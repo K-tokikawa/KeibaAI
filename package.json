@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/encoding-japanese": "^2.0.1",
     "@types/node": "^20.2.5",
     "@types/tedious": "^4.0.9",
     "csv-writer": "^1.6.0",

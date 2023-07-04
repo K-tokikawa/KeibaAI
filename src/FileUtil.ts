@@ -33,4 +33,26 @@ export default class FileUtil {
         const page = pageElement.split('\r\n');
         return page
     }
+
+    public static async ContinueOutputFile(filepath: string, lines: string[]){
+        return new Promise((resoleve) => {
+            let exist = fs.existsSync(filepath)
+            lines.forEach((line: string, index: number) => {
+                line = line + '\n'
+                const arybuf = Encoding.convert(line, {
+                    from: 'UNICODE',
+                    to: 'UTF8',
+                    type: 'arraybuffer',
+                });
+    
+                if (exist) {
+                    fs.appendFileSync(filepath, Buffer.from(arybuf))
+                } else {
+                    fs.writeFileSync(filepath, Buffer.from(arybuf));
+                    exist = fs.existsSync(filepath)
+                }
+            })
+            resoleve(true)
+        })
+    }
 }

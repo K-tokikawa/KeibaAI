@@ -31,6 +31,7 @@ export default abstract class SQLBase<T>{
 }
 
 async function executeStatement(connection: Connection, sql: string) {
+    const bolFinish = false
     return new Promise(async (resolve) => {
         let rows: obj[] = []
         console.log('request')
@@ -55,12 +56,14 @@ async function executeStatement(connection: Connection, sql: string) {
         })
         // 複数行取得の時は、'doneInProc'が取得できたら全行取得完了　※多分
         request.on('doneInProc', function () {
-            resolve(rows)
+            console.log('doneInProc')
+            
         });
 
         request.on('requestCompleted', () => {
             connection.close();
-            resolve(true)
+            console.log('requestCompleted')
+            resolve(rows)
         });
     })
 }
