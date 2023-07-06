@@ -3,41 +3,22 @@ import glob
 import pandas as pd
 import xgboost as xgb
 import optuna
-import subprocess
-import json
-import pprint
 
 from matplotlib import pyplot as plt
 from sklearn.metrics import mean_squared_error
-
-DEFAULT_ATTRIBUTES = (
-    'index',
-    'uuid',
-    'name',
-    'timestamp',
-    'memory.total',
-    'memory.free',
-    'memory.used',
-    'utilization.gpu',
-    'utilization.memory'
-)
-def get_gpu_info(nvidia_smi_path='nvidia-smi', keys=DEFAULT_ATTRIBUTES, no_units=True):
-    nu_opt = '' if not no_units else ',nounits'
-    cmd = '%s --query-gpu=%s --format=csv,noheader%s' % (nvidia_smi_path, ','.join(keys), nu_opt)
-    output = subprocess.check_output(cmd, shell=True)
-    lines = output.decode().split('\n')
-    lines = [ line.strip() for line in lines if line.strip() != '' ]
-
-    return [ { k: v for k, v in zip(keys, line.split(', ')) } for line in lines ]
-
-
+# Best trial:
+#   Value: 1.7746615905434537
+#   Params:
+#     eta: 0.06026118701460826
+#     max_depth: 9
+#     lambda: 246
 
 def objective(trial):
     params = {
         'eta': trial.suggest_float("eta", 0.01, 1.0, log=True),
         'objective': 'reg:squarederror',
         'eval_metric': 'rmse',
-        'max_depth': trial.suggest_int("max_depth", 6, 9),
+        'max_depth': trial.suggest_int("max_depth", 3, 7),
         'lambda': trial.suggest_int("lambda", 0, 10000),
         'tree_method':'gpu_hist' 
         }
@@ -45,16 +26,14 @@ def objective(trial):
     cv_results = xgb.cv(
         params,
         xgb_train_copy,
-        num_boost_round=10000,
-        nfold=5, # CVの分割数
-        early_stopping_rounds=500
+        num_boost_round=1000,
+        nfold=2, # CVの分割数
+        early_stopping_rounds=100
     )
-    pprint.pprint(get_gpu_info())
     result = cv_results["test-rmse-mean"].min()
-    cv_results.__del___()
     del xgb_train_copy
-    pprint.pprint(get_gpu_info())
     return result
+
 
 files = glob.glob('.\\data\\blood\\*.csv')
 
@@ -81,7 +60,7 @@ testdata = testdata.drop(testdata.columns[[0, 0]], axis=1)
 
 
 study = optuna.create_study()
-study.optimize(objective, n_trials=5000)
+study.optimize(objective, n_trials=500)
 
 print("Number of finished trials: ", len(study.trials))
 print("Best trial:")
@@ -109,7 +88,7 @@ evals = [(xgb_train, 'train'), (xgb_test, 'eval')]
 evals_result = {}
 bst = xgb.train(param,
                 xgb_train,
-                num_boost_round=75000,
+                num_boost_round=1000,
                 early_stopping_rounds=100,
                 evals=evals,
                 evals_result=evals_result,

@@ -1,13 +1,10 @@
 import SQLBase from "../SQLBase"
-import PrmBloodStudyDataCount from "../param/PrmBloodStudyDataCount"
-import EntBloodStudyDataCount from "../entity/EntBloodStudyDataCount"
+import EntBloodStudyDataCount from "../entity/EntStudyDataCount"
 export default class GetBloodStudyDataCount extends SQLBase<EntBloodStudyDataCount[]>
 {
-    private parameter: PrmBloodStudyDataCount | null
 
-    constructor(prm: PrmBloodStudyDataCount | null) {
+    constructor() {
         super()
-        this.parameter = prm
     }
     public async Execsql(): Promise<EntBloodStudyDataCount[]> {
         const sql = `
