@@ -18,7 +18,7 @@ def objective(trial):
         'eta': trial.suggest_float("eta", 0.01, 1.0, log=True),
         'objective': 'reg:squarederror',
         'eval_metric': 'rmse',
-        'max_depth': trial.suggest_int("max_depth", 3, 7),
+        'max_depth': trial.suggest_int("max_depth", 6, 9),
         'lambda': trial.suggest_int("lambda", 0, 10000),
         'tree_method':'gpu_hist' 
         }
@@ -59,17 +59,17 @@ testdata = testdata.drop(testdata.columns[[0, 0]], axis=1)
 
 
 
-study = optuna.create_study()
-study.optimize(objective, n_trials=500)
+# study = optuna.create_study()
+# study.optimize(objective, n_trials=500)
 
-print("Number of finished trials: ", len(study.trials))
-print("Best trial:")
-trial = study.best_trial
+# print("Number of finished trials: ", len(study.trials))
+# print("Best trial:")
+# trial = study.best_trial
 
-print("  Value: {}".format(trial.value))
-print("  Params: ")
-for key, value in trial.params.items():
-    print("    {}: {}".format(key, value))
+# print("  Value: {}".format(trial.value))
+# print("  Params: ")
+# for key, value in trial.params.items():
+#     print("    {}: {}".format(key, value))
 
 param = {
     'objective': 'reg:squarederror',
@@ -77,9 +77,12 @@ param = {
     'tree_method':'gpu_hist' 
 }
 
-param["max_depth"] = trial.params["max_depth"]
-param["eta"] = trial.params["eta"]
-param["lambda"] = trial.params["lambda"]
+# param["max_depth"] = trial.params["max_depth"]
+# param["eta"] = trial.params["eta"]
+# param["lambda"] = trial.params["lambda"]
+param["eta"] = 0.06
+param["max_depth"] = 7
+param["lambda"] = 200
 
 xgb_train = xgb.DMatrix(traindata, label=trainlabel)
 xgb_test = xgb.DMatrix(testdata, label=testlabel)
@@ -88,7 +91,7 @@ evals = [(xgb_train, 'train'), (xgb_test, 'eval')]
 evals_result = {}
 bst = xgb.train(param,
                 xgb_train,
-                num_boost_round=1000,
+                num_boost_round=5000,
                 early_stopping_rounds=100,
                 evals=evals,
                 evals_result=evals_result,

@@ -1,6 +1,6 @@
 import SQLBase from "../SQLBase"
 import EntStudyDataCount from "../entity/EntStudyDataCount"
-export default class GetBloodStudyDataCount extends SQLBase<EntStudyDataCount[]>
+export default class GetBloodStudyDataCount_Blood extends SQLBase<EntStudyDataCount[]>
 {
 
     constructor() {
@@ -9,18 +9,19 @@ export default class GetBloodStudyDataCount extends SQLBase<EntStudyDataCount[]>
     public async Execsql(): Promise<EntStudyDataCount[]> {
         const sql = `
 select
-    count(FS.HorseID) as Count
+    Count(RHI.ID) as Count
 from RaceHorseInfomation as RHI
     left outer join RaceInfomation as RI
         on RI.ID = RHI.RaceID
-    left outer join HorseMaster as HM
-        on HM.ID = RHI.HorseID
-    left outer join HorseMaster as Father
-        on Father.netkeibaID = HM.Father
-    inner join FatherScore as FS
-        on FS.HorseID = Father.ID
-    left outer join TimeAverage as TA
+    left outer join RaceMaster as RM
+        on RM.ID = RI.RaceMasterID
+    inner join TimeAverage as TA
         on TA.ID = RHI.Average
+    left outer join BloodTable as BD
+        on BD.ID = RHI.HorseID
+where
+    GoalTime is not null
+
 `
         return await this.ExecGet(sql)
     }
