@@ -21,6 +21,7 @@ from RaceHorseInfomation as RHI
         on BD.ID = RHI.HorseID
 where
     GoalTime is not null
+    and RHI.OutValue = 0
 
 `
         return await this.ExecGet(sql)

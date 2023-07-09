@@ -3,40 +3,72 @@ import glob
 import pandas as pd
 import xgboost as xgb
 import optuna
+import subprocess
+import json
+import pprint
 
 from matplotlib import pyplot as plt
 from sklearn.metrics import mean_squared_error
-# Best trial:
-#   Value: 1.7746615905434537
-#   Params:
-#     eta: 0.06026118701460826
-#     max_depth: 9
-#     lambda: 246
+
+DEFAULT_ATTRIBUTES = (
+    'index',
+    'uuid',
+    'memory.total',
+    'memory.free',
+    'memory.used',
+)
+def get_gpu_info(nvidia_smi_path='nvidia-smi', keys=DEFAULT_ATTRIBUTES, no_units=True):
+    nu_opt = '' if not no_units else ',nounits'
+    cmd = '%s --query-gpu=%s --format=csv,noheader%s' % (nvidia_smi_path, ','.join(keys), nu_opt)
+    output = subprocess.check_output(cmd, shell=True)
+    lines = output.decode().split('\n')
+    lines = [ line.strip() for line in lines if line.strip() != '' ]
+
+    return [ { k: v for k, v in zip(keys, line.split(', ')) } for line in lines ]
 
 def objective(trial):
+    global datas
+    datas = datas.sample(frac=1)
+    row = datas.shape[0]
+    studytrain = round(row * 0.7)
+    studytraindata = datas[0: studytrain]
+    studytrainlabel = studytraindata.iloc[0:,[0]]
+    studytraindata = studytraindata.drop(studytraindata.columns[[0, 0]], axis=1)
+
+    studytestdata = datas[studytrain: row]
+    studytestlabel = studytestdata.iloc[0:,[0]]
+    studytestdata = studytestdata.drop(studytestdata.columns[[0, 0]], axis=1)
+
+    studyxgb_train = xgb.DMatrix(studytraindata, label=studytrainlabel)
+    studyxgb_test = xgb.DMatrix(studytestdata, label=studytestlabel)
+
     params = {
-        'eta': trial.suggest_float("eta", 0.01, 1.0, log=True),
+        'eta': trial.suggest_float("eta", 0.01, 1.0, log=False),
         'objective': 'reg:squarederror',
         'eval_metric': 'rmse',
         'max_depth': trial.suggest_int("max_depth", 6, 9),
-        'lambda': trial.suggest_int("lambda", 0, 10000),
+        'lambda': trial.suggest_int("lambda", 100, 1000),
         'tree_method':'gpu_hist' 
         }
-    xgb_train_copy = xgb.DMatrix(traindata, label=trainlabel)
-    cv_results = xgb.cv(
-        params,
-        xgb_train_copy,
-        num_boost_round=1000,
-        nfold=2, # CVの分割数
-        early_stopping_rounds=100
-    )
-    result = cv_results["test-rmse-mean"].min()
-    del xgb_train_copy
+    evals = [(studyxgb_train, 'train'), (studyxgb_test, 'eval')]
+    evals_result = {}
+    xgb.train(params,
+              studyxgb_train,
+              num_boost_round=5000,
+              early_stopping_rounds=100,
+              verbose_eval=100,
+              evals=evals,
+              evals_result=evals_result,
+              )
+
+    result = evals_result['eval']['rmse']
+    result = result[len(result)-1]
+    print(result)
     return result
 
 
 files = glob.glob('.\\data\\blood\\*.csv')
-
+global datas
 datas = pd.DataFrame()
 for file in files:
     data = pd.read_csv(file, sep=',', header=None)
@@ -57,14 +89,15 @@ testdata = datas[train: row]
 testlabel = testdata.iloc[0:,[0]]
 testdata = testdata.drop(testdata.columns[[0, 0]], axis=1)
 
+xgb_train = xgb.DMatrix(traindata, label=trainlabel)
+xgb_test = xgb.DMatrix(testdata, label=testlabel)
 
-
-# study = optuna.create_study()
-# study.optimize(objective, n_trials=500)
+study = optuna.create_study()
+study.optimize(objective, n_trials=500, gc_after_trial = True)
 
 # print("Number of finished trials: ", len(study.trials))
 # print("Best trial:")
-# trial = study.best_trial
+trial = study.best_trial
 
 # print("  Value: {}".format(trial.value))
 # print("  Params: ")
@@ -77,29 +110,35 @@ param = {
     'tree_method':'gpu_hist' 
 }
 
-# param["max_depth"] = trial.params["max_depth"]
-# param["eta"] = trial.params["eta"]
-# param["lambda"] = trial.params["lambda"]
-param["eta"] = 0.06
-param["max_depth"] = 7
-param["lambda"] = 200
-
-xgb_train = xgb.DMatrix(traindata, label=trainlabel)
-xgb_test = xgb.DMatrix(testdata, label=testlabel)
-
+# param["eta"] = 0.12446843751961466
+# param["max_depth"] = 9
+# param["lambda"] = 865
+param["max_depth"] = trial.params["max_depth"]
+param["eta"] = trial.params["eta"]
+param["lambda"] = trial.params["lambda"]
 evals = [(xgb_train, 'train'), (xgb_test, 'eval')]
 evals_result = {}
 bst = xgb.train(param,
                 xgb_train,
                 num_boost_round=5000,
                 early_stopping_rounds=100,
+                verbose_eval=100,
                 evals=evals,
                 evals_result=evals_result,
                 )
-
+bst.save_model('.\\model\\blood\\model.json')
 y_pred = bst.predict(xgb_test)
 mse = mean_squared_error(testlabel, y_pred)
 print('RMSE:', math.sqrt(mse))
+
+# print("Number of finished trials: ", len(study.trials))
+# print("Best trial:")
+# trial = study.best_trial
+
+# print("  Value: {}".format(trial.value))
+# print("  Params: ")
+# for key, value in trial.params.items():
+#     print("    {}: {}".format(key, value))
 
 train_metric = evals_result['train']['rmse']
 plt.plot(train_metric, label='train rmse')

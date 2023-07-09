@@ -835,6 +835,7 @@ select
               on MM_FS.HorseID = MM_Father.ID
       where
           GoalTime is not null
+          and RHI.OutValue = 0
   ) as BD
 where
     BD.num BETWEEN ${this.parameter?.Start} and ${this.parameter?.Finish}
