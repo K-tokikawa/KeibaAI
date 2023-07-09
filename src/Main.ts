@@ -11,7 +11,7 @@ import GetBloodStudyData_Blood from "./querry/GetBloodStudyData_Blood"
 import EntBloodStudyData_Blood from "./entity/EntBloodStudyData_Blood"
 import GetBloodStudyDataCount_Blood from "./querry/GetBloodStudyDataCount_Blood"
 
-const mode = 3
+const mode = 2
 main(mode)
 async function main(mode: number) {
     let ID = 0
@@ -63,7 +63,8 @@ async function main(mode: number) {
                 case 2:
                     sql = new GetJockyStudyData(param)
                     value = await sql.Execsql() as EntJockyStudyData[]
-                    rows = value.map(x => { return `${x.Rank},${x.JockeyID},${x.Venue},${x.Range},${x.GateNo},${x.HoldMonth},${x.Weather},${x.Popularity},${x.Weight}`})
+                    console.log(`${count}`)
+                    rows = value.map(x => { return `${x.Rank},${x.JockeyID},${x.Venue},${x.Range},${x.Ground},${x.GroundCondition},${x.GateNo},${x.Age},${x.HoldMonth},${x.Weather},${x.Popularity},${x.Weight},${x.Hold},${x.Day},${x.Round}`})
                     filePath = `./data/Jocky/${Start}.csv`
                     break
                 case 3:

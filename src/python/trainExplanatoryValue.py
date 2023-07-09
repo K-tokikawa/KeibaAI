@@ -4,8 +4,6 @@ import pandas as pd
 import xgboost as xgb
 import optuna
 import subprocess
-import json
-import pprint
 
 from matplotlib import pyplot as plt
 from sklearn.metrics import mean_squared_error
@@ -46,7 +44,7 @@ def objective(trial):
         'eta': trial.suggest_float("eta", 0.01, 1.0, log=False),
         'objective': 'reg:squarederror',
         'eval_metric': 'rmse',
-        'max_depth': trial.suggest_int("max_depth", 6, 9),
+        'max_depth': trial.suggest_int("max_depth", 3, 7),
         'lambda': trial.suggest_int("lambda", 100, 1000),
         'tree_method':'gpu_hist' 
         }
@@ -67,7 +65,7 @@ def objective(trial):
     return result
 
 
-files = glob.glob('.\\data\\blood\\*.csv')
+files = glob.glob('.\\data\\Jocky\\*.csv')
 global datas
 datas = pd.DataFrame()
 for file in files:

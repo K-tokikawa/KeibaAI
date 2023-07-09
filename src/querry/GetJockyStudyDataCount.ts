@@ -8,12 +8,14 @@ export default class GetJockyStudyDataCount extends SQLBase<EntStudyDataCount[]>
     public async Execsql(): Promise<EntStudyDataCount[]> {
         const sql = `
 select
-    count(RHI.Rank)
+    count(RHI.Rank) as Count
 from RaceHorseInfomation as RHI
     left outer join RaceInfomation as RI
         on RI.ID = RHI.RaceID
 where
-    RHI.JockeyID in (
+        RHI.Rank is not null
+    and RHI.OutValue = 0
+    and RHI.JockeyID in (
         select
             RHI.JockeyID
         from RaceHorseInfomation as RHI

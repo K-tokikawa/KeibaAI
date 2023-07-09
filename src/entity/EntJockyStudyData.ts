@@ -3,22 +3,33 @@ export default class EntJockyStudyData{
     public JockeyID : string
     public Venue : string
     public Range : number
+    public Ground : number
+    public GroundCondition : number
     public HoldMonth : number
     public Popularity : number
     public Weather : number
     public GateNo : number
+    public Age : number
     public Weight : number
-
+    public Round : number
+    public Day : number
+    public Hold : number
     constructor(){
         this.Rank = 0
         this.JockeyID = ''
         this.Venue = ''
         this.Range = 0
+        this.Ground = 0
+        this.GroundCondition = 0
         this.HoldMonth = 0
         this.Popularity = 0
         this.Weather = 0
         this.GateNo = 0
+        this.Age = 0
         this.Weight = 0
+        this.Hold = 0
+        this.Day = 0
+        this.Round = 0
     }
 
 }

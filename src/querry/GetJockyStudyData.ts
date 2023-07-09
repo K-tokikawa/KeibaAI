@@ -12,32 +12,45 @@ export default class GetJockyStudyData extends SQLBase<EntJockyStudyData[]>
     public async Execsql(): Promise<EntJockyStudyData[]> {
         const sql = `
 select
-      RHI.Rank
-    , RHI.JockeyID
-    , RHI.Venue
-    , RHI.[Range]
-    , RHI.HoldMonth
-    , RHI.Popularity
-    , RHI.Weather
-    , RHI.GateNo
-    , RHI.Weight
+      Rank
+    , JockeyID
+    , Venue
+    , Range
+    , Ground
+    , GroundCondition
+    , HoldMonth
+    , Popularity
+    , Weather
+    , GateNo
+    , Age
+    , Weight
+    , Hold
+    , Day
+    , Round
 from (
     select
         ROW_NUMBER()over(order by JockeyID) as ID
         , RHI.Rank
         , RHI.JockeyID
+        , case when RI.Year > 2000 then RHI.HorseAge else RHI.HorseAge - 1 end as Age
         , RI.Venue
         , RI.[Range]
+        , RI.Ground
+        , RI.GroundCondition
         , RI.HoldMonth
         , RHI.Popularity
         , RI.Weather
         , RHI.GateNo
         , RHI.Weight
+        , RI.Hold
+        , RI.Day
+        , RI.Round
     from RaceHorseInfomation as RHI
         left outer join RaceInfomation as RI
             on RI.ID = RHI.RaceID
     where
-        RHI.JockeyID in (
+            RHI.OutValue = 0
+        and RHI.JockeyID in (
             select
                 RHI.JockeyID
             from RaceHorseInfomation as RHI
@@ -54,7 +67,8 @@ from (
         )
 ) as RHI
 where
-    RHI.ID between ${this.parameter?.Start} and ${this.parameter?.Finish}
+    RHI.Rank is not null
+    and RHI.ID between ${this.parameter?.Start} and ${this.parameter?.Finish}
 `
         return await this.ExecGet(sql)
     }
