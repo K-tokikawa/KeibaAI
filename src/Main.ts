@@ -14,7 +14,7 @@ import GetRaceStudyDataMinMax from "./querry/GetRaceStudyDataMinMax"
 import EntStudyDataMinMax from "./entity/EntStudyDataMinMax"
 import GetRaceStudyData from "./querry/GetRaceStudyData"
 import EntRaceStudyData from "./entity/EntRaceStudyData"
-import ClassRotationData from "./class/ClassRotationData"
+import ClassRotationData from "./class/ClassRaceData"
 
 const mode = 4
 main(mode)
@@ -140,6 +140,7 @@ function CreateRotationData(value: EntRaceStudyData[]){
             row.HoldMonth,
             row.Hold,
             row.Day,
+            row.ID,
             row.Range,
             row.Ground,
             row.GroundCondition,
@@ -212,6 +213,6 @@ function CreateRotationData(value: EntRaceStudyData[]){
 }
 
 function CreateAchievementData(value: EntRaceStudyData[]){
-    
+
     return []
 }

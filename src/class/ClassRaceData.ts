@@ -6,6 +6,7 @@ export default class ClassRotationData{
     private m_HoldMonth: number
     private m_Hold: number
     private m_Day: number
+    private m_ID: number
     private m_Range: number
     private m_Ground: number | null
     private m_GroundCondition: number
@@ -24,6 +25,7 @@ export default class ClassRotationData{
         HoldMonth: number,
         Hold: number,
         Day: number,
+        ID: number,
         Range: number,
         Ground: number | null,
         GroundCondition: number,
@@ -42,6 +44,7 @@ export default class ClassRotationData{
         this.m_HoldMonth = HoldMonth
         this.m_Hold = Hold
         this.m_Day = Day
+        this.m_ID = ID
         this.m_Range = Range
         this.m_Ground = Ground
         this.m_GroundCondition = GroundCondition
