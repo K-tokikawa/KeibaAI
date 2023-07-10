@@ -1,6 +1,7 @@
 export default class EntJockyStudyData{
     public Rank : number
     public JockeyID : string
+    public HorseGender: number
     public Venue : string
     public Range : number
     public Ground : number
@@ -17,6 +18,7 @@ export default class EntJockyStudyData{
     constructor(){
         this.Rank = 0
         this.JockeyID = ''
+        this.HorseGender = 0
         this.Venue = ''
         this.Range = 0
         this.Ground = 0

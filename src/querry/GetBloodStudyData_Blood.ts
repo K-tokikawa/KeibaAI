@@ -16,6 +16,7 @@ select
       , Ground
       , Venue
       , GroundCondition
+      , HorseGender
       , Weight
       , Age
       , time
@@ -413,6 +414,7 @@ select
           , RM.Venue
           , RM.GroundCondition
           , RHI.Weight
+          , RHI.HorseGender
           , case when RI.[Year] > 2000 then RHI.HorseAge else RHI.HorseAge - 1 end as Age
           , ROW_NUMBER()over(order by RHI.ID) as num
           , GoalTime - TA.Average as time

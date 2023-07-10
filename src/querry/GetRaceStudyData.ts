@@ -1,6 +1,6 @@
 import SQLBase from "../SQLBase"
-import PrmStudyData from "../param/PrmStudyData"
 import EntRaceStudyData from "../entity/EntRaceStudyData"
+import PrmStudyData from "../param/PrmStudyData"
 export default class GetRaceStudyData extends SQLBase<EntRaceStudyData[]>
 {
     private parameter: PrmStudyData | null
@@ -12,59 +12,62 @@ export default class GetRaceStudyData extends SQLBase<EntRaceStudyData[]>
     public async Execsql(): Promise<EntRaceStudyData[]> {
         const sql = `
 select
-    RHI.HorseID
-  , RHI.Hold
-  , RHI.Venue
-  , RHI.[Range]
-  , RHI.Ground
-  , RHI.GroundCondition
-  , RHI.Weather
-  , RHI.RaceID
-  , RHI.Rank
-  , RHI.Remarks
-  , RHI.GateNo
-  , RHI.HorseNo
-  , RHI.HorseAge
-  , RHI.HorseGender
-  , RHI.Weight
-  , RHI.JockeyID
-  , RHI.GoalTime
-  , RHI.SpurtTime
-  , RHI.HorseWeight
-  , RHI.Fluctuation
-  , RHI.Barn
-  , RHI.TrainerID
+      HorseID
+    , GoalTime
+    , OutValue
+    , Direction
+    , HoldDay
+    , HoldMonth
+    , Hold
+    , Day
+    , ID
+    , Venue
+    , Range
+    , Ground
+    , GroundCondition
+    , Weight
+    , TrainerID
+    , HorseGender
+    , HorseWeight
+    , Fluctuation
+    , JockeyID
+    , lag(RHI.HoldDay)over(partition by RHI.HorseID order by RHI.num) as before
+    , num
 from (
     select
-          RHI.HorseID
-        , RI.[Year] + RI.HoldMonth + RI.HoldDay as Hold
+          RHI.GoalTime
+        , convert(datetime, convert(nvarchar, RI.Year) + '-' + convert(nvarchar, RI.HoldMonth) + '-' + convert(nvarchar, RI.HoldDay)) as HoldDay
+        , RHI.OutValue
+        , case when RI.Direction = 3 then null else RI.Direction end as Direction
+        , RI.HoldMonth
+        , RI.Hold
+        , RI.Day
+        , RI.Weather
+        , RM.ID
+        , RI.Range
         , RI.Venue
-        , RI.[Range]
         , RI.Ground
         , RI.GroundCondition
-        , RI.Weather
-        , RHI.RaceID
-        , RHI.Rank
-        , RHI.Remarks
-        , RHI.GateNo
-        , RHI.HorseNo
-        , RHI.HorseAge
-        , RHI.HorseGender
         , RHI.Weight
-        , RHI.JockeyID
-        , RHI.GoalTime
-        , RHI.SpurtTime
-        , RHI.HorseWeight
-        , RHI.Fluctuation
-        , RHI.Barn
         , RHI.TrainerID
-        , ROW_NUMBER()over(order by RHI.HorseID) as num
+        , RHI.HorseGender
+        , RHI.HorseWeight
+        , convert(int, RHI.Fluctuation) as Fluctuation
+        , RHI.JockeyID
+        , RHI.HorseID
+        , ROW_NUMBER()over(partition by RHI.HorseID order by convert(datetime, convert(nvarchar, RI.Year) + '-' + convert(nvarchar, RI.HoldMonth) + '-' + convert(nvarchar, RI.HoldDay)) desc) as num
     from RaceHorseInfomation as RHI
         left outer join RaceInfomation as RI
             on RI.ID = RHI.RaceID
+        left outer join RaceMaster as RM
+            on RM.ID = RI.RaceMasterID
+    where
+        RHI.HorseID is not null
 ) as RHI
 where
-    num between ${this.parameter?.Start} and ${this.parameter?.Finish}
+    RHI.HorseID between ${this.parameter?.Start} and ${this.parameter?.Finish}
+order by
+    RHI.HorseID
 `
         return await this.ExecGet(sql)
     }

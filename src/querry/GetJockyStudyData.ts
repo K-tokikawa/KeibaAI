@@ -14,6 +14,7 @@ export default class GetJockyStudyData extends SQLBase<EntJockyStudyData[]>
 select
       Rank
     , JockeyID
+    , HorseGender
     , Venue
     , Range
     , Ground
@@ -32,6 +33,7 @@ from (
         ROW_NUMBER()over(order by JockeyID) as ID
         , RHI.Rank
         , RHI.JockeyID
+        , RHI.HorseGender
         , case when RI.Year > 2000 then RHI.HorseAge else RHI.HorseAge - 1 end as Age
         , RI.Venue
         , RI.[Range]
@@ -50,6 +52,7 @@ from (
             on RI.ID = RHI.RaceID
     where
             RHI.OutValue = 0
+        and RI.Direction <> 3
         and RHI.JockeyID in (
             select
                 RHI.JockeyID

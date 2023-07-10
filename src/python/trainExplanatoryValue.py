@@ -52,7 +52,7 @@ def objective(trial):
     evals_result = {}
     xgb.train(params,
               studyxgb_train,
-              num_boost_round=5000,
+              num_boost_round=3000,
               early_stopping_rounds=100,
               verbose_eval=100,
               evals=evals,
@@ -61,11 +61,13 @@ def objective(trial):
 
     result = evals_result['eval']['rmse']
     result = result[len(result)-1]
-    print(result)
     return result
 
+mode = 4
+print('Start')
 
-files = glob.glob('.\\data\\Jocky\\*.csv')
+print('Read File')
+files = glob.glob('.\\data\\Rotation\\*.csv')
 global datas
 datas = pd.DataFrame()
 for file in files:
@@ -75,6 +77,14 @@ for file in files:
     else :
         datas = pd.concat([datas, data])
 
+
+datas = datas.dropna(subset=[0])
+print(datas)
+if (mode == 4):
+    datas = datas.dropna(subset=[1])
+    datas = datas.dropna(subset=[2])
+    datas = datas.drop(datas.columns[[1, 2]], axis=1)
+print(datas)
 datas = datas.sample(frac=1)
 row = datas.shape[0]
 train = round(row * 0.7)
@@ -90,17 +100,11 @@ testdata = testdata.drop(testdata.columns[[0, 0]], axis=1)
 xgb_train = xgb.DMatrix(traindata, label=trainlabel)
 xgb_test = xgb.DMatrix(testdata, label=testlabel)
 
+print('Start Study')
 study = optuna.create_study()
 study.optimize(objective, n_trials=500, gc_after_trial = True)
-
-# print("Number of finished trials: ", len(study.trials))
-# print("Best trial:")
+print('Finish Study')
 trial = study.best_trial
-
-# print("  Value: {}".format(trial.value))
-# print("  Params: ")
-# for key, value in trial.params.items():
-#     print("    {}: {}".format(key, value))
 
 param = {
     'objective': 'reg:squarederror',
@@ -116,9 +120,10 @@ param["eta"] = trial.params["eta"]
 param["lambda"] = trial.params["lambda"]
 evals = [(xgb_train, 'train'), (xgb_test, 'eval')]
 evals_result = {}
+print('Start Train')
 bst = xgb.train(param,
                 xgb_train,
-                num_boost_round=5000,
+                num_boost_round=3000,
                 early_stopping_rounds=100,
                 verbose_eval=100,
                 evals=evals,
@@ -127,16 +132,8 @@ bst = xgb.train(param,
 bst.save_model('.\\model\\blood\\model.json')
 y_pred = bst.predict(xgb_test)
 mse = mean_squared_error(testlabel, y_pred)
+print('Finish Train')
 print('RMSE:', math.sqrt(mse))
-
-# print("Number of finished trials: ", len(study.trials))
-# print("Best trial:")
-# trial = study.best_trial
-
-# print("  Value: {}".format(trial.value))
-# print("  Params: ")
-# for key, value in trial.params.items():
-#     print("    {}: {}".format(key, value))
 
 train_metric = evals_result['train']['rmse']
 plt.plot(train_metric, label='train rmse')

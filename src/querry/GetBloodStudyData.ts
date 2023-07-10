@@ -17,6 +17,7 @@ export default class GetBloodStudyData extends SQLBase<EntBloodStudyData[]>
       , Venue
       , GroundCondition
       , Weight
+      , HorseGender
       , Age
       , time
       , F_ID_1
@@ -288,6 +289,7 @@ export default class GetBloodStudyData extends SQLBase<EntBloodStudyData[]>
           , RM.Venue
           , RM.GroundCondition
           , RHI.Weight
+          , RHI.HorseGender
           , case when RI.[Year] > 2000 then RHI.HorseAge else RHI.HorseAge - 1 end as Age
           , ROW_NUMBER()over(order by FS.HorseID) as num
           , GoalTime - TA.Average as time
