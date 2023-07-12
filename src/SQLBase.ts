@@ -23,7 +23,7 @@ export default abstract class SQLBase<T>{
         return new Promise((resolve) => {
             this.connection.connect()
             this.connection.on('connect', async () => {
-                console.log('connect')
+                // console.log('connect')
                 resolve(await executeStatement(this.connection, sql))
             })
         })
@@ -34,7 +34,7 @@ async function executeStatement(connection: Connection, sql: string) {
     const bolFinish = false
     return new Promise(async (resolve) => {
         let rows: obj[] = []
-        console.log('request')
+        // console.log('request')
         const request = new Request(sql, function (err: any) {
             if (err) {
                 console.log(err);
@@ -42,7 +42,7 @@ async function executeStatement(connection: Connection, sql: string) {
             }
             connection.close();
         });
-        console.log('execSql')
+        // console.log('execSql')
         connection.execSql(request);
 
         request.on('row', (columns: any) => {
@@ -56,13 +56,14 @@ async function executeStatement(connection: Connection, sql: string) {
         })
         // 複数行取得の時は、'doneInProc'が取得できたら全行取得完了　※多分
         request.on('doneInProc', function () {
-            console.log('doneInProc')
+            // console.log('doneInProc')
             
         });
 
         request.on('requestCompleted', () => {
             connection.close();
-            console.log('requestCompleted')
+            // console.log('requestCompleted')
+            connection.close();
             resolve(rows)
         });
     })

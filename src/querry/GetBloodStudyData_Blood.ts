@@ -1,11 +1,11 @@
 import SQLBase from "../SQLBase"
-import PrmBloodStudyData from "../param/PrmStudyData"
+import PrmStudyData from "../param/PrmStudyData"
 import EntBloodStudyData_Blood from "../entity/EntBloodStudyData_Blood"
 export default class GetBloodStudyData_Blood extends SQLBase<EntBloodStudyData_Blood[]>
 {
-    private parameter: PrmBloodStudyData | null
+    private parameter: PrmStudyData | null
 
-    constructor(prm: PrmBloodStudyData | null) {
+    constructor(prm: PrmStudyData | null) {
         super()
         this.parameter = prm
     }
@@ -835,12 +835,12 @@ select
               on MM_Father.netkeibaID = M_Mother.Father
           inner join FatherScore as MM_FS
               on MM_FS.HorseID = MM_Father.ID
-      where
-          GoalTime is not null
-          and RHI.OutValue = 0
-  ) as BD
-where
-    BD.num BETWEEN ${this.parameter?.Start} and ${this.parameter?.Finish}
+              where
+              GoalTime is not null
+              and RHI.OutValue = 0
+      ) as BD
+    where
+        BD.num BETWEEN ${this.parameter?.Start} and ${this.parameter?.Finish}
 `
         return await this.ExecGet(sql)
     }

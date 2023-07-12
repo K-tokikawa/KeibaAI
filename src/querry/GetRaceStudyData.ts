@@ -29,6 +29,12 @@ select
     , TrainerID
     , HorseGender
     , HorseWeight
+    , HorseAge
+    , Passage1
+    , Passage2
+    , Passage3
+    , Passage4
+    , SpurtTime
     , Fluctuation
     , JockeyID
     , lag(RHI.HoldDay)over(partition by RHI.HorseID order by RHI.num) as before
@@ -52,6 +58,12 @@ from (
         , RHI.TrainerID
         , RHI.HorseGender
         , RHI.HorseWeight
+        , case when RI.Year > 2000 then RHI.HorseAge else RHI.HorseAge - 1 end as HorseAge
+        , RHI.Passage1
+        , RHI.Passage2
+        , RHI.Passage3
+        , RHI.Passage4
+        , RHI.SpurtTime
         , convert(int, RHI.Fluctuation) as Fluctuation
         , RHI.JockeyID
         , RHI.HorseID
@@ -63,6 +75,7 @@ from (
             on RM.ID = RI.RaceMasterID
     where
         RHI.HorseID is not null
+        and RI.Direction <> 3
 ) as RHI
 where
     RHI.HorseID between ${this.parameter?.Start} and ${this.parameter?.Finish}

@@ -63,11 +63,12 @@ def objective(trial):
     result = result[len(result)-1]
     return result
 
+
 mode = 4
 print('Start')
 
 print('Read File')
-files = glob.glob('.\\data\\Rotation\\*.csv')
+files = glob.glob('.\\data\\achievement\\*.csv')
 global datas
 datas = pd.DataFrame()
 for file in files:
@@ -77,12 +78,10 @@ for file in files:
     else :
         datas = pd.concat([datas, data])
 
-
 datas = datas.dropna(subset=[0])
 print(datas)
 if (mode == 4):
-    datas = datas.dropna(subset=[1])
-    datas = datas.dropna(subset=[2])
+    datas = datas.dropna(subset=[1, 2])
     datas = datas.drop(datas.columns[[1, 2]], axis=1)
 print(datas)
 datas = datas.sample(frac=1)
@@ -102,7 +101,7 @@ xgb_test = xgb.DMatrix(testdata, label=testlabel)
 
 print('Start Study')
 study = optuna.create_study()
-study.optimize(objective, n_trials=500, gc_after_trial = True)
+study.optimize(objective, n_trials=300, gc_after_trial = True)
 print('Finish Study')
 trial = study.best_trial
 
@@ -129,7 +128,8 @@ bst = xgb.train(param,
                 evals=evals,
                 evals_result=evals_result,
                 )
-bst.save_model('.\\model\\blood\\model.json')
+
+bst.save_model('.\\model\\achievement\\model.json')
 y_pred = bst.predict(xgb_test)
 mse = mean_squared_error(testlabel, y_pred)
 print('Finish Train')
