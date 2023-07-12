@@ -7,6 +7,7 @@ export default class EntBloodStudyDataBlood {
     public Weight: number
     public Age: number
     public time: number | null
+    public HorseID: number |null
     public FID: number | null
     public MID: number | null
     public FFID: number | null
@@ -403,6 +404,7 @@ export default class EntBloodStudyDataBlood {
         this.Weight = 0
         this.Age = 0
         this.time = 0
+        this.HorseID = 0
         this.FID = 0
         this.MID = 0
         this.FFID = 0

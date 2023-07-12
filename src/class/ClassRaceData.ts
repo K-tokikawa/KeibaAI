@@ -2,7 +2,6 @@ import EntRaceStudyData from "../entity/EntRaceStudyData"
 
 export default class ClassRaceData{
     private m_GoalTime: number
-    private m_OutValue: number
     private m_Direction: number
     private m_Venue: string
     private m_HoldMonth: number
@@ -28,7 +27,6 @@ export default class ClassRaceData{
     private m_HoldDay: Date
     constructor(row: EntRaceStudyData, before: number){
         this.m_GoalTime = row.GoalTime
-        this.m_OutValue = row.OutValue
         this.m_Direction = row.Direction
         this.m_Venue = row.Venue
         this.m_HoldMonth = row.HoldMonth
@@ -54,7 +52,6 @@ export default class ClassRaceData{
         this.m_HoldDay = row.HoldDay
     }
     public get GoalTime() { return this.m_GoalTime }
-    public get OutValue() { return this.m_OutValue }
     public get Direction() { return this.m_Direction}
     public get Venue() { return this.m_Venue }
     public get HoldMonth() { return this.m_HoldMonth }

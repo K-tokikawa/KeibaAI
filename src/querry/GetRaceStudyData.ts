@@ -14,7 +14,6 @@ export default class GetRaceStudyData extends SQLBase<EntRaceStudyData[]>
 select
       HorseID
     , GoalTime
-    , OutValue
     , Direction
     , HoldDay
     , HoldMonth
@@ -76,6 +75,7 @@ from (
     where
         RHI.HorseID is not null
         and RI.Direction <> 3
+        and OutValue = 0
 ) as RHI
 where
     RHI.HorseID between ${this.parameter?.Start} and ${this.parameter?.Finish}

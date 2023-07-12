@@ -12,7 +12,8 @@ export default class GetBloodStudyData_Blood extends SQLBase<EntBloodStudyData_B
     public async Execsql(): Promise<EntBloodStudyData_Blood[]> {
         const sql = `
 select
-        FID
+        HorseID
+      , FID
       , MID
       , FFID
       , FMID
@@ -401,7 +402,8 @@ select
       , MM_FS_ID_87 as MMFSID87
   from (
         select
-          BD.FID
+          HM.ID as HorseID
+        , BD.FID
         , BD.MID
         , BD.FFID
         , BD.FMID
@@ -811,7 +813,7 @@ select
             left join FatherScore as MM_FS
                 on MM_FS.HorseID = MM_Father.ID
         where
-            HM.ID = ${this.parameter?.HorseID}
+            HM.ID in (${this.parameter?.HorseID})
   ) as BD
 `
         return await this.ExecGet(sql)
