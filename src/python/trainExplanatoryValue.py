@@ -25,40 +25,24 @@ def get_gpu_info(nvidia_smi_path='nvidia-smi', keys=DEFAULT_ATTRIBUTES, no_units
     return [ { k: v for k, v in zip(keys, line.split(', ')) } for line in lines ]
 
 def objective(trial):
-    global datas
-    datas = datas.sample(frac=1)
-    row = datas.shape[0]
-    studytrain = round(row * 0.7)
-    studytraindata = datas[0: studytrain]
-    studytrainlabel = studytraindata.iloc[0:,[0]]
-    studytraindata = studytraindata.drop(studytraindata.columns[[0, 0]], axis=1)
-
-    studytestdata = datas[studytrain: row]
-    studytestlabel = studytestdata.iloc[0:,[0]]
-    studytestdata = studytestdata.drop(studytestdata.columns[[0, 0]], axis=1)
-
-    studyxgb_train = xgb.DMatrix(studytraindata, label=studytrainlabel)
-    studyxgb_test = xgb.DMatrix(studytestdata, label=studytestlabel)
-
     params = {
         'eta': trial.suggest_float("eta", 0.01, 1.0, log=False),
         'objective': 'reg:squarederror',
         'eval_metric': 'rmse',
-        'max_depth': trial.suggest_int("max_depth", 3, 7),
+        'max_depth': trial.suggest_int("max_depth", 5, 9),
         'lambda': trial.suggest_int("lambda", 100, 1000),
         'tree_method':'gpu_hist' 
         }
-    evals = [(studyxgb_train, 'train'), (studyxgb_test, 'eval')]
+    evals = [(xgb_train, 'train'), (xgb_test, 'eval')]
     evals_result = {}
     xgb.train(params,
-              studyxgb_train,
+              xgb_train,
               num_boost_round=3000,
               early_stopping_rounds=100,
               verbose_eval=100,
               evals=evals,
               evals_result=evals_result,
               )
-
     result = evals_result['eval']['rmse']
     result = result[len(result)-1]
     return result
@@ -71,19 +55,15 @@ print('Read File')
 files = glob.glob('.\\data\\achievement\\*.csv')
 global datas
 datas = pd.DataFrame()
+count = 0
 for file in files:
-    data = pd.read_csv(file, sep=',', header=None)
+    data_reader = pd.read_csv(file, sep=',', header=None, low_memory=True, chunksize=1000)
+    count += 1
+    print(count)
     if datas.index.size == 0 :
-        datas = data
+        datas = pd.concat((r for r in data_reader), ignore_index=True)
     else :
-        datas = pd.concat([datas, data])
-
-datas = datas.dropna(subset=[0])
-print(datas)
-if (mode == 4):
-    datas = datas.dropna(subset=[1, 2])
-    datas = datas.drop(datas.columns[[1, 2]], axis=1)
-print(datas)
+        datas = pd.concat([datas, pd.concat((r for r in data_reader), ignore_index=True)])
 datas = datas.sample(frac=1)
 row = datas.shape[0]
 train = round(row * 0.7)
@@ -91,14 +71,14 @@ train = round(row * 0.7)
 traindata = datas[0: train]
 trainlabel = traindata.iloc[0:,[0]]
 traindata = traindata.drop(traindata.columns[[0, 0]], axis=1)
+xgb_train = xgb.DMatrix(traindata, label=trainlabel)
+del trainlabel, traindata
 
 testdata = datas[train: row]
 testlabel = testdata.iloc[0:,[0]]
 testdata = testdata.drop(testdata.columns[[0, 0]], axis=1)
-
-xgb_train = xgb.DMatrix(traindata, label=trainlabel)
 xgb_test = xgb.DMatrix(testdata, label=testlabel)
-
+del testdata, datas
 print('Start Study')
 study = optuna.create_study()
 study.optimize(objective, n_trials=300, gc_after_trial = True)

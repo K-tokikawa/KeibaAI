@@ -19,7 +19,7 @@ import ClassAchievementData from "./class/ClassAchievementData"
 import ClassPassageData from "./class/ClassPassageData"
 import GetHorseIDBloodStudyData_Blood from "./querry/GetHorseIDBloodStudyData_Blood"
 
-const mode = 6
+const mode = 5
 main(mode)
 async function main(mode: number) {
     let ID = 0
@@ -209,7 +209,7 @@ function CreateRotationData(value: EntRaceStudyData[]){
 }
 
 function CreateAchievementData(value: EntRaceStudyData[]){
-    const empty = `,,,,,,,,,,,,,`
+    const empty = `,,,,,,,,,`
     const rows: string[] = []
     const dic: {
         [HorseID: number]: {
@@ -268,7 +268,7 @@ function CreateAchievementData(value: EntRaceStudyData[]){
                 if (achievement == null) {
                     str += empty
                 } else {
-                    str += `,${value.GoalTime},${value.Venue},${value.Range},${value.Ground},${value.GroundCondition},${value.Hold},${value.Day},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.JockeyID},${value.before}`
+                    str += `,${achievement.GoalTime},${achievement.Venue},${achievement.Range},${achievement.Ground},${achievement.GroundCondition},${achievement.Weight},${achievement.HorseGender},${achievement.HorseWeight},${achievement.before}`
                 }
             })
             rows.push(str)
