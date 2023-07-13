@@ -120,8 +120,10 @@ async function main(mode: number) {
                     break
                 case 5:
                     sql = new GetRaceStudyData(param)
+                    console.log(Start)
                     value = await sql.Execsql() as EntRaceStudyData[]
                     rows = CreateAchievementData(value)
+
                     filePath = `./data/achievement/${Start}.csv`
                     break
                 case 6:
@@ -183,9 +185,9 @@ function CreateRotationData(value: EntRaceStudyData[]){
             if (row.length > 1) {
                 row.forEach((value: ClassRaceData) => {
                     if (data == ''){
-                        data += `${value.GoalTime},${value.Direction},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.Fluctuation},${value.JockeyID},${value.before}`
+                        data += `${value.GoalTime},${value.Direction},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
                     } else {
-                        data += `,${value.GoalTime},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.Fluctuation},${value.JockeyID},${value.before}`
+                        data += `,${value.GoalTime},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
                     }
                 })
                 const empty = ',,,,,,,,,,,,,,,'
@@ -209,7 +211,6 @@ function CreateRotationData(value: EntRaceStudyData[]){
 }
 
 function CreateAchievementData(value: EntRaceStudyData[]){
-    const empty = `,,,,,,,,,`
     const rows: string[] = []
     const dic: {
         [HorseID: number]: {
@@ -259,16 +260,17 @@ function CreateAchievementData(value: EntRaceStudyData[]){
         })
         Object.keys(entitys).forEach(key => {
             const num = Number(key)
-            const achievements = entitys[num].achievements
             const value = entitys[num].represent
-            let str = `${value.GoalTime},${value.Venue},${value.Range},${value.Ground},${value.GroundCondition},${value.HoldMonth},${value.Hold},${value.Day},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.Fluctuation},${value.JockeyID}`
+            const achievements = entitys[num].achievements
+            let str = `${value.GoalTime},${value.Venue},${value.Range},${value.Ground},${value.HorseAge},${value.GroundCondition},${value.HoldMonth},${value.Hold},${value.Day},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.Fluctuation},${value.JockeyID}`
             Object.keys(achievements).forEach(key => {
                 const id = Number(key)
                 const achievement = achievements[id]
                 if (achievement == null) {
+                    const empty = `,,,,,,,,,,`
                     str += empty
                 } else {
-                    str += `,${achievement.GoalTime},${achievement.Venue},${achievement.Range},${achievement.Ground},${achievement.GroundCondition},${achievement.Weight},${achievement.HorseGender},${achievement.HorseWeight},${achievement.before}`
+                    str += `,${achievement.GoalTime},${achievement.Venue},${achievement.Range},${achievement.Ground},${achievement.GroundCondition},${achievement.Weight},${achievement.HorseGender},${achievement.HorseWeight},${achievement.HorseAge},${achievement.before}`
                 }
             })
             rows.push(str)

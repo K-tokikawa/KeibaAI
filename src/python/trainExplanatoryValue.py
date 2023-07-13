@@ -52,14 +52,12 @@ mode = 4
 print('Start')
 
 print('Read File')
-files = glob.glob('.\\data\\achievement\\*.csv')
-global datas
+files = glob.glob('.\\data\\aptitude\\*.csv')
 datas = pd.DataFrame()
 count = 0
 for file in files:
     data_reader = pd.read_csv(file, sep=',', header=None, low_memory=True, chunksize=1000)
     count += 1
-    print(count)
     if datas.index.size == 0 :
         datas = pd.concat((r for r in data_reader), ignore_index=True)
     else :
@@ -80,8 +78,15 @@ testdata = testdata.drop(testdata.columns[[0, 0]], axis=1)
 xgb_test = xgb.DMatrix(testdata, label=testlabel)
 del testdata, datas
 print('Start Study')
-study = optuna.create_study()
-study.optimize(objective, n_trials=300, gc_after_trial = True)
+DATABASE_URI = 'postgresql://postgres:pegunike39@localhost:5432/keibaai'
+study_name = 'example2_postgress'
+
+study = optuna.create_study(
+    study_name=study_name,
+    storage=DATABASE_URI,
+    load_if_exists=True
+)
+study.optimize(objective, n_trials=10, gc_after_trial = True)
 print('Finish Study')
 trial = study.best_trial
 
@@ -109,7 +114,7 @@ bst = xgb.train(param,
                 evals_result=evals_result,
                 )
 
-bst.save_model('.\\model\\achievement\\model.json')
+bst.save_model('.\\model\\aptitude\\model.json')
 y_pred = bst.predict(xgb_test)
 mse = mean_squared_error(testlabel, y_pred)
 print('Finish Train')

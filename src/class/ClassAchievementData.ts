@@ -6,23 +6,6 @@ export default class ClassachievementData {
     constructor(represent: ClassRaceData) {
         this.m_represent = represent
         this.m_achievements = {}
-        this.constructorachievements()
-    }
-
-    public updateAchievement(data: ClassRaceData) {
-        this.m_achievements[data.ID] = data
-    }
-    public getIDAchievementData(ID: number) {
-        if (this.m_achievements[ID] != undefined) {
-            return this.m_achievements[ID]
-        } else {
-            return null
-        }
-    }
-    public get represent() { return this.m_represent}
-    public get achievements() { return this.m_achievements}
-
-    private constructorachievements(){
         this.m_achievements[ClassachievementData.ID1] = null
         this.m_achievements[ClassachievementData.ID4] = null
         this.m_achievements[ClassachievementData.ID5] = null
@@ -313,293 +296,310 @@ export default class ClassachievementData {
         this.m_achievements[ClassachievementData.ID536] = null
         this.m_achievements[ClassachievementData.ID585] = null
     }
-    private static ID1: number
-    private static ID4: number
-    private static ID5: number
-    private static ID6: number
-    private static ID8: number
-    private static ID12: number
-    private static ID13: number
-    private static ID14: number
-    private static ID15: number
-    private static ID16: number
-    private static ID20: number
-    private static ID21: number
-    private static ID22: number
-    private static ID23: number
-    private static ID24: number
-    private static ID25: number
-    private static ID28: number
-    private static ID32: number
-    private static ID40: number
-    private static ID41: number
-    private static ID42: number
-    private static ID43: number
-    private static ID44: number
-    private static ID48: number
-    private static ID49: number
-    private static ID50: number
-    private static ID51: number
-    private static ID54: number
-    private static ID55: number
-    private static ID56: number
-    private static ID58: number
-    private static ID59: number
-    private static ID61: number
-    private static ID65: number
-    private static ID66: number
-    private static ID67: number
-    private static ID68: number
-    private static ID69: number
-    private static ID70: number
-    private static ID71: number
-    private static ID72: number
-    private static ID73: number
-    private static ID74: number
-    private static ID75: number
-    private static ID77: number
-    private static ID78: number
-    private static ID79: number
-    private static ID80: number
-    private static ID81: number
-    private static ID82: number
-    private static ID83: number
-    private static ID84: number
-    private static ID85: number
-    private static ID86: number
-    private static ID87: number
-    private static ID88: number
-    private static ID89: number
-    private static ID90: number
-    private static ID91: number
-    private static ID92: number
-    private static ID93: number
-    private static ID94: number
-    private static ID95: number
-    private static ID96: number
-    private static ID97: number
-    private static ID98: number
-    private static ID99: number
-    private static ID101: number
-    private static ID102: number
-    private static ID105: number
-    private static ID106: number
-    private static ID107: number
-    private static ID108: number
-    private static ID109: number
-    private static ID110: number
-    private static ID113: number
-    private static ID114: number
-    private static ID115: number
-    private static ID116: number
-    private static ID117: number
-    private static ID118: number
-    private static ID119: number
-    private static ID120: number
-    private static ID121: number
-    private static ID122: number
-    private static ID123: number
-    private static ID125: number
-    private static ID126: number
-    private static ID127: number
-    private static ID129: number
-    private static ID130: number
-    private static ID131: number
-    private static ID132: number
-    private static ID133: number
-    private static ID134: number
-    private static ID135: number
-    private static ID136: number
-    private static ID140: number
-    private static ID141: number
-    private static ID144: number
-    private static ID145: number
-    private static ID146: number
-    private static ID148: number
-    private static ID149: number
-    private static ID150: number
-    private static ID152: number
-    private static ID153: number
-    private static ID154: number
-    private static ID155: number
-    private static ID156: number
-    private static ID157: number
-    private static ID160: number
-    private static ID161: number
-    private static ID162: number
-    private static ID163: number
-    private static ID164: number
-    private static ID167: number
-    private static ID171: number
-    private static ID172: number
-    private static ID173: number
-    private static ID175: number
-    private static ID176: number
-    private static ID177: number
-    private static ID178: number
-    private static ID179: number
-    private static ID180: number
-    private static ID181: number
-    private static ID182: number
-    private static ID183: number
-    private static ID184: number
-    private static ID185: number
-    private static ID186: number
-    private static ID187: number
-    private static ID188: number
-    private static ID191: number
-    private static ID195: number
-    private static ID196: number
-    private static ID197: number
-    private static ID199: number
-    private static ID200: number
-    private static ID201: number
-    private static ID203: number
-    private static ID204: number
-    private static ID205: number
-    private static ID206: number
-    private static ID211: number
-    private static ID212: number
-    private static ID213: number
-    private static ID214: number
-    private static ID215: number
-    private static ID216: number
-    private static ID219: number
-    private static ID220: number
-    private static ID221: number
-    private static ID222: number
-    private static ID223: number
-    private static ID224: number
-    private static ID225: number
-    private static ID227: number
-    private static ID235: number
-    private static ID239: number
-    private static ID240: number
-    private static ID241: number
-    private static ID242: number
-    private static ID243: number
-    private static ID247: number
-    private static ID251: number
-    private static ID255: number
-    private static ID256: number
-    private static ID257: number
-    private static ID258: number
-    private static ID259: number
-    private static ID260: number
-    private static ID262: number
-    private static ID266: number
-    private static ID267: number
-    private static ID268: number
-    private static ID269: number
-    private static ID270: number
-    private static ID271: number
-    private static ID272: number
-    private static ID273: number
-    private static ID274: number
-    private static ID275: number
-    private static ID276: number
-    private static ID278: number
-    private static ID279: number
-    private static ID280: number
-    private static ID281: number
-    private static ID282: number
-    private static ID283: number
-    private static ID284: number
-    private static ID285: number
-    private static ID286: number
-    private static ID287: number
-    private static ID288: number
-    private static ID290: number
-    private static ID291: number
-    private static ID292: number
-    private static ID293: number
-    private static ID294: number
-    private static ID295: number
-    private static ID298: number
-    private static ID299: number
-    private static ID300: number
-    private static ID301: number
-    private static ID302: number
-    private static ID303: number
-    private static ID304: number
-    private static ID306: number
-    private static ID307: number
-    private static ID308: number
-    private static ID309: number
-    private static ID310: number
-    private static ID311: number
-    private static ID314: number
-    private static ID315: number
-    private static ID316: number
-    private static ID317: number
-    private static ID318: number
-    private static ID319: number
-    private static ID320: number
-    private static ID321: number
-    private static ID322: number
-    private static ID326: number
-    private static ID332: number
-    private static ID333: number
-    private static ID339: number
-    private static ID340: number
-    private static ID341: number
-    private static ID343: number
-    private static ID344: number
-    private static ID347: number
-    private static ID348: number
-    private static ID349: number
-    private static ID351: number
-    private static ID352: number
-    private static ID353: number
-    private static ID355: number
-    private static ID356: number
-    private static ID357: number
-    private static ID358: number
-    private static ID359: number
-    private static ID360: number
-    private static ID361: number
-    private static ID363: number
-    private static ID364: number
-    private static ID365: number
-    private static ID367: number
-    private static ID368: number
-    private static ID369: number
-    private static ID371: number
-    private static ID372: number
-    private static ID375: number
-    private static ID376: number
-    private static ID377: number
-    private static ID378: number
-    private static ID379: number
-    private static ID380: number
-    private static ID381: number
-    private static ID382: number
-    private static ID383: number
-    private static ID384: number
-    private static ID391: number
-    private static ID392: number
-    private static ID395: number
-    private static ID402: number
-    private static ID406: number
-    private static ID407: number
-    private static ID410: number
-    private static ID417: number
-    private static ID436: number
-    private static ID440: number
-    private static ID441: number
-    private static ID448: number
-    private static ID452: number
-    private static ID453: number
-    private static ID456: number
-    private static ID472: number
-    private static ID476: number
-    private static ID477: number
-    private static ID483: number
-    private static ID488: number
-    private static ID492: number
-    private static ID495: number
-    private static ID499: number
-    private static ID508: number
-    private static ID536: number
-    private static ID585: number
+
+    public updateAchievement(data: ClassRaceData) {
+        if (this.m_achievements[data.ID] == undefined) {
+            return false
+        }
+        this.m_achievements[data.ID] = data
+    }
+    public getIDAchievementData(ID: number) {
+        if (this.m_achievements[ID] != undefined) {
+            return this.m_achievements[ID]
+        } else {
+            return null
+        }
+    }
+    public get represent() { return this.m_represent}
+    public get achievements() { return this.m_achievements}
+
+    private static ID1: number = 1
+    private static ID4: number = 4
+    private static ID5: number = 5
+    private static ID6: number = 6
+    private static ID8: number = 8
+    private static ID12: number = 12
+    private static ID13: number = 13
+    private static ID14: number = 14
+    private static ID15: number = 15
+    private static ID16: number = 16
+    private static ID20: number = 20
+    private static ID21: number = 21
+    private static ID22: number = 22
+    private static ID23: number = 23
+    private static ID24: number = 24
+    private static ID25: number = 25
+    private static ID28: number = 28
+    private static ID32: number = 32
+    private static ID40: number = 40
+    private static ID41: number = 41
+    private static ID42: number = 42
+    private static ID43: number = 43
+    private static ID44: number = 44
+    private static ID48: number = 48
+    private static ID49: number = 49
+    private static ID50: number = 50
+    private static ID51: number = 51
+    private static ID54: number = 54
+    private static ID55: number = 55
+    private static ID56: number = 56
+    private static ID58: number = 58
+    private static ID59: number = 59
+    private static ID61: number = 61
+    private static ID65: number = 65
+    private static ID66: number = 66
+    private static ID67: number = 67
+    private static ID68: number = 68
+    private static ID69: number = 69
+    private static ID70: number = 70
+    private static ID71: number = 71
+    private static ID72: number = 72
+    private static ID73: number = 73
+    private static ID74: number = 74
+    private static ID75: number = 75
+    private static ID77: number = 77
+    private static ID78: number = 78
+    private static ID79: number = 79
+    private static ID80: number = 80
+    private static ID81: number = 81
+    private static ID82: number = 82
+    private static ID83: number = 83
+    private static ID84: number = 84
+    private static ID85: number = 85
+    private static ID86: number = 86
+    private static ID87: number = 87
+    private static ID88: number = 88
+    private static ID89: number = 89
+    private static ID90: number = 90
+    private static ID91: number = 91
+    private static ID92: number = 92
+    private static ID93: number = 93
+    private static ID94: number = 94
+    private static ID95: number = 95
+    private static ID96: number = 96
+    private static ID97: number = 97
+    private static ID98: number = 98
+    private static ID99: number = 99
+    private static ID101: number = 101
+    private static ID102: number = 102
+    private static ID105: number = 105
+    private static ID106: number = 106
+    private static ID107: number = 107
+    private static ID108: number = 108
+    private static ID109: number = 109
+    private static ID110: number = 110
+    private static ID113: number = 113
+    private static ID114: number = 114
+    private static ID115: number = 115
+    private static ID116: number = 116
+    private static ID117: number = 117
+    private static ID118: number = 118
+    private static ID119: number = 119
+    private static ID120: number = 120
+    private static ID121: number = 121
+    private static ID122: number = 122
+    private static ID123: number = 123
+    private static ID125: number = 125
+    private static ID126: number = 126
+    private static ID127: number = 127
+    private static ID129: number = 129
+    private static ID130: number = 130
+    private static ID131: number = 131
+    private static ID132: number = 132
+    private static ID133: number = 133
+    private static ID134: number = 134
+    private static ID135: number = 135
+    private static ID136: number = 136
+    private static ID140: number = 140
+    private static ID141: number = 141
+    private static ID144: number = 144
+    private static ID145: number = 145
+    private static ID146: number = 146
+    private static ID148: number = 148
+    private static ID149: number = 149
+    private static ID150: number = 150
+    private static ID152: number = 152
+    private static ID153: number = 153
+    private static ID154: number = 154
+    private static ID155: number = 155
+    private static ID156: number = 156
+    private static ID157: number = 157
+    private static ID160: number = 160
+    private static ID161: number = 161
+    private static ID162: number = 162
+    private static ID163: number = 163
+    private static ID164: number = 164
+    private static ID167: number = 167
+    private static ID171: number = 171
+    private static ID172: number = 172
+    private static ID173: number = 173
+    private static ID175: number = 175
+    private static ID176: number = 176
+    private static ID177: number = 177
+    private static ID178: number = 178
+    private static ID179: number = 179
+    private static ID180: number = 180
+    private static ID181: number = 181
+    private static ID182: number = 182
+    private static ID183: number = 183
+    private static ID184: number = 184
+    private static ID185: number = 185
+    private static ID186: number = 186
+    private static ID187: number = 187
+    private static ID188: number = 188
+    private static ID191: number = 191
+    private static ID195: number = 195
+    private static ID196: number = 196
+    private static ID197: number = 197
+    private static ID199: number = 199
+    private static ID200: number = 200
+    private static ID201: number = 201
+    private static ID203: number = 203
+    private static ID204: number = 204
+    private static ID205: number = 205
+    private static ID206: number = 206
+    private static ID211: number = 211
+    private static ID212: number = 212
+    private static ID213: number = 213
+    private static ID214: number = 214
+    private static ID215: number = 215
+    private static ID216: number = 216
+    private static ID219: number = 219
+    private static ID220: number = 220
+    private static ID221: number = 221
+    private static ID222: number = 222
+    private static ID223: number = 223
+    private static ID224: number = 224
+    private static ID225: number = 225
+    private static ID227: number = 227
+    private static ID235: number = 235
+    private static ID239: number = 239
+    private static ID240: number = 240
+    private static ID241: number = 241
+    private static ID242: number = 242
+    private static ID243: number = 243
+    private static ID247: number = 247
+    private static ID251: number = 251
+    private static ID255: number = 255
+    private static ID256: number = 256
+    private static ID257: number = 257
+    private static ID258: number = 258
+    private static ID259: number = 259
+    private static ID260: number = 260
+    private static ID262: number = 262
+    private static ID266: number = 266
+    private static ID267: number = 267
+    private static ID268: number = 268
+    private static ID269: number = 269
+    private static ID270: number = 270
+    private static ID271: number = 271
+    private static ID272: number = 272
+    private static ID273: number = 273
+    private static ID274: number = 274
+    private static ID275: number = 275
+    private static ID276: number = 276
+    private static ID278: number = 278
+    private static ID279: number = 279
+    private static ID280: number = 280
+    private static ID281: number = 281
+    private static ID282: number = 282
+    private static ID283: number = 283
+    private static ID284: number = 284
+    private static ID285: number = 285
+    private static ID286: number = 286
+    private static ID287: number = 287
+    private static ID288: number = 288
+    private static ID290: number = 290
+    private static ID291: number = 291
+    private static ID292: number = 292
+    private static ID293: number = 293
+    private static ID294: number = 294
+    private static ID295: number = 295
+    private static ID298: number = 298
+    private static ID299: number = 299
+    private static ID300: number = 300
+    private static ID301: number = 301
+    private static ID302: number = 302
+    private static ID303: number = 303
+    private static ID304: number = 304
+    private static ID306: number = 306
+    private static ID307: number = 307
+    private static ID308: number = 308
+    private static ID309: number = 309
+    private static ID310: number = 310
+    private static ID311: number = 311
+    private static ID314: number = 314
+    private static ID315: number = 315
+    private static ID316: number = 316
+    private static ID317: number = 317
+    private static ID318: number = 318
+    private static ID319: number = 319
+    private static ID320: number = 320
+    private static ID321: number = 321
+    private static ID322: number = 322
+    private static ID326: number = 326
+    private static ID332: number = 332
+    private static ID333: number = 333
+    private static ID339: number = 339
+    private static ID340: number = 340
+    private static ID341: number = 341
+    private static ID343: number = 343
+    private static ID344: number = 344
+    private static ID347: number = 347
+    private static ID348: number = 348
+    private static ID349: number = 349
+    private static ID351: number = 351
+    private static ID352: number = 352
+    private static ID353: number = 353
+    private static ID355: number = 355
+    private static ID356: number = 356
+    private static ID357: number = 357
+    private static ID358: number = 358
+    private static ID359: number = 359
+    private static ID360: number = 360
+    private static ID361: number = 361
+    private static ID363: number = 363
+    private static ID364: number = 364
+    private static ID365: number = 365
+    private static ID367: number = 367
+    private static ID368: number = 368
+    private static ID369: number = 369
+    private static ID371: number = 371
+    private static ID372: number = 372
+    private static ID375: number = 375
+    private static ID376: number = 376
+    private static ID377: number = 377
+    private static ID378: number = 378
+    private static ID379: number = 379
+    private static ID380: number = 380
+    private static ID381: number = 381
+    private static ID382: number = 382
+    private static ID383: number = 383
+    private static ID384: number = 384
+    private static ID391: number = 391
+    private static ID392: number = 392
+    private static ID395: number = 395
+    private static ID402: number = 402
+    private static ID406: number = 406
+    private static ID407: number = 407
+    private static ID410: number = 410
+    private static ID417: number = 417
+    private static ID436: number = 436
+    private static ID440: number = 440
+    private static ID441: number = 441
+    private static ID448: number = 448
+    private static ID452: number = 452
+    private static ID453: number = 453
+    private static ID456: number = 456
+    private static ID472: number = 472
+    private static ID476: number = 476
+    private static ID477: number = 477
+    private static ID483: number = 483
+    private static ID488: number = 488
+    private static ID492: number = 492
+    private static ID495: number = 495
+    private static ID499: number = 499
+    private static ID508: number = 508
+    private static ID536: number = 536
+    private static ID585: number = 585
 }
