@@ -7,7 +7,7 @@ export default class EntBloodStudyDataBlood {
     public Weight: number
     public Age: number
     public time: number | null
-    public HorseID: number |null
+    public HorseID: number
     public FID: number | null
     public MID: number | null
     public FFID: number | null

@@ -813,7 +813,7 @@ select
             left join FatherScore as MM_FS
                 on MM_FS.HorseID = MM_Father.ID
         where
-            HM.ID in (${this.parameter?.HorseID})
+            HM.ID in (${this.parameter?.IDs})
   ) as BD
 `
         return await this.ExecGet(sql)

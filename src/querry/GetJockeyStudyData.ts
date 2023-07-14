@@ -1,5 +1,5 @@
 import SQLBase from "../SQLBase"
-import EntJockyStudyData from "../entity/EntJockyStudyData"
+import EntJockyStudyData from "../entity/EntJockeyStudyData"
 import PrmStudyData from "../param/PrmStudyData"
 export default class GetJockyStudyData extends SQLBase<EntJockyStudyData[]>
 {
@@ -22,7 +22,7 @@ select
     , HoldMonth
     , Popularity
     , Weather
-    , GateNo
+    , HorseNo
     , Age
     , Weight
     , Hold
@@ -42,7 +42,7 @@ from (
         , RI.HoldMonth
         , RHI.Popularity
         , RI.Weather
-        , RHI.GateNo
+        , RHI.HorseNo
         , RHI.Weight
         , RI.Hold
         , RI.Day

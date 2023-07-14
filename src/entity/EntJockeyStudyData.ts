@@ -1,4 +1,4 @@
-export default class EntJockyStudyData{
+export default class EntJockeyStudyData{
     public Rank : number
     public JockeyID : string
     public HorseGender: number
@@ -9,7 +9,7 @@ export default class EntJockyStudyData{
     public HoldMonth : number
     public Popularity : number
     public Weather : number
-    public GateNo : number
+    public HorseNo: number
     public Age : number
     public Weight : number
     public Round : number
@@ -26,7 +26,7 @@ export default class EntJockyStudyData{
         this.HoldMonth = 0
         this.Popularity = 0
         this.Weather = 0
-        this.GateNo = 0
+        this.HorseNo = 0
         this.Age = 0
         this.Weight = 0
         this.Hold = 0

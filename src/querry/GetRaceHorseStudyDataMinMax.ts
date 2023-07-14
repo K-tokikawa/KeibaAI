@@ -1,6 +1,6 @@
 import SQLBase from "../SQLBase"
 import EntStudyDataMinMax from "../entity/EntStudyDataMinMax"
-export default class GetRaceStudyDataMinMax extends SQLBase<EntStudyDataMinMax[]>
+export default class GetRaceHorseStudyDataMinMax extends SQLBase<EntStudyDataMinMax[]>
 {
 
     constructor() {

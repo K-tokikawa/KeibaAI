@@ -1,4 +1,4 @@
-import ClassRaceData from "./ClassRaceData"
+import ClassRaceData from "./ClassRaceHorseData"
 
 export default class ClassPassageData{
     private m_represent: ClassRaceData

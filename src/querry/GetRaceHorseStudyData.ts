@@ -1,7 +1,7 @@
 import SQLBase from "../SQLBase"
-import EntRaceStudyData from "../entity/EntRaceStudyData"
+import EntRaceHorseStudyData from "../entity/EntRaceHorseStudyData"
 import PrmStudyData from "../param/PrmStudyData"
-export default class GetRaceStudyData extends SQLBase<EntRaceStudyData[]>
+export default class GetRaceHorseStudyData extends SQLBase<EntRaceHorseStudyData[]>
 {
     private parameter: PrmStudyData | null
 
@@ -9,16 +9,18 @@ export default class GetRaceStudyData extends SQLBase<EntRaceStudyData[]>
         super()
         this.parameter = prm
     }
-    public async Execsql(): Promise<EntRaceStudyData[]> {
+    public async Execsql(): Promise<EntRaceHorseStudyData[]> {
         const sql = `
 select
       HorseID
+    , RaceID
     , GoalTime
     , Direction
     , HoldDay
     , HoldMonth
     , Hold
     , Day
+    , Weather
     , ID
     , Venue
     , Range
@@ -28,6 +30,7 @@ select
     , TrainerID
     , HorseGender
     , HorseWeight
+    , HorseNo
     , HorseAge
     , Passage1
     , Passage2
@@ -41,6 +44,7 @@ select
 from (
     select
           RHI.GoalTime
+        , RI.RaceID
         , convert(datetime, convert(nvarchar, RI.Year) + '-' + convert(nvarchar, RI.HoldMonth) + '-' + convert(nvarchar, RI.HoldDay)) as HoldDay
         , RHI.OutValue
         , case when RI.Direction = 3 then null else RI.Direction end as Direction
@@ -57,6 +61,7 @@ from (
         , RHI.TrainerID
         , RHI.HorseGender
         , RHI.HorseWeight
+        , RHI.HorseNo
         , case when RI.Year > 2000 then RHI.HorseAge else RHI.HorseAge - 1 end as HorseAge
         , RHI.Passage1
         , RHI.Passage2
@@ -78,7 +83,7 @@ from (
         and OutValue = 0
 ) as RHI
 where
-    RHI.HorseID between ${this.parameter?.Start} and ${this.parameter?.Finish}
+${this.parameter?.IDs == null ? `RHI.HorseID between ${this.parameter?.Start} and ${this.parameter?.Finish}`: `RHI.HorseID in (${this.parameter?.IDs})`}
 order by
     RHI.HorseID
 `
