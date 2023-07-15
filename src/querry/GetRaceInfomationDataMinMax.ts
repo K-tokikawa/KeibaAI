@@ -11,7 +11,7 @@ export default class GetRaceInfomationMinMax extends SQLBase<EntStudyDataMinMax[
 select
     min(RI.ID) as min
     , max(RI.ID) as max
-from RaceHorseInfomation as RHI
+from RaceInfomation as RI
 where
     RI.Direction <> 3
 `

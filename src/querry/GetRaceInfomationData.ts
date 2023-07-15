@@ -34,7 +34,7 @@ from RaceInfomation as RI
     ) as RHI
         on RHI.RaceID = RI.ID
 where
-    RI.ID in (${this.parameter?.IDs})`
+    RI.ID between ${this.parameter?.Start} and ${this.parameter?.Finish}`
         return await this.ExecGet(sql)
     }
 }

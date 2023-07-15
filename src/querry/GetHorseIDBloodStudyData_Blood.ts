@@ -1,7 +1,7 @@
 import SQLBase from "../SQLBase"
 import PrmStudyData from "../param/PrmStudyData"
 import EntBloodStudyData_Blood from "../entity/EntBloodStudyData_Blood"
-export default class GetBloodStudyData_Blood extends SQLBase<EntBloodStudyData_Blood[]>
+export default class GetHorseIDBloodStudyData_Blood extends SQLBase<EntBloodStudyData_Blood[]>
 {
     private parameter: PrmStudyData | null
 

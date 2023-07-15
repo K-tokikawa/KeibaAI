@@ -48,11 +48,13 @@ def objective(trial):
     return result
 
 
-mode = 4
 print('Start')
 
 print('Read File')
-files = glob.glob('.\\data\\aptitude\\*.csv')
+mode = 'achievement'
+trial = 30
+files = glob.glob(f'.\\data\\{mode}\\*.csv')
+
 datas = pd.DataFrame()
 count = 0
 for file in files:
@@ -79,14 +81,14 @@ xgb_test = xgb.DMatrix(testdata, label=testlabel)
 del testdata, datas
 print('Start Study')
 DATABASE_URI = 'postgresql://postgres:pegunike39@localhost:5432/keibaai'
-study_name = 'example2_postgress'
+study_name = mode
 
 study = optuna.create_study(
     study_name=study_name,
     storage=DATABASE_URI,
     load_if_exists=True
 )
-study.optimize(objective, n_trials=10, gc_after_trial = True)
+study.optimize(objective, n_trials=trial, gc_after_trial = True)
 print('Finish Study')
 trial = study.best_trial
 
@@ -96,9 +98,6 @@ param = {
     'tree_method':'gpu_hist' 
 }
 
-# param["eta"] = 0.12446843751961466
-# param["max_depth"] = 9
-# param["lambda"] = 865
 param["max_depth"] = trial.params["max_depth"]
 param["eta"] = trial.params["eta"]
 param["lambda"] = trial.params["lambda"]
@@ -114,7 +113,7 @@ bst = xgb.train(param,
                 evals_result=evals_result,
                 )
 
-bst.save_model('.\\model\\aptitude\\model.json')
+bst.save_model(f'.\\model\\{mode}\\model.json')
 y_pred = bst.predict(xgb_test)
 mse = mean_squared_error(testlabel, y_pred)
 print('Finish Train')
