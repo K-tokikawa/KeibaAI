@@ -51,7 +51,7 @@ def objective(trial):
 print('Start')
 
 print('Read File')
-mode = 'achievement'
+mode = 'blood'
 trial = 30
 files = glob.glob(f'.\\data\\{mode}\\*.csv')
 

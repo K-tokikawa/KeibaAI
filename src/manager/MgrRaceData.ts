@@ -285,7 +285,7 @@ export default class MgrRaceData{
                         const empty = `,,,,,,,,,,,`
                         str += empty
                     } else {
-                        str += `,${achievement.GoalTime},${achievement.Venue},${achievement.Range},${achievement.Ground},${achievement.GroundCondition},${achievement.Weather},${achievement.Weight},${achievement.HorseGender},${achievement.HorseWeight},${achievement.HorseNo},${achievement.HorseAge},${achievement.before}`
+                        str += `,${achievement.GoalTime},${achievement.Weather},${achievement.Weight},${achievement.HorseGender},${achievement.HorseAge},${achievement.before}`
                     }
                 })
                 rows.push(str)
