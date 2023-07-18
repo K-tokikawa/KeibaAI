@@ -30,12 +30,12 @@ select
     , Round
 from (
     select
-        ROW_NUMBER()over(order by JockeyID) as ID
+        ROW_NUMBER()over(order by JM.JockeyID) as ID
         , RHI.Rank
-        , RHI.JockeyID
+        , JM.ID as JockeyID
         , RHI.HorseGender
         , case when RI.Year > 2000 then RHI.HorseAge else RHI.HorseAge - 1 end as Age
-        , RI.Venue
+        , convert(int, RI.Venue) as Venue
         , RI.[Range]
         , RI.Ground
         , RI.GroundCondition
@@ -50,6 +50,8 @@ from (
     from RaceHorseInfomation as RHI
         left outer join RaceInfomation as RI
             on RI.ID = RHI.RaceID
+        left outer join JockeyMaster as JM
+            on JM.JockeyID = RHI.JockeyID
     where
             RHI.OutValue = 0
         and RI.Direction <> 3
@@ -66,11 +68,12 @@ from (
                     from RaceInfomation
                 )
             group by
-                RHI.JockeyID
+            RHI.JockeyID
         )
 ) as RHI
 where
     RHI.Rank is not null
+    and RHI.JockeyID = 5339
     and RHI.ID between ${this.parameter?.Start} and ${this.parameter?.Finish}
 `
         return await this.ExecGet(sql)

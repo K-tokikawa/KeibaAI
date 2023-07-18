@@ -154,7 +154,7 @@ export default class MgrRaceData{
                             const id = Number(key)
                             const achievement = achievements[id]
                             if (achievement == null) {
-                                const empty = `,,,,,,,,,,,`
+                                const empty = `,,,,,,,,,,,,`
                                 strAchievement += empty
                             } else {
                                 strAchievement += `,${achievement.GoalTime},${achievement.Venue},${achievement.Range},${achievement.Ground},${achievement.GroundCondition},${achievement.Weather},${achievement.Weight},${achievement.HorseGender},${achievement.HorseWeight},${achievement.HorseNo},${achievement.HorseAge},${achievement.before}`
@@ -273,6 +273,7 @@ export default class MgrRaceData{
                     }
                 })
             })
+            const empty = `,,,,,,,,,,,,`
             Object.keys(entitys).forEach(key => {
                 const num = Number(key)
                 const value = entitys[num].represent
@@ -282,10 +283,9 @@ export default class MgrRaceData{
                     const id = Number(key)
                     const achievement = achievements[id]
                     if (achievement == null) {
-                        const empty = `,,,,,,,,,,,`
-                        str += empty
+                        str = str + empty
                     } else {
-                        str += `,${achievement.GoalTime},${achievement.Weather},${achievement.Weight},${achievement.HorseGender},${achievement.HorseAge},${achievement.before}`
+                        str = str + `,${achievement.GoalTime},${achievement.Venue},${achievement.Range},${achievement.Ground},${achievement.GroundCondition},${achievement.Weather},${achievement.Weight},${achievement.HorseGender},${achievement.HorseWeight},${achievement.HorseNo},${achievement.HorseAge},${achievement.before}`
                     }
                 })
                 rows.push(str)

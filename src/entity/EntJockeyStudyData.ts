@@ -1,6 +1,6 @@
 export default class EntJockeyStudyData{
     public Rank : number
-    public JockeyID : string
+    public JockeyID : number
     public HorseGender: number
     public Venue : string
     public Range : number
@@ -17,7 +17,7 @@ export default class EntJockeyStudyData{
     public Hold : number
     constructor(){
         this.Rank = 0
-        this.JockeyID = ''
+        this.JockeyID = 0
         this.HorseGender = 0
         this.Venue = ''
         this.Range = 0

@@ -14,8 +14,10 @@ export default class GetRaceHorseJockeyIDsData extends SQLBase<EntRaceHorseInfom
 select
       RaceID
     , HorseID
-    , JockeyID
+    , JM.ID as JockeyID
 from RaceHorseInfomation as RHI
+    left outer jon JockeyMaster as JM
+        on JM.JockeyID = RHI.JockeyID
 where
     RHI.ID in (${this.parameter?.IDs})`
         return await this.ExecGet(sql)

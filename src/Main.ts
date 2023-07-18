@@ -21,6 +21,7 @@ import GetRaceHorseJockeyIDsData from "./querry/GetRaceHorseJockeyIDsData"
 import EntRaceHorseJockeyIDsDat from "./entity/EntRaceHorseJockeyIDsData"
 import MgrRaceData from "./manager/MgrRaceData"
 import GetHorseIDBloodStudyData_Blood from "./querry/GetHorseIDBloodStudyData_Blood"
+import { PythonShell } from "python-shell";
 
 const blood_prt = 1
 const Jockey = 2
@@ -29,7 +30,7 @@ const Rotation = 4
 const Achievement = 5
 const Aptitude = 6
 const nural = 7
-main(blood)
+main(Achievement)
 
 async function main(mode: number) {
     let ID = 0
@@ -89,7 +90,7 @@ async function main(mode: number) {
     let count = 0
     do {
         let bolstart = false
-        bolstart = count >= 29
+        bolstart = count >= 0
         if (bolstart) {
 
             let Start = count == 0 ? 1 : + valuenum * count + 1
@@ -196,4 +197,9 @@ async function CreateRacePredictData(value: EntRaceInfomationData[]) {
     const RaceDatas = await RaceDatapsql.Execsql() as EntRaceHorseStudyData[]
     const mgr = new MgrRaceData(RaceDatas)
     mgr.dicCreate(bloodvalue)
+    const shell = new PythonShell('./src/python/test.py')
+
+    shell.on('message', function(message){
+    console.log(message)
+})
 }

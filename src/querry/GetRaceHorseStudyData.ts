@@ -69,7 +69,7 @@ from (
         , RHI.Passage4
         , RHI.SpurtTime
         , convert(int, RHI.Fluctuation) as Fluctuation
-        , RHI.JockeyID
+        , JM.ID as JockeyID
         , RHI.HorseID
         , ROW_NUMBER()over(partition by RHI.HorseID order by convert(datetime, convert(nvarchar, RI.Year) + '-' + convert(nvarchar, RI.HoldMonth) + '-' + convert(nvarchar, RI.HoldDay)) desc) as num
     from RaceHorseInfomation as RHI
@@ -77,6 +77,8 @@ from (
             on RI.ID = RHI.RaceID
         left outer join RaceMaster as RM
             on RM.ID = RI.RaceMasterID
+        left outer join JockeyMaster as JM
+            on JM.JockeyID = RHI.JockeyID
     where
         RHI.HorseID is not null
         and RI.Direction <> 3
