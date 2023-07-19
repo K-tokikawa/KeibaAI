@@ -26,8 +26,11 @@ select
     , Range
     , Ground
     , GroundCondition
+    , Round
     , Weight
     , TrainerID
+    , Age
+    , Popularity
     , HorseGender
     , HorseWeight
     , HorseNo
@@ -57,8 +60,11 @@ from (
         , RI.Venue
         , RI.Ground
         , RI.GroundCondition
+        , RI.Round
         , RHI.Weight
         , RHI.TrainerID
+        , RHI.HorseAge as Age
+        , RHI.Popularity
         , RHI.HorseGender
         , RHI.HorseWeight
         , RHI.HorseNo

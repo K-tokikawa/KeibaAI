@@ -13,8 +13,11 @@ export default class EntRaceHorseStudyData{
     public Range: number
     public Ground: number | null
     public GroundCondition: number
+    public Round: number
     public Weight: number
     public TrainerID: string
+    public Age: number
+    public Popularity: number
     public HorseGender: number
     public HorseWeight: number
     public HorseNo: number
@@ -43,8 +46,11 @@ export default class EntRaceHorseStudyData{
         this.Range = 0
         this.Ground = 0
         this.GroundCondition = 0
+        this.Round = 0
         this.Weight = 0
         this.TrainerID = ''
+        this.Age = 0
+        this.Popularity = 0
         this.HorseGender = 0
         this.HorseWeight = 0
         this.HorseNo = 0
