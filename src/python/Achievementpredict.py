@@ -4,7 +4,7 @@ from sklearn.metrics import mean_squared_error
 import numpy as np
 
 model = xgb.Booster()
-model.load_model('.\\model\\Blood\\model.json')
+model.load_model('.\\model\\achievement\\model.json')
 data = input()
 data = data.split(',')
 datas = []

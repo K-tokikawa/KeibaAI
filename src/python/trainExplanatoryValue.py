@@ -8,6 +8,9 @@ import subprocess
 from matplotlib import pyplot as plt
 from sklearn.metrics import mean_squared_error
 
+mode = 'achievement'
+trial = 30
+
 DEFAULT_ATTRIBUTES = (
     'index',
     'uuid',
@@ -51,8 +54,7 @@ def objective(trial):
 print('Start')
 
 print('Read File')
-mode = 'blood'
-trial = 30
+
 files = glob.glob(f'.\\data\\{mode}\\*.csv')
 
 datas = pd.DataFrame()
