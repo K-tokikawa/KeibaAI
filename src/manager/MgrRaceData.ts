@@ -6,16 +6,14 @@ import GetHorseIDBloodStudyData_Blood from "../querry/GetHorseIDBloodStudyData_B
 import PrmStudyData from "../param/PrmStudyData";
 import ClassAchievementData from "../class/ClassAchievementData";
 import { PythonShell } from "python-shell";
+import ClassHorseData from "../class/ClassHorseData";
+import { resolve } from "path";
 
 export default class MgrRaceData{
     private m_RaceData: EntRaceHorseStudyData[]
     private m_dic: {
-        [RaceID: number]:{
-            [HorseID: number]: {
-                JockeyData:number
-                , BloodData: number
-                , [num: number]: {PassageData: number, AchievementData: number, RotationData: number}
-            }
+        [HorseID: number]: {
+            data: ClassHorseData
         }
     }
 
@@ -24,103 +22,81 @@ export default class MgrRaceData{
         this.m_dic = {}
     }
 
-    public GetPassageData(RaceID: number, HorseID: number, num: number) {return this.m_dic[RaceID][HorseID][num].PassageData}
-    public GetRotationData(RaceID: number, HorseID: number, num: number) {return this.m_dic[RaceID][HorseID][num].RotationData}
-    public GetAchievementData(RaceID: number, HorseID: number, num: number) {return this.m_dic[RaceID][HorseID][num].AchievementData}
+    public get dic(){return this.m_dic}
 
     async dicCreate(valueblood: {[ID: number]: string}){
-        const m_dic = this.m_dic
-        const dic: {
-            [RaceID:number]:{
-                [HorseID: number]: {
-                    JockeyData:number
-                    , BloodData: number
-                    , [num: number]: {PassageData: ClassPassageData, AchievementData: ClassAchievementData, RotationData: ClassRaceHorseData[]}
+        return new Promise (async (resolve) => {
+            
+            const dic = this.m_dic
+            let Jockey: number | null = null
+            let Blood: number | null = null
+            let Achievement: number | null = null
+            let Aptitude: number | null = null
+            let Rotation: number | null = null
+            for(const row of this.m_RaceData) {
+                const data = new ClassRaceHorseData(
+                    row,
+                    0
+                )
+                const Rank = row.Rank
+                const RaceID = row.RaceID
+                const HorseID = row.HorseID
+                const num = row.num
+    
+                // Jockey
+                const dicHorse = dic[HorseID]
+                if (dicHorse == undefined) {
+                    const JockeyData = `Jockey,0,${row.JockeyID},${row.HorseGender},${row.Venue},${row.Range},${row.Ground},${row.GroundCondition},${row.HorseNo},${row.Age},${row.HoldMonth},${row.Weather},${row.Popularity},${row.Weight},${row.Hold},${row.Day},${row.Round}`
+                    Jockey = await Predict(JockeyData)
+                    // Blood
+                    const blood = valueblood[HorseID]
+                    const BloodData = `blood,0,${row.Range},${row.Venue},${row.Ground},${row.GroundCondition},${row.HorseGender},${row.Weight},${row.Age},${blood}`
+                    Blood = await Predict(BloodData)
+                    dic[HorseID] = {data: new ClassHorseData(0, 0, RaceID, Rank, Blood, Jockey)}
+                }
+                const horseData = dic[HorseID].data
+                const PassageData = new ClassPassageData(data)
+                const AchievementData = new ClassAchievementData(data)
+                horseData.setHorseData(num, PassageData, AchievementData, [])
+                horseData.HorseData[num].RotationData.push(data)
+    
+                if (num - 1 > 0) {
+                    horseData.HorseData[num - 1].RotationData.push(data)
+                }
+                if (num - 2 > 0) {
+                    horseData.HorseData[num - 2].RotationData.push(data)
+                }
+                if (num - 3 > 0) {
+                    horseData.HorseData[num - 3].RotationData.push(data)
+                }
+                if (num - 4 > 0) {
+                    horseData.HorseData[num - 4].RotationData.push(data)
+                }
+                if (num - 5 > 0) {
+                    horseData.HorseData[num - 5].RotationData.push(data)
                 }
             }
-        } = {}
-        this.m_RaceData.forEach((row: EntRaceHorseStudyData) => {
-            const data = new ClassRaceHorseData(
-                row,
-                0
-            )
-            const RaceID = row.RaceID
-            const HorseID = row.HorseID
-            const num = row.num
-
-            if (dic[RaceID] == undefined) {
-                dic[RaceID] ={}
-            }
-            const dicHorse = dic[RaceID]
-            if (dicHorse[HorseID] == undefined) {
-                m_dic[RaceID][HorseID] = {JockeyData: Number(), BloodData: Number()}
-                dicHorse[HorseID] = {JockeyData: Number(), BloodData: Number()}
-            }
-            // Jockey
-            const JockeyData = `${row.JockeyID},${row.HorseGender},${row.Venue},${row.Range},${row.Ground},${row.GroundCondition},${row.HorseNo},${row.Age},${row.HoldMonth},${row.Weather},${row.Popularity},${row.Weight},${row.Hold},${row.Day},${row.Round}`
-            const Jockeyshell = new PythonShell('./src/python/Jockeypredict.py')
-            const Jockeyshelldatarow = JockeyData.split(',')
-            const Jockeyshelldatas = Jockeyshelldatarow.map(x => {return x == null ? 'None': x})
-            Jockeyshell.send(`${Jockeyshelldatas}`)
-            Jockeyshell.on('message', function(message){
-                const data = Number(message[0])
-                m_dic[RaceID][HorseID].JockeyData = data
-            })
-            // Blood
-            const blood = valueblood[HorseID]
-            const BloodData = `0,${row.Range},${row.Venue},${row.Ground},${row.GroundCondition},${row.HorseGender},${row.Weight},${row.Age},${blood}`
-            const shell = new PythonShell('./src/python/Bloodpredict.py')
-            const datarow = BloodData.split(',')
-            const datas = datarow.map(x => {return x == null ? 'None': x})
-            shell.send(`${datas}`)
-            shell.on('message', function(message){
-                const data = Number(message[0])
-                m_dic[RaceID][HorseID].BloodData = data
-            })
-
-            m_dic[RaceID][HorseID][num] = {PassageData: Number(), AchievementData: Number(), RotationData: Number()}
-            const PassageData = new ClassPassageData(data)
-            const AchievementData = new ClassAchievementData(data)
-            dicHorse[HorseID][num] = {PassageData: PassageData, AchievementData: AchievementData,RotationData: []}
-            dicHorse[HorseID][num].RotationData.push(data)
-            if (num - 1 > 0) {
-                dicHorse[HorseID][num - 1].RotationData.push(data)
-            }
-            if (num - 2 > 0) {
-                dicHorse[HorseID][num - 2].RotationData.push(data)
-            }
-            if (num - 3 > 0) {
-                dicHorse[HorseID][num - 3].RotationData.push(data)
-            }
-            if (num - 4 > 0) {
-                dicHorse[HorseID][num - 4].RotationData.push(data)
-            }
-            if (num - 5 > 0) {
-                dicHorse[HorseID][num - 5].RotationData.push(data)
-            }
-        })
-        Object.keys(dic).forEach((keyRaceID) => {
-            const RaceID = Number(keyRaceID)
-            const dicHorse = dic[RaceID]
-            Object.keys(dicHorse).forEach(keyHorseID => {
+            console.log('----------------------------------')
+            for (const keyHorseID of Object.keys(dic)){
                 const HorseID = Number(keyHorseID)
+                const horseData = dic[HorseID].data
                 const blood = valueblood[HorseID]
-                const entitys: {[num: number]: {PassageData: ClassPassageData, AchievementData: ClassAchievementData, RotationData: ClassRaceHorseData[]}} = dicHorse[HorseID]
-                Object.keys(entitys).forEach(keynum => {
+                const entitys: {[num: number]: {PassageData: ClassPassageData, AchievementData: ClassAchievementData, RotationData: ClassRaceHorseData[]}} = horseData.HorseData
+                for (const keynum of Object.keys(entitys)){
                     const num = Number(keynum)
                     const Passageentity = entitys[num].PassageData
                     const Achievemententity = entitys[num].AchievementData
-                    const RaceHorseData = dicHorse[HorseID][num].RotationData
+                    const RaceHorseData = entitys[num].RotationData
                     // Rotation
                     let data = ''
                     if (RaceHorseData.length > 1) {
-                        RaceHorseData.forEach((value: ClassRaceHorseData) => {
+                        for (const value of RaceHorseData){
                             if (data == ''){
                                 data += `${value.Direction},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
                             } else {
                                 data += `,${value.GoalTime},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
                             }
-                        })
+                        }
                         const empty = ',null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null'
                         if (RaceHorseData.length == 2){
                             data = data + empty + empty + empty + empty
@@ -134,21 +110,18 @@ export default class MgrRaceData{
                         if (RaceHorseData.length == 5){
                             data = data + empty
                         }
-                        const shell = new PythonShell('./src/python/Rotation.py')
-                        const datarow = data.split(',')
-                        const datas = datarow.map(x => {return x == null ? 'None': x})
-                        shell.send(`${datas}`)
-                        shell.on('message', function(message){
-                            const data = Number(message[0])
-                            m_dic[RaceID][HorseID][num].RotationData = data
-                        })
+                        data = 'rotation,0,' + data
                     }
-    
+                    // console.log('rotation')
+                    Rotation = await Predict(data)
+                    // console.log(Rotation)
+                    // console.log('----------------------------------')
+
                     // aptitude
                     const represent = Passageentity.represent
-                    let strPassage = `${represent.Venue},${represent.Range},${represent.Weather}.${represent.Ground},${represent.GroundCondition},${represent.HoldMonth},${represent.Hold},${represent.HorseNo},${represent.Day},${represent.Weight},${represent.TrainerID},${represent.HorseGender},${represent.HorseWeight},${represent.Fluctuation},${represent.JockeyID},${represent.HorseAge}`
+                    let strPassage = `${represent.Venue},${represent.Range},${represent.Weather}.${represent.Ground},${represent.GroundCondition},${represent.HoldMonth},${represent.Hold},${represent.HorseNo},${represent.Day},${represent.Weight},${represent.TrainerID},${represent.HorseGender},${represent.HorseWeight},${represent.Fluctuation},${represent.JockeyID},${represent.HorseAge},`
                     strPassage += blood
-                    this.m_RaceData.forEach((row: EntRaceHorseStudyData) => {
+                    for (const row of this.m_RaceData) {
                         // Passage
                         if (row.HorseID == HorseID) {
                             if (row.HoldDay.getTime() < Passageentity.represent.HoldDay.getTime()){
@@ -158,17 +131,6 @@ export default class MgrRaceData{
                                 Passageentity.addPassage4(row.Passage4)
                             }
                         }
-                        strPassage += `,${Passageentity.AveragePassage1},${Passageentity.AveragePassage2},${Passageentity.AveragePassage3},${Passageentity.AveragePassage4}`
-                        const shell = new PythonShell('./src/python/Aptitude.py')
-                        const datarow = strPassage.split(',')
-                        const datas = datarow.map(x => {return x == null ? 'None': x})
-                        shell.send(`${datas}`)
-                        shell.on('message', function(message){
-                            const data = Number(message[0])
-                            m_dic[RaceID][HorseID][num].PassageData = data
-                        })
-
-                        // Acievement
                         if (row.HorseID == HorseID) {
                             if (row.HoldDay.getTime() < Achievemententity.represent.HoldDay.getTime()){
                                 const before = row.before == null ? 0 :(row.HoldDay.getTime() - Achievemententity.represent.HoldDay.getTime()) / 86400000
@@ -186,33 +148,37 @@ export default class MgrRaceData{
                                 }
                             }
                         }
-                    })
-                    Object.keys(entitys).forEach(key => {
-                        const num = Number(key)
-                        const value = entitys[num].AchievementData.represent
-                        const achievements = entitys[num].AchievementData.achievements
-                        let strAchievement = `${value.Venue},${value.Range},${value.Ground},${value.HorseAge},${value.GroundCondition},${value.HoldMonth},${value.Hold},${value.Day},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.Fluctuation},${value.JockeyID}`
-                        Object.keys(achievements).forEach(key => {
-                            const id = Number(key)
-                            const achievement = achievements[id]
-                            if (achievement == null) {
-                                const empty = `,null,null,null,null,null,null,null,null`
-                                strAchievement += empty
-                            } else {
-                                strAchievement += `,${achievement.GoalTime},${achievement.Weather},${achievement.Weight},${achievement.HorseGender},${achievement.HorseWeight},${achievement.HorseNo},${achievement.HorseAge},${achievement.before}`
-                            }
-                        })
-                        const shell = new PythonShell('./src/python/Achievement.py')
-                        const datarow = strAchievement.split(',')
-                        const datas = datarow.map(x => {return x == null ? 'None': x})
-                        shell.send(`${datas}`)
-                        shell.on('message', function(message){
-                            const data = Number(message[0])
-                            m_dic[RaceID][HorseID][num].AchievementData = data
-                        })
-                    })
-                })
-            })
+                    }
+                    strPassage += `,${Passageentity.AveragePassage1},${Passageentity.AveragePassage2},${Passageentity.AveragePassage3},${Passageentity.AveragePassage4}`
+                    // console.log('aptitude')
+                    strPassage = 'aptitude,0,' + strPassage
+                    Aptitude = await Predict(strPassage)
+                    // console.log(Aptitude)
+                    // console.log('----------------------------------')
+                    // Acievement
+
+                    const value = entitys[num].AchievementData.represent
+                    const achievements = entitys[num].AchievementData.achievements
+                    let strAchievement = `${value.Venue},${value.Range},${value.Ground},${value.HorseAge},${value.GroundCondition},${value.HoldMonth},${value.Hold},${value.Day},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.Fluctuation},${value.JockeyID}`
+                    for (const key of Object.keys(achievements)){
+                        const id = Number(key)
+                        const achievement = achievements[id]
+                        if (achievement == null) {
+                            const empty = `,null,null,null,null,null,null,null,null`
+                            strAchievement += empty
+                        } else {
+                            strAchievement += `,${achievement.GoalTime},${achievement.Weather},${achievement.Weight},${achievement.HorseGender},${achievement.HorseWeight},${achievement.HorseNo},${achievement.HorseAge},${achievement.before}`
+                        }
+                    }
+                    strAchievement = 'achievement,0,' + strAchievement
+                    // console.log('achievement')
+                    Achievement = await Predict(strAchievement)
+                    // console.log(Achievement)
+                    // console.log('----------------------------------')
+                    horseData.setHorsePredict(num, Aptitude, Achievement, Rotation)
+                }
+            }
+            resolve(true)
         })
     }
 
@@ -228,7 +194,6 @@ export default class MgrRaceData{
                 row,
                 0
             )
-            const ID = row.ID
             const HorseID = row.HorseID
             const num = row.num
             if (dic[HorseID] == undefined) {
@@ -414,4 +379,18 @@ export default class MgrRaceData{
         })
         return rows
     }
+}
+async function Predict(data: string): Promise<number | null>{
+    return new Promise((resolve, reject) => {
+        const shell = new PythonShell('./src/python/predict.py')
+        const datarow = data.split(',')
+        const datas = datarow.map(x => {return x == 'null' ? 'None': x})
+        shell.send(`${datas}`)
+        let result: number| null = null
+        shell.on('message', async function(message){
+            result = Number(message.replace('[', '').replace(']', ''))
+            resolve(result)
+        })
+    })
+
 }

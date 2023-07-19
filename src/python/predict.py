@@ -7,14 +7,17 @@ model = xgb.Booster()
 data = input()
 data = data.split(',')
 mode = data[0]
-model.load_model(f'.\\model\\{mode}\\model.json')
-
+path = f'.\\model\\{mode}\\model.json'
+model.load_model(path)
 datas = []
 for d in data:
     if (d == 'None'):
         datas.append(None)
     else:
-        datas.append(float(d))
+        try:
+            datas.append(float(d))
+        except ValueError:
+            path
 data = pd.DataFrame([pd.Series(data=datas)])
 data = data.drop(data.columns[[0, 0]], axis=1)
 xgb_test = xgb.DMatrix(data)

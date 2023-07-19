@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 from sklearn.metrics import mean_squared_error
 
 mode = 'achievement'
-trial = 30
+trial = 1
 
 DEFAULT_ATTRIBUTES = (
     'index',
@@ -82,13 +82,13 @@ testdata = testdata.drop(testdata.columns[[0, 0]], axis=1)
 xgb_test = xgb.DMatrix(testdata, label=testlabel)
 del testdata, datas
 print('Start Study')
-DATABASE_URI = 'postgresql://postgres:pegunike39@localhost:5432/keibaai'
-study_name = mode
+# DATABASE_URI = 'postgresql://postgres:pegunike39@localhost:5432/keibaai'
+# study_name = mode
 
 study = optuna.create_study(
-    study_name=study_name,
-    storage=DATABASE_URI,
-    load_if_exists=True
+    # study_name=study_name,
+    # storage=DATABASE_URI,
+    # load_if_exists=True
 )
 study.optimize(objective, n_trials=trial, gc_after_trial = True)
 print('Finish Study')

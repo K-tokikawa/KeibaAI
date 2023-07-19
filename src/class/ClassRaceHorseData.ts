@@ -9,6 +9,7 @@ export default class ClassRaceHorseData{
     private m_Day: number
     private m_Weather: number
     private m_ID: number
+    private m_Rank: number
     private m_Range: number
     private m_Ground: number | null
     private m_GroundCondition: number
@@ -35,6 +36,7 @@ export default class ClassRaceHorseData{
         this.m_Hold = row.Hold
         this.m_Day = row.Day
         this.m_ID = row.ID
+        this.m_Rank = row.Rank
         this.m_Weather = row.Weather
         this.m_Range = row.Range
         this.m_Ground = row.Ground
@@ -63,6 +65,7 @@ export default class ClassRaceHorseData{
     public get Day() { return this.m_Day }
     public get Weather() { return this.m_Weather}
     public get ID() { return this.m_ID }
+    public get Rank() {return this.m_Rank}
     public get Range() { return this.m_Range }
     public get Ground() { return this.m_Ground }
     public get GroundCondition() { return this.m_GroundCondition }

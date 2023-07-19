@@ -22,6 +22,7 @@ select
     , Day
     , Weather
     , ID
+    , Rank
     , Venue
     , Range
     , Ground
@@ -56,13 +57,14 @@ from (
         , RI.Day
         , RI.Weather
         , RM.ID
+        , RHI.Rank
         , RI.Range
-        , RI.Venue
+        , convert(int, RI.Venue) as Venue
         , RI.Ground
         , RI.GroundCondition
         , RI.Round
         , RHI.Weight
-        , RHI.TrainerID
+        , convert(int, RHI.TrainerID) as TrainerID
         , RHI.HorseAge as Age
         , RHI.Popularity
         , RHI.HorseGender

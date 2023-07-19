@@ -21,6 +21,7 @@ import GetRaceHorseJockeyIDsData from "./querry/GetRaceHorseJockeyIDsData"
 import EntRaceHorseJockeyIDsDat from "./entity/EntRaceHorseJockeyIDsData"
 import MgrRaceData from "./manager/MgrRaceData"
 import GetHorseIDBloodStudyData_Blood from "./querry/GetHorseIDBloodStudyData_Blood"
+import { resolve } from "path"
 
 const blood_prt = 1
 const Jockey = 2
@@ -29,12 +30,12 @@ const Rotation = 4
 const Achievement = 5
 const Aptitude = 6
 const nural = 7
-main(Achievement)
+main(nural)
 
 async function main(mode: number) {
     let ID = 0
     ID++
-    const valuenum = 10000
+    const valuenum = 1
     let Count: EntStudyDataCount[] = []
     let minmax: EntStudyDataMinMax[] = []
     let sql: GetBloodStudyDataCount | GetJockeyStudyDataCount | GetBloodStudyDataCount_Blood | GetRaceHorseStudyDataMinMax | GetRaceInfomationMinMax
@@ -154,8 +155,9 @@ async function main(mode: number) {
                     break
                 case 7:
                     sql = new GetRaceInfomationData(param)
+                    console.log(count)
                     value = await sql.Execsql() as EntRaceInfomationData[]
-                    CreateRacePredictData(value)
+                    await CreateRacePredictData(value)
                     break
             }
             await FileUtil.ContinueOutputFile(filePath, rows)
@@ -195,5 +197,5 @@ async function CreateRacePredictData(value: EntRaceInfomationData[]) {
     const RaceDatapsql = new GetRaceHorseStudyData(RaceDataparam)
     const RaceDatas = await RaceDatapsql.Execsql() as EntRaceHorseStudyData[]
     const mgr = new MgrRaceData(RaceDatas)
-    mgr.dicCreate(blooddata)
+    await mgr.dicCreate(blooddata)
 }

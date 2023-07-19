@@ -9,6 +9,7 @@ export default class EntRaceHorseStudyData{
     public HoldDay: Date
     public Weather: number
     public ID: number
+    public Rank: number
     public Venue: string
     public Range: number
     public Ground: number | null
@@ -42,6 +43,7 @@ export default class EntRaceHorseStudyData{
         this.Day = 0
         this.Weather = 0
         this.ID = 0
+        this.Rank = 0
         this.Venue = ''
         this.Range = 0
         this.Ground = 0

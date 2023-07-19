@@ -16,7 +16,7 @@ select
     , HorseID
     , JM.ID as JockeyID
 from RaceHorseInfomation as RHI
-    left outer jon JockeyMaster as JM
+    left outer join JockeyMaster as JM
         on JM.JockeyID = RHI.JockeyID
 where
     RHI.ID in (${this.parameter?.IDs})`
