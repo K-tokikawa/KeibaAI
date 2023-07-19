@@ -4,9 +4,11 @@ from sklearn.metrics import mean_squared_error
 import numpy as np
 
 model = xgb.Booster()
-model.load_model('.\\model\\Blood\\model.json')
 data = input()
 data = data.split(',')
+mode = data[0]
+model.load_model(f'.\\model\\{mode}\\model.json')
+
 datas = []
 for d in data:
     if (d == 'None'):
