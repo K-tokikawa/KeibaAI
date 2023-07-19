@@ -30,12 +30,12 @@ const Rotation = 4
 const Achievement = 5
 const Aptitude = 6
 const nural = 7
-main(nural)
+main(Aptitude)
 
 async function main(mode: number) {
     let ID = 0
     ID++
-    const valuenum = 1
+    const valuenum = 10000
     let Count: EntStudyDataCount[] = []
     let minmax: EntStudyDataMinMax[] = []
     let sql: GetBloodStudyDataCount | GetJockeyStudyDataCount | GetBloodStudyDataCount_Blood | GetRaceHorseStudyDataMinMax | GetRaceInfomationMinMax

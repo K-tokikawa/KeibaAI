@@ -47,7 +47,7 @@ select
     , num
 from (
     select
-          RHI.GoalTime
+          RHI.GoalTime - TA.Average as GoalTime
         , RI.RaceID
         , convert(datetime, convert(nvarchar, RI.Year) + '-' + convert(nvarchar, RI.HoldMonth) + '-' + convert(nvarchar, RI.HoldDay)) as HoldDay
         , RHI.OutValue
@@ -87,6 +87,8 @@ from (
             on RM.ID = RI.RaceMasterID
         left outer join JockeyMaster as JM
             on JM.JockeyID = RHI.JockeyID
+        left outer join TimeAverage as TA
+            on TA.ID = RHI.Average
     where
         RHI.HorseID is not null
         and RI.Direction <> 3
