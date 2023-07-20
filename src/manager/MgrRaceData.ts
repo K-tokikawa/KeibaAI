@@ -168,10 +168,10 @@ export default class MgrRaceData{
                         const id = Number(key)
                         const achievement = achievements[id]
                         if (achievement == null) {
-                            const empty = `,null,null,null,null,null,null,null,null`
+                            const empty = `,null,null,null`
                             strAchievement += empty
                         } else {
-                            strAchievement += `,${achievement.GoalTime},${achievement.Weather},${achievement.Weight},${achievement.HorseGender},${achievement.HorseWeight},${achievement.HorseNo},${achievement.HorseAge},${achievement.before}`
+                            strAchievement += `,${achievement.GoalTime},${achievement.Weight},${achievement.before}`
                         }
                     }
                     strAchievement = 'achievement,0,' + strAchievement
@@ -292,7 +292,7 @@ export default class MgrRaceData{
                     }
                 })
             })
-            const empty = `,,,,,,,,`
+            const empty = `,,,`
             Object.keys(entitys).forEach(key => {
                 const num = Number(key)
                 const value = entitys[num].represent
@@ -304,7 +304,7 @@ export default class MgrRaceData{
                     if (achievement == null) {
                         str = str + empty
                     } else {
-                        str = str + `,${achievement.GoalTime},${achievement.Weather},${achievement.Weight},${achievement.HorseGender},${achievement.HorseWeight},${achievement.HorseNo},${achievement.HorseAge},${achievement.before}`
+                        str = str + `,${achievement.GoalTime},${achievement.Weight},${achievement.before}`
                     }
                 })
                 rows.push(str)
