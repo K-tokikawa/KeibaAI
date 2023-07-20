@@ -19,7 +19,7 @@ from RaceHorseInfomation as RHI
     left outer join JockeyMaster as JM
         on JM.JockeyID = RHI.JockeyID
 where
-    RHI.ID in (${this.parameter?.IDs})`
+    RHI.RaceID in (${this.parameter?.IDs})`
         return await this.ExecGet(sql)
     }
 }

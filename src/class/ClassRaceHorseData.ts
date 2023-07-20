@@ -3,7 +3,7 @@ import EntRaceStudyData from "../entity/EntRaceHorseStudyData"
 export default class ClassRaceHorseData{
     private m_GoalTime: number
     private m_Direction: number
-    private m_Venue: string
+    private m_Venue: number
     private m_HoldMonth: number
     private m_Hold: number
     private m_Day: number
@@ -14,7 +14,7 @@ export default class ClassRaceHorseData{
     private m_Ground: number | null
     private m_GroundCondition: number
     private m_Weight: number
-    private m_TrainerID: string
+    private m_TrainerID: number
     private m_HorseGender: number
     private m_HorseWeight: number
     private m_HorseNo: number
@@ -25,7 +25,7 @@ export default class ClassRaceHorseData{
     private m_Passage4: number | null
     private m_SpurtTime: number | null
     private m_Fluctuation: number
-    private m_JockeyID: string
+    private m_JockeyID: number
     private m_before: number
     private m_HoldDay: Date
     constructor(row: EntRaceStudyData, before: number){

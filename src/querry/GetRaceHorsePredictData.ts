@@ -1,7 +1,7 @@
 import SQLBase from "../SQLBase"
 import EntRaceHorseStudyData from "../entity/EntRaceHorseStudyData"
 import PrmStudyData from "../param/PrmStudyData"
-export default class GetRaceHorseStudyData extends SQLBase<EntRaceHorseStudyData[]>
+export default class GetRaceHorsePredictData extends SQLBase<EntRaceHorseStudyData[]>
 {
     private parameter: PrmStudyData | null
 
@@ -68,7 +68,7 @@ from (
         , RHI.HorseAge as Age
         , RHI.Popularity
         , RHI.HorseGender
-        , isnull(HorseWeight, lead(HorseWeight)over(partition by RHI.HorseID order by convert(datetime, convert(nvarchar, RI.Year) + '-' + convert(nvarchar, RI.HoldMonth) + '-' + convert(nvarchar, RI.HoldDay)) desc)) as HorseWeight
+        , isnull(isnull(HorseWeight, lead(HorseWeight)over(partition by RHI.HorseID order by convert(datetime, convert(nvarchar, RI.Year) + '-' + convert(nvarchar, RI.HoldMonth) + '-' + convert(nvarchar, RI.HoldDay)) desc)), weightave.weightave) as HorseWeight
         , RHI.HorseNo
         , case when RI.Year > 2000 then RHI.HorseAge else RHI.HorseAge - 1 end as HorseAge
         , RHI.Passage1
@@ -89,11 +89,20 @@ from (
             on JM.JockeyID = RHI.JockeyID
         inner join TimeAverage as TA
             on TA.ID = RHI.Average
+        left outer join (
+            select
+                RHI.HorseID
+                , sum(HorseWeight) / count(RHI.HorseID) as weightave
+            from RaceHorseInfomation as RHI
+            where
+                RHI.HorseID is not null
+            group by
+                RHI.HorseID
+        ) as weightave
+            on RHI.HorseID = weightave.HorseID
     where
             RHI.HorseID is not null
         and RI.Direction <> 3
-        and HorseWeight is not null
-        and OutValue = 0
 ) as RHI
 where
 ${this.parameter?.IDs == null ? `RHI.HorseID between ${this.parameter?.Start} and ${this.parameter?.Finish}`: `RHI.HorseID in (${this.parameter?.IDs})`}

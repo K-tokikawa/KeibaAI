@@ -1,6 +1,6 @@
 export default class EntRaceInfomationData{
     public ID: number
-    public Venue: string
+    public Venue: number
     public Range: number
     public Ground: number
     public GroundCondition: number
@@ -13,7 +13,7 @@ export default class EntRaceInfomationData{
 
     constructor() {
         this.ID = 0
-        this.Venue = ''
+        this.Venue = 0
         this.Range = 0
         this.Ground = 0
         this.GroundCondition = 0

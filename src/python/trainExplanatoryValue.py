@@ -7,8 +7,12 @@ import subprocess
 
 from matplotlib import pyplot as plt
 from sklearn.metrics import mean_squared_error
-
-mode = 'achievement'
+rotation = 'rotation'
+aptitude = 'aptitude'
+achievement = 'achievement'
+Jockey = 'Jockey'
+blood = 'blood'
+mode = achievement
 trial = 1
 
 DEFAULT_ATTRIBUTES = (
@@ -85,14 +89,14 @@ print('Start Study')
 # DATABASE_URI = 'postgresql://postgres:pegunike39@localhost:5432/keibaai'
 # study_name = mode
 
-study = optuna.create_study(
-    # study_name=study_name,
-    # storage=DATABASE_URI,
-    # load_if_exists=True
-)
-study.optimize(objective, n_trials=trial, gc_after_trial = True)
-print('Finish Study')
-trial = study.best_trial
+# study = optuna.create_study(
+#     # study_name=study_name,
+#     # storage=DATABASE_URI,
+#     # load_if_exists=True
+# )
+# study.optimize(objective, n_trials=trial, gc_after_trial = True)
+# print('Finish Study')
+# trial = study.best_trial
 
 param = {
     'objective': 'reg:squarederror',
@@ -100,9 +104,12 @@ param = {
     'tree_method':'gpu_hist' 
 }
 
-param["max_depth"] = trial.params["max_depth"]
-param["eta"] = trial.params["eta"]
-param["lambda"] = trial.params["lambda"]
+# param["max_depth"] = trial.params["max_depth"]
+# param["eta"] = trial.params["eta"]
+# param["lambda"] = trial.params["lambda"]
+param["max_depth"] = 7
+param["eta"] = 0.5930623297418864
+param["lambda"] = 852
 evals = [(xgb_train, 'train'), (xgb_test, 'eval')]
 evals_result = {}
 print('Start Train')

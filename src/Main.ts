@@ -22,6 +22,7 @@ import EntRaceHorseJockeyIDsDat from "./entity/EntRaceHorseJockeyIDsData"
 import MgrRaceData from "./manager/MgrRaceData"
 import GetHorseIDBloodStudyData_Blood from "./querry/GetHorseIDBloodStudyData_Blood"
 import { resolve } from "path"
+import GetRaceHorsePredictData from "./querry/GetRaceHorsePredictData"
 
 const blood_prt = 1
 const Jockey = 2
@@ -30,12 +31,12 @@ const Rotation = 4
 const Achievement = 5
 const Aptitude = 6
 const nural = 7
-main(Aptitude)
+main(nural)
 
 async function main(mode: number) {
     let ID = 0
     ID++
-    const valuenum = 10000
+    const valuenum = 3
     let Count: EntStudyDataCount[] = []
     let minmax: EntStudyDataMinMax[] = []
     let sql: GetBloodStudyDataCount | GetJockeyStudyDataCount | GetBloodStudyDataCount_Blood | GetRaceHorseStudyDataMinMax | GetRaceInfomationMinMax
@@ -157,6 +158,7 @@ async function main(mode: number) {
                     sql = new GetRaceInfomationData(param)
                     console.log(count)
                     value = await sql.Execsql() as EntRaceInfomationData[]
+                    console.log(value)
                     await CreateRacePredictData(value)
                     break
             }
@@ -170,19 +172,54 @@ async function main(mode: number) {
 
 async function CreateRacePredictData(value: EntRaceInfomationData[]) {
     const Racedic: {
-        [RaceID: number]:[{HorseID: number, JockeyID: number}]
+        [RaceID: number]: {
+            Horses: number[],
+            Venue: number,
+            Range: number,
+            Ground: number,
+            GroundCondition: number,
+            Weather: number,
+            HoldMonth: number,
+            Hold: number,
+            Day: number}
+    } = {}
+    const predict: {
+        [RaceID: number]: {
+            info: string,
+            [HorseNo: number]: 
+                string
+        }
     } = {}
     const RaceIDs = value.map(x => {return x.ID})
     const HorseIDsparam = new PrmStudyData(0,0, RaceIDs)
     const HorseIDssql = new GetRaceHorseJockeyIDsData(HorseIDsparam)
     const HorseIDsvalue = await HorseIDssql.Execsql() as EntRaceHorseJockeyIDsDat[]
-    HorseIDsvalue.forEach((row: EntRaceHorseJockeyIDsDat) => {
+    for (const row of HorseIDsvalue){
         if (Racedic[row.RaceID] == undefined) {
-            Racedic[row.RaceID] = [{HorseID: row.HorseID, JockeyID: row.JockeyID}]
-        } else {
-            Racedic[row.RaceID].push({HorseID: row.HorseID, JockeyID: row.JockeyID})
+            Racedic[row.RaceID] = {
+                Horses: [],
+                Venue: 0 ,
+                Range: 0 ,
+                Ground: 0 ,
+                GroundCondition: 0 ,
+                Weather: 0 ,
+                HoldMonth: 0 ,
+                Hold: 0 ,
+                Day: 0
+            }
         }
-    })
+        Racedic[row.RaceID].Horses.push(row.HorseID)
+    }
+    value.map(x => {
+        Racedic[x.ID].Venue= x.Venue 
+        Racedic[x.ID].Range= x.Range 
+        Racedic[x.ID].Ground= x.Ground 
+        Racedic[x.ID].GroundCondition= x.GroundCondition 
+        Racedic[x.ID].Weather= x.Weather 
+        Racedic[x.ID].HoldMonth= x.HoldMonth 
+        Racedic[x.ID].Hold= x.Hold 
+            Racedic[x.ID].Day= x.Day
+        })
     const HorseIDs = Array.from(new Set(HorseIDsvalue.map(x => {return x.HorseID})))
 
     const bloodparam = new PrmStudyData(0,0, HorseIDs)
@@ -194,8 +231,26 @@ async function CreateRacePredictData(value: EntRaceInfomationData[]) {
     })
 
     const RaceDataparam = new PrmStudyData(0, 0, HorseIDs, RaceIDs)
-    const RaceDatapsql = new GetRaceHorseStudyData(RaceDataparam)
+    const RaceDatapsql = new GetRaceHorsePredictData(RaceDataparam)
+    console.log('RaceDatas')
     const RaceDatas = await RaceDatapsql.Execsql() as EntRaceHorseStudyData[]
     const mgr = new MgrRaceData(RaceDatas)
     await mgr.dicCreate(blooddata)
+    console.log('dicCreate')
+    const dicData = mgr.dic
+    for (const x of Object.keys(Racedic)){
+        const RaceID = Number(x)
+        const RaceInfo = Racedic[RaceID]
+        const strRaceInfo = `${RaceInfo.Venue},${RaceInfo.Range},${RaceInfo.Ground},${RaceInfo.GroundCondition},${RaceInfo.Weather},${RaceInfo.Hold},${RaceInfo.Day}`
+        predict[RaceID] = {info:strRaceInfo}
+        for (const value of Racedic[RaceID].Horses){
+            const HorseID = value
+            const HorseData = dicData[HorseID].data
+            const num = HorseData.getNum(RaceID)
+            const HorseNo = HorseData.getHorseNo(RaceID)
+            const Horsepredict = HorseData.PredictData[num]
+            const str = `${Horsepredict.RotationPredict},${Horsepredict.AchievementPredict},${Horsepredict.AptitudePredict},${HorseData.BloodPredict},${HorseData.JockeyPredict}`
+            predict[RaceID][HorseNo] = str
+        }
+    }
 }

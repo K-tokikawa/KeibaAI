@@ -3,20 +3,20 @@ export default class EntRaceHorseStudyData{
     public RaceID: number
     public GoalTime: number
     public Direction: number
+    public HoldDay: Date
     public HoldMonth: number
     public Hold: number
     public Day: number
-    public HoldDay: Date
     public Weather: number
     public ID: number
     public Rank: number
-    public Venue: string
+    public Venue: number
     public Range: number
-    public Ground: number | null
+    public Ground: number
     public GroundCondition: number
     public Round: number
     public Weight: number
-    public TrainerID: string
+    public TrainerID: number
     public Age: number
     public Popularity: number
     public HorseGender: number
@@ -29,7 +29,7 @@ export default class EntRaceHorseStudyData{
     public Passage4: number | null
     public SpurtTime: number | null
     public Fluctuation: number
-    public JockeyID: string
+    public JockeyID: number
     public before: Date
     public num: number
     constructor(){
@@ -44,13 +44,13 @@ export default class EntRaceHorseStudyData{
         this.Weather = 0
         this.ID = 0
         this.Rank = 0
-        this.Venue = ''
+        this.Venue = 0
         this.Range = 0
         this.Ground = 0
         this.GroundCondition = 0
         this.Round = 0
         this.Weight = 0
-        this.TrainerID = ''
+        this.TrainerID = 0
         this.Age = 0
         this.Popularity = 0
         this.HorseGender = 0
@@ -63,7 +63,7 @@ export default class EntRaceHorseStudyData{
         this.Passage4 = null
         this.SpurtTime = null
         this.Fluctuation = 0
-        this.JockeyID = ''
+        this.JockeyID = 0
         this.before = new Date()
         this.num = 0
     }

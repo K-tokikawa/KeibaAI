@@ -13,7 +13,7 @@ export default class GetRaceInfomationData extends SQLBase<EntRaceInfomationData
         const sql = `
 select
       ID
-    , Venue
+    , convert(int, Venue) as Venue
     , Range
     , Ground
     , GroundCondition

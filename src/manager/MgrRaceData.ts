@@ -7,7 +7,6 @@ import PrmStudyData from "../param/PrmStudyData";
 import ClassAchievementData from "../class/ClassAchievementData";
 import { PythonShell } from "python-shell";
 import ClassHorseData from "../class/ClassHorseData";
-import { resolve } from "path";
 
 export default class MgrRaceData{
     private m_RaceData: EntRaceHorseStudyData[]
@@ -26,13 +25,13 @@ export default class MgrRaceData{
 
     async dicCreate(valueblood: {[ID: number]: string}){
         return new Promise (async (resolve) => {
-            
             const dic = this.m_dic
             let Jockey: number | null = null
             let Blood: number | null = null
             let Achievement: number | null = null
             let Aptitude: number | null = null
             let Rotation: number | null = null
+            console.log('start')
             for(const row of this.m_RaceData) {
                 const data = new ClassRaceHorseData(
                     row,
@@ -42,7 +41,7 @@ export default class MgrRaceData{
                 const RaceID = row.RaceID
                 const HorseID = row.HorseID
                 const num = row.num
-    
+                const HorseNo = row.HorseNo
                 // Jockey
                 const dicHorse = dic[HorseID]
                 if (dicHorse == undefined) {
@@ -52,12 +51,12 @@ export default class MgrRaceData{
                     const blood = valueblood[HorseID]
                     const BloodData = `blood,0,${row.Range},${row.Venue},${row.Ground},${row.GroundCondition},${row.HorseGender},${row.Weight},${row.Age},${blood}`
                     Blood = await Predict(BloodData)
-                    dic[HorseID] = {data: new ClassHorseData(0, 0, RaceID, Rank, Blood, Jockey)}
+                    dic[HorseID] = {data: new ClassHorseData(0, 0, Blood, Jockey, RaceID, num, HorseNo)}
                 }
                 const horseData = dic[HorseID].data
                 const PassageData = new ClassPassageData(data)
                 const AchievementData = new ClassAchievementData(data)
-                horseData.setHorseData(num, PassageData, AchievementData, [])
+                horseData.setHorseData(num, PassageData, AchievementData, [], RaceID, Rank)
                 horseData.HorseData[num].RotationData.push(data)
     
                 if (num - 1 > 0) {
@@ -81,15 +80,17 @@ export default class MgrRaceData{
                 const HorseID = Number(keyHorseID)
                 const horseData = dic[HorseID].data
                 const blood = valueblood[HorseID]
-                const entitys: {[num: number]: {PassageData: ClassPassageData, AchievementData: ClassAchievementData, RotationData: ClassRaceHorseData[]}} = horseData.HorseData
+                const entitys: {[num: number]: {PassageData: ClassPassageData, AchievementData: ClassAchievementData, RotationData: ClassRaceHorseData[], RaceID: number, Rank: number}} = horseData.HorseData
                 for (const keynum of Object.keys(entitys)){
                     const num = Number(keynum)
                     const Passageentity = entitys[num].PassageData
                     const Achievemententity = entitys[num].AchievementData
                     const RaceHorseData = entitys[num].RotationData
+                    const RaceID = entitys[num].RaceID
+                    const Rank = entitys[num].Rank
                     // Rotation
                     let data = ''
-                    if (RaceHorseData.length > 1) {
+                    if (RaceHorseData.length > 0) {
                         for (const value of RaceHorseData){
                             if (data == ''){
                                 data += `${value.Direction},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
@@ -98,6 +99,9 @@ export default class MgrRaceData{
                             }
                         }
                         const empty = ',null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null'
+                        if (RaceHorseData.length == 1){
+                            data = data + empty + empty + empty + empty + empty
+                        }
                         if (RaceHorseData.length == 2){
                             data = data + empty + empty + empty + empty
                         }
@@ -112,10 +116,10 @@ export default class MgrRaceData{
                         }
                         data = 'rotation,0,' + data
                     }
-                    // console.log('rotation')
+                    console.log('rotation')
                     Rotation = await Predict(data)
-                    // console.log(Rotation)
-                    // console.log('----------------------------------')
+                    console.log(Rotation)
+                    console.log('----------------------------------')
 
                     // aptitude
                     const represent = Passageentity.represent
@@ -150,11 +154,11 @@ export default class MgrRaceData{
                         }
                     }
                     strPassage += `,${Passageentity.AveragePassage1},${Passageentity.AveragePassage2},${Passageentity.AveragePassage3},${Passageentity.AveragePassage4}`
-                    // console.log('aptitude')
+                    console.log('aptitude')
                     strPassage = 'aptitude,0,' + strPassage
                     Aptitude = await Predict(strPassage)
-                    // console.log(Aptitude)
-                    // console.log('----------------------------------')
+                    console.log(Aptitude)
+                    console.log('----------------------------------')
                     // Acievement
 
                     const value = entitys[num].AchievementData.represent
@@ -171,11 +175,11 @@ export default class MgrRaceData{
                         }
                     }
                     strAchievement = 'achievement,0,' + strAchievement
-                    // console.log('achievement')
+                    console.log('achievement')
                     Achievement = await Predict(strAchievement)
-                    // console.log(Achievement)
-                    // console.log('----------------------------------')
-                    horseData.setHorsePredict(num, Aptitude, Achievement, Rotation)
+                    console.log(Achievement)
+                    console.log('----------------------------------')
+                    horseData.setHorsePredict(num, Aptitude, Achievement, Rotation, RaceID, Rank)
                 }
             }
             resolve(true)
