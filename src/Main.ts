@@ -36,7 +36,7 @@ main(nural)
 async function main(mode: number) {
     let ID = 0
     ID++
-    const valuenum = 1000
+    const valuenum = 10
     let Count: EntStudyDataCount[] = []
     let minmax: EntStudyDataMinMax[] = []
     let sql: GetBloodStudyDataCount | GetJockeyStudyDataCount | GetBloodStudyDataCount_Blood | GetRaceHorseStudyDataMinMax | GetRaceInfomationMinMax
@@ -91,7 +91,7 @@ async function main(mode: number) {
     let count = 0
     do {
         let bolstart = false
-        bolstart = count >= 0
+        bolstart = count >= 3
         if (bolstart) {
 
             let Start = count == 0 ? 1 : + valuenum * count + 1
@@ -265,7 +265,6 @@ async function CreateRacePredictData(value: EntRaceInfomationData[]) {
             dicpredict[RaceID].Horses[HorseNo].rank = Horsepredict.Rank
         }
         let data = dicpredict[RaceID].info
-        console.log(dicpredict[RaceID].Horses)
         for (const value of Object.keys(dicpredict[RaceID].Horses)){
             const no = Number(value)
             const Horse = dicpredict[RaceID].Horses[no]
