@@ -13,7 +13,7 @@ achievement = 'achievement'
 Jockey = 'Jockey'
 blood = 'blood'
 mode = achievement
-trial = 1
+trial = 10
 
 DEFAULT_ATTRIBUTES = (
     'index',
@@ -89,14 +89,14 @@ print('Start Study')
 # DATABASE_URI = 'postgresql://postgres:pegunike39@localhost:5432/keibaai'
 # study_name = mode
 
-# study = optuna.create_study(
-#     # study_name=study_name,
-#     # storage=DATABASE_URI,
-#     # load_if_exists=True
-# )
-# study.optimize(objective, n_trials=trial, gc_after_trial = True)
-# print('Finish Study')
-# trial = study.best_trial
+study = optuna.create_study(
+    # study_name=study_name,
+    # storage=DATABASE_URI,
+    # load_if_exists=True
+)
+study.optimize(objective, n_trials=trial, gc_after_trial = True)
+print('Finish Study')
+trial = study.best_trial
 
 param = {
     'objective': 'reg:squarederror',

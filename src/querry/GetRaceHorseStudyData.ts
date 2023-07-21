@@ -48,7 +48,7 @@ select
 from (
     select
           RHI.GoalTime - TA.Average as GoalTime
-        , RI.RaceID
+        , RI.ID as RaceID
         , convert(datetime, convert(nvarchar, RI.Year) + '-' + convert(nvarchar, RI.HoldMonth) + '-' + convert(nvarchar, RI.HoldDay)) as HoldDay
         , RHI.OutValue
         , case when RI.Direction = 3 then null else RI.Direction end as Direction

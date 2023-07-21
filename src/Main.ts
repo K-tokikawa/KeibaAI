@@ -36,7 +36,7 @@ main(nural)
 async function main(mode: number) {
     let ID = 0
     ID++
-    const valuenum = 3
+    const valuenum = 1000
     let Count: EntStudyDataCount[] = []
     let minmax: EntStudyDataMinMax[] = []
     let sql: GetBloodStudyDataCount | GetJockeyStudyDataCount | GetBloodStudyDataCount_Blood | GetRaceHorseStudyDataMinMax | GetRaceInfomationMinMax
@@ -158,8 +158,8 @@ async function main(mode: number) {
                     sql = new GetRaceInfomationData(param)
                     console.log(count)
                     value = await sql.Execsql() as EntRaceInfomationData[]
-                    console.log(value)
-                    await CreateRacePredictData(value)
+                    rows = await CreateRacePredictData(value)
+                    filePath = `./data/nural/${Start}.csv`
                     break
             }
             await FileUtil.ContinueOutputFile(filePath, rows)
@@ -183,11 +183,16 @@ async function CreateRacePredictData(value: EntRaceInfomationData[]) {
             Hold: number,
             Day: number}
     } = {}
-    const predict: {
+    const dicpredict: {
         [RaceID: number]: {
             info: string,
-            [HorseNo: number]: 
-                string
+            Horses: {
+                [HorseNo: number]: 
+                {
+                    horseinfo: string,
+                    rank: number
+                }
+            }
         }
     } = {}
     const RaceIDs = value.map(x => {return x.ID})
@@ -238,19 +243,44 @@ async function CreateRacePredictData(value: EntRaceInfomationData[]) {
     await mgr.dicCreate(blooddata)
     console.log('dicCreate')
     const dicData = mgr.dic
+    const rows: string[] = []
     for (const x of Object.keys(Racedic)){
         const RaceID = Number(x)
         const RaceInfo = Racedic[RaceID]
         const strRaceInfo = `${RaceInfo.Venue},${RaceInfo.Range},${RaceInfo.Ground},${RaceInfo.GroundCondition},${RaceInfo.Weather},${RaceInfo.Hold},${RaceInfo.Day}`
-        predict[RaceID] = {info:strRaceInfo}
-        for (const value of Racedic[RaceID].Horses){
-            const HorseID = value
+        dicpredict[RaceID] = {info:strRaceInfo, Horses:{}}
+        for (let no = 1; no <= 24; no++ ){
+            dicpredict[RaceID].Horses[no]={
+                horseinfo:',None,None,None,None,None',
+                rank:0
+            }
+        }
+        for (const HorseID of Racedic[RaceID].Horses){
             const HorseData = dicData[HorseID].data
             const num = HorseData.getNum(RaceID)
             const HorseNo = HorseData.getHorseNo(RaceID)
             const Horsepredict = HorseData.PredictData[num]
             const str = `${Horsepredict.RotationPredict},${Horsepredict.AchievementPredict},${Horsepredict.AptitudePredict},${HorseData.BloodPredict},${HorseData.JockeyPredict}`
-            predict[RaceID][HorseNo] = str
+            dicpredict[RaceID].Horses[HorseNo].horseinfo = str
+            dicpredict[RaceID].Horses[HorseNo].rank = Horsepredict.Rank
+        }
+        let data = dicpredict[RaceID].info
+        console.log(dicpredict[RaceID].Horses)
+        for (const value of Object.keys(dicpredict[RaceID].Horses)){
+            const no = Number(value)
+            const Horse = dicpredict[RaceID].Horses[no]
+            if (Horse.rank != 0) {
+                let Horsedata = `${Horse.rank},${data},${Horse.horseinfo}`
+                for (const value of Object.keys(dicpredict[RaceID].Horses)){
+                    const EnemyNo = Number(value)
+                    const Horse = dicpredict[RaceID].Horses[no].horseinfo
+                    if (EnemyNo != no) {
+                        Horsedata += `,${Horse}`
+                    }
+                }
+                rows.push(Horsedata)
+            }
         }
     }
+    return rows
 }

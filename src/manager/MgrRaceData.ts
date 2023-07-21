@@ -7,6 +7,7 @@ import PrmStudyData from "../param/PrmStudyData";
 import ClassAchievementData from "../class/ClassAchievementData";
 import { PythonShell } from "python-shell";
 import ClassHorseData from "../class/ClassHorseData";
+import simpleProgress from "../ProgressBar";
 
 export default class MgrRaceData{
     private m_RaceData: EntRaceHorseStudyData[]
@@ -32,7 +33,10 @@ export default class MgrRaceData{
             let Aptitude: number | null = null
             let Rotation: number | null = null
             console.log('start')
+            const ProgressBar = simpleProgress()
+            const progress = ProgressBar(this.m_RaceData.length, 20, 'Race')
             for(const row of this.m_RaceData) {
+                progress(1)
                 const data = new ClassRaceHorseData(
                     row,
                     0
@@ -51,11 +55,12 @@ export default class MgrRaceData{
                     const blood = valueblood[HorseID]
                     const BloodData = `blood,0,${row.Range},${row.Venue},${row.Ground},${row.GroundCondition},${row.HorseGender},${row.Weight},${row.Age},${blood}`
                     Blood = await Predict(BloodData)
-                    dic[HorseID] = {data: new ClassHorseData(0, 0, Blood, Jockey, RaceID, num, HorseNo)}
+                    dic[HorseID] = {data: new ClassHorseData(Blood, Jockey)}
                 }
                 const horseData = dic[HorseID].data
                 const PassageData = new ClassPassageData(data)
                 const AchievementData = new ClassAchievementData(data)
+                horseData.setRaceIDnumPairs(RaceID, num, HorseNo)
                 horseData.setHorseData(num, PassageData, AchievementData, [], RaceID, Rank)
                 horseData.HorseData[num].RotationData.push(data)
     
@@ -75,8 +80,9 @@ export default class MgrRaceData{
                     horseData.HorseData[num - 5].RotationData.push(data)
                 }
             }
-            console.log('----------------------------------')
+            const predictprogress = ProgressBar(Object.keys(dic).length, 20, 'predict')
             for (const keyHorseID of Object.keys(dic)){
+                predictprogress(1)
                 const HorseID = Number(keyHorseID)
                 const horseData = dic[HorseID].data
                 const blood = valueblood[HorseID]
@@ -98,7 +104,7 @@ export default class MgrRaceData{
                                 data += `,${value.GoalTime},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
                             }
                         }
-                        const empty = ',null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null'
+                        const empty = ',None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None'
                         if (RaceHorseData.length == 1){
                             data = data + empty + empty + empty + empty + empty
                         }
@@ -116,11 +122,7 @@ export default class MgrRaceData{
                         }
                         data = 'rotation,0,' + data
                     }
-                    console.log('rotation')
                     Rotation = await Predict(data)
-                    console.log(Rotation)
-                    console.log('----------------------------------')
-
                     // aptitude
                     const represent = Passageentity.represent
                     let strPassage = `${represent.Venue},${represent.Range},${represent.Weather}.${represent.Ground},${represent.GroundCondition},${represent.HoldMonth},${represent.Hold},${represent.HorseNo},${represent.Day},${represent.Weight},${represent.TrainerID},${represent.HorseGender},${represent.HorseWeight},${represent.Fluctuation},${represent.JockeyID},${represent.HorseAge},`
@@ -154,11 +156,8 @@ export default class MgrRaceData{
                         }
                     }
                     strPassage += `,${Passageentity.AveragePassage1},${Passageentity.AveragePassage2},${Passageentity.AveragePassage3},${Passageentity.AveragePassage4}`
-                    console.log('aptitude')
                     strPassage = 'aptitude,0,' + strPassage
                     Aptitude = await Predict(strPassage)
-                    console.log(Aptitude)
-                    console.log('----------------------------------')
                     // Acievement
 
                     const value = entitys[num].AchievementData.represent
@@ -168,17 +167,14 @@ export default class MgrRaceData{
                         const id = Number(key)
                         const achievement = achievements[id]
                         if (achievement == null) {
-                            const empty = `,null,null,null`
+                            const empty = `,None,None,None`
                             strAchievement += empty
                         } else {
                             strAchievement += `,${achievement.GoalTime},${achievement.Weight},${achievement.before}`
                         }
                     }
                     strAchievement = 'achievement,0,' + strAchievement
-                    console.log('achievement')
                     Achievement = await Predict(strAchievement)
-                    console.log(Achievement)
-                    console.log('----------------------------------')
                     horseData.setHorsePredict(num, Aptitude, Achievement, Rotation, RaceID, Rank)
                 }
             }
