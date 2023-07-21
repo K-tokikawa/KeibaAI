@@ -182,6 +182,106 @@ export default class MgrRaceData{
         })
     }
 
+    async CreateRacePredict(valueblood: {[ID: number]: string}, HorseID: number){
+        let Achievement: number | null = null
+        let Aptitude: number | null = null
+        let Rotation: number | null = null
+        const dic = this.m_dic
+        predictprogress(1)
+        const horseData = dic[HorseID].data
+        const blood = valueblood[HorseID]
+        const entitys: {[num: number]: {PassageData: ClassPassageData, AchievementData: ClassAchievementData, RotationData: ClassRaceHorseData[], RaceID: number, Rank: number}} = horseData.HorseData
+        for (const keynum of Object.keys(entitys)){
+            const num = Number(keynum)
+            const Passageentity = entitys[num].PassageData
+            const Achievemententity = entitys[num].AchievementData
+            const RaceHorseData = entitys[num].RotationData
+            const RaceID = entitys[num].RaceID
+            const Rank = entitys[num].Rank
+            // Rotation
+            let data = ''
+            if (RaceHorseData.length > 0) {
+                for (const value of RaceHorseData){
+                    if (data == ''){
+                        data += `${value.Direction},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
+                    } else {
+                        data += `,${value.GoalTime},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
+                    }
+                }
+                const empty = ',None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None'
+                if (RaceHorseData.length == 1){
+                    data = data + empty + empty + empty + empty + empty
+                }
+                if (RaceHorseData.length == 2){
+                    data = data + empty + empty + empty + empty
+                }
+                if (RaceHorseData.length == 3){
+                    data = data + empty + empty + empty
+                }
+                if (RaceHorseData.length == 4){
+                    data = data + empty + empty
+                }
+                if (RaceHorseData.length == 5){
+                    data = data + empty
+                }
+                data = 'rotation,0,' + data
+            }
+            Rotation = await Predict(data)
+            // aptitude
+            const represent = Passageentity.represent
+            let strPassage = `${represent.Venue},${represent.Range},${represent.Weather}.${represent.Ground},${represent.GroundCondition},${represent.HoldMonth},${represent.Hold},${represent.HorseNo},${represent.Day},${represent.Weight},${represent.TrainerID},${represent.HorseGender},${represent.HorseWeight},${represent.Fluctuation},${represent.JockeyID},${represent.HorseAge},`
+            strPassage += blood
+            for (const row of this.m_RaceData) {
+                // Passage
+                if (row.HorseID == HorseID) {
+                    if (row.HoldDay.getTime() < Passageentity.represent.HoldDay.getTime()){
+                        Passageentity.addPassage1(row.Passage1)
+                        Passageentity.addPassage2(row.Passage2)
+                        Passageentity.addPassage3(row.Passage3)
+                        Passageentity.addPassage4(row.Passage4)
+                    }
+                }
+                if (row.HorseID == HorseID) {
+                    if (row.HoldDay.getTime() < Achievemententity.represent.HoldDay.getTime()){
+                        const before = row.before == null ? 0 :(row.HoldDay.getTime() - Achievemententity.represent.HoldDay.getTime()) / 86400000
+                        const data = new ClassRaceHorseData(
+                            row,
+                            before
+                        )
+                        const AchievementData = Achievemententity.getIDAchievementData(data.ID)
+                        if (AchievementData == null) {
+                            Achievemententity.updateAchievement(data)
+                        } else if(AchievementData.GoalTime > data.GoalTime) {
+                            Achievemententity.updateAchievement(data)
+                        } else {
+                            // なにもなし
+                        }
+                    }
+                }
+            }
+            strPassage += `,${Passageentity.AveragePassage1},${Passageentity.AveragePassage2},${Passageentity.AveragePassage3},${Passageentity.AveragePassage4}`
+            strPassage = 'aptitude,0,' + strPassage
+            Aptitude = await Predict(strPassage)
+            // Acievement
+
+            const value = entitys[num].AchievementData.represent
+            const achievements = entitys[num].AchievementData.achievements
+            let strAchievement = `${value.Venue},${value.Range},${value.Ground},${value.HorseAge},${value.GroundCondition},${value.HoldMonth},${value.Hold},${value.Day},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.Fluctuation},${value.JockeyID}`
+            for (const key of Object.keys(achievements)){
+                const id = Number(key)
+                const achievement = achievements[id]
+                if (achievement == null) {
+                    const empty = `,None,None,None`
+                    strAchievement += empty
+                } else {
+                    strAchievement += `,${achievement.GoalTime},${achievement.Weight},${achievement.before}`
+                }
+            }
+            strAchievement = 'achievement,0,' + strAchievement
+            Achievement = await Predict(strAchievement)
+            horseData.setHorsePredict(num, Aptitude, Achievement, Rotation, RaceID, Rank)
+        }
+    }
     async CreateAptitudeData(){
         const rows: string[] = []
         const dic: {
