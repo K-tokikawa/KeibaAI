@@ -91,7 +91,7 @@ async function main(mode: number) {
     let count = 0
     do {
         let bolstart = false
-        bolstart = count >= 3
+        bolstart = count >= 0
         if (bolstart) {
 
             let Start = count == 0 ? 1 : + valuenum * count + 1
@@ -272,7 +272,7 @@ async function CreateRacePredictData(value: EntRaceInfomationData[]) {
                 let Horsedata = `${Horse.rank},${data},${Horse.horseinfo}`
                 for (const value of Object.keys(dicpredict[RaceID].Horses)){
                     const EnemyNo = Number(value)
-                    const Horse = dicpredict[RaceID].Horses[no].horseinfo
+                    const Horse = dicpredict[RaceID].Horses[EnemyNo].horseinfo
                     if (EnemyNo != no) {
                         Horsedata += `,${Horse}`
                     }
