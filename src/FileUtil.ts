@@ -1,6 +1,7 @@
 import fs from 'fs'
 import Encoding from 'encoding-japanese'
 import iconv from 'iconv-lite';
+import simpleProgress from './ProgressBar';
 export default class FileUtil {
 
     public static OutputFile(
@@ -8,7 +9,11 @@ export default class FileUtil {
         filePath: string
     ) {
         console.log('output')
-        lines.forEach((line, index) => {
+        const ProgressBar = simpleProgress()
+        const progress = ProgressBar(lines.length, 20, 'FileOutPut')
+        let index = 0
+        for (let line of lines){
+            progress(1)
             line = line + '\n'
             const arybuf = Encoding.convert(line, {
                 from: 'UNICODE',
@@ -21,7 +26,8 @@ export default class FileUtil {
             else {
                 fs.appendFileSync(filePath, Buffer.from(arybuf));
             }
-        })
+            index++
+        }
     }
 
     public static DeleteFile(filePath: string) {

@@ -34,28 +34,28 @@ export default class ClassPassageData{
         this.m_Passage1 += (value == null ? 0 : value)
         this.m_CountPassage1 += (value == null ? 0 : 1)
         if (this.m_CountPassage1 != 0){
-            this.m_AveragePassage1 = this.m_Passage1 / this.m_CountPassage1
+            this.m_AveragePassage1 = this.m_Passage1 / this.m_CountPassage1 | 0
         }
     }
     public addPassage2(value: number|null) {
         this.m_Passage2 += (value == null ? 0 : value)
         this.m_CountPassage2 += (value == null ? 0 : 1)
         if (this.m_CountPassage2 != 0){
-            this.m_AveragePassage2 = this.m_Passage2 / this.m_CountPassage2
+            this.m_AveragePassage2 = this.m_Passage2 / this.m_CountPassage2 | 0
         }
     }
     public addPassage3(value: number|null) {
         this.m_Passage3 += (value == null ? 0 : value)
         this.m_CountPassage3 += (value == null ? 0 : 1)
-        if (this.m_CountPassage3 != 0){
-            this.m_AveragePassage3 = this.m_Passage3 / this.m_CountPassage3
+        if (this.m_CountPassage3 != 0){ 
+            this.m_AveragePassage3 = this.m_Passage3 / this.m_CountPassage3 | 0
         }
     }
     public addPassage4(value: number|null) {
         this.m_Passage4 += (value == null ? 0 : value)
         this.m_CountPassage4 += (value == null ? 0 : 1)
         if (this.m_CountPassage4 != 0){
-            this.m_AveragePassage4 = this.m_Passage4 / this.m_CountPassage4
+            this.m_AveragePassage4 = this.m_Passage4 / this.m_CountPassage4 | 0
         }
     }
     public get represent() { return this.m_represent}

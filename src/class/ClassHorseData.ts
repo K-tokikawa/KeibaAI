@@ -18,7 +18,7 @@ export default class ClassHorseData{
         [num: number]: {
             AptitudePredict: number| null, AchievementPredict: number| null, RotationPredict: number| null, RaceID: number, Rank: number
         }}
-    constructor(BloodPredict: number | null, JockeyPredict: number | null) {
+    constructor(BloodPredict: number | null = null, JockeyPredict: number | null = null) {
         this.m_BloodPredict = BloodPredict
         this.m_JockeyPredict = JockeyPredict
         this.m_RaceIDNumPairs = {}

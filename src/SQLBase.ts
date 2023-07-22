@@ -1,5 +1,6 @@
 import { Connection, Request } from "tedious"
 import config from "../config.json"
+import FileUtil from "./FileUtil";
 
 export default abstract class SQLBase<T>{
 
@@ -28,7 +29,44 @@ export default abstract class SQLBase<T>{
             })
         })
     }
+    
+    protected async ExecBulkInsert(
+        table: string,
+        entity: string[],
+        filepath: string
+    ) {
+        FileUtil.OutputFile(entity, filepath)
+        const sql =
+            `BULK INSERT
+    ${table}
+FROM '${filepath}'
+WITH (
+      FORMAT = 'CSV'
+    , DATAFILETYPE='char'
+    , CODEPAGE = '65001'
+    , ROWTERMINATOR = '\n'
+    )`
+        return new Promise((reject) => {
+            this.connection.connect()
+            this.connection.on('connect', () => {
+                reject(executeStatement(this.connection, sql))
+            })
+            this.connection.on('end', () => {
+                let success = true
+                while (success) {
+                    try {
+                        FileUtil.DeleteFile(filepath)
+                        success = false
+                    }
+                    catch (error) {
+
+                    }
+                }
+            })
+        })
+    }
 }
+
 
 async function executeStatement(connection: Connection, sql: string) {
     const bolFinish = false
