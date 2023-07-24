@@ -1,7 +1,7 @@
 import SQLBase from "../SQLBase"
-import EntRaceHorseInfomationData from "../entity/EntRaceHorseJockeyIDsData"
+import EntRaceHorseInfomationData from "../entity/EntRaceHorseInfomationData"
 import PrmStudyData from "../param/PrmStudyData"
-export default class GetRaceHorseJockeyIDsData extends SQLBase<EntRaceHorseInfomationData[]>
+export default class GetRaceHorseInfomationData extends SQLBase<EntRaceHorseInfomationData[]>
 {
     private parameter: PrmStudyData | null
 
@@ -14,7 +14,16 @@ export default class GetRaceHorseJockeyIDsData extends SQLBase<EntRaceHorseInfom
 select
       RaceID
     , HorseID
+    , Rank
+    , HorseNo
     , JM.ID as JockeyID
+    , HorseAge
+    , HorseGender
+    , HorseWeight
+    , Weight
+    , TrainerID
+    , Fluctuation
+    , Popularity
 from RaceHorseInfomation as RHI
     left outer join JockeyMaster as JM
         on JM.JockeyID = RHI.JockeyID
@@ -23,5 +32,3 @@ where
         return await this.ExecGet(sql)
     }
 }
-
-

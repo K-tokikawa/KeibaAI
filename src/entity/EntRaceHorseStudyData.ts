@@ -1,6 +1,6 @@
 export default class EntRaceHorseStudyData{
-    public HorseID: number
     public RaceID: number
+    public HorseID: number
     public GoalTime: number
     public Direction: number
     public HoldDay: Date

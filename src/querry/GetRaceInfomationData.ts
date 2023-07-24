@@ -14,6 +14,7 @@ export default class GetRaceInfomationData extends SQLBase<EntRaceInfomationData
 select
       ID
     , convert(int, Venue) as Venue
+    , Direction
     , Range
     , Ground
     , GroundCondition
@@ -22,6 +23,7 @@ select
     , Hold
     , Day
     , convert(datetime, convert(nvarchar, RI.Year) + '-' + convert(nvarchar, RI.HoldMonth) + '-' + convert(nvarchar, RI.HoldDay)) as HoldDay
+    , Round
     , hc
 from RaceInfomation as RI
     left outer join( 
@@ -34,7 +36,8 @@ from RaceInfomation as RI
     ) as RHI
         on RHI.RaceID = RI.ID
 where
-    RI.ID between ${this.parameter?.Start} and ${this.parameter?.Finish}`
+    RI.ID between ${this.parameter?.Start} and ${this.parameter?.Finish}
+    and RI.Direction <> 3`
         return await this.ExecGet(sql)
     }
 }

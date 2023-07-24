@@ -139,7 +139,6 @@ export default class MgrRaceData{
                             // data += `,GoalTime_${a} decomal(18, 0),Venue_${a} bigint, HoldMonth_${a} int,Hold_${a} int,Day_${a} int,Range_${a} int,Ground_${a} int,GroundCondition_${a} int,Weather_${a} int,Weight_${a} int,TrainerID_${a} int,HorseGender_${a} int,HorseWeight_${a} int,HorseNo_${a} int,HorseAge_${a} int,Fluctuation_${a} int,JockeyID_${a} int,before_${a}`
                         }
                     }
-                    // const empty = ',None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None'
                     // const empty = ',null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null'
                     const empty = ',,,,,,,,,,,,,,,,,,'
                     if (RaceHorseData.length == 1){
@@ -198,8 +197,8 @@ export default class MgrRaceData{
                 // strPassage += `,AveragePassage1,AveragePassage2,AveragePassage3,AveragePassage4`
                 strPassage += `,${Passageentity.AveragePassage1},${Passageentity.AveragePassage2},${Passageentity.AveragePassage3},${Passageentity.AveragePassage4}`
                 // strPassage = 'aptitude,0,' + strPassage
+
                 // Acievement
-    
                 const value = entitys[num].AchievementData.represent
                 const achievements = entitys[num].AchievementData.achievements
                 // let strAchievement = `${HorseID},${RaceID},${value.Venue},${value.Range},${value.Ground},${value.HorseAge},${value.GroundCondition},${value.HoldMonth},${value.Hold},${value.Day},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.Fluctuation},${value.JockeyID}`
@@ -210,7 +209,6 @@ export default class MgrRaceData{
                     const achievement = achievements[id]
                     // strAchievement += `,GoalTime_${id} decimal(18,0),Weight_${id} bigint,before_${id} bigint`
                     if (achievement == null || achievement.GoalTime == null) {
-                        // const empty = `,None,None,None`
                         // const empty = `,null,null,null`
                         const empty = `,,,`
                         strAchievement += empty
@@ -222,13 +220,7 @@ export default class MgrRaceData{
                 this.m_insertDic.strAchievement.push(strAchievement)
                 this.m_insertDic.data.push(data)
                 this.m_insertDic.strPassage.push(strPassage)
-                // const [Achievement, Rotation, Aptitude] = await Promise.all([
-                //     Predict(strAchievement),
-                //     Predict(data),
-                //     Predict(strPassage)
-                // ])
-                // const [Achievement, Rotation, Aptitude] = [HorseID, HorseID * 10, HorseID*100]
-                // horseData.setHorsePredict(num, Aptitude, Achievement, Rotation, RaceID, Rank)
+
             }
             resolve(true)
         })
@@ -430,18 +422,4 @@ export default class MgrRaceData{
         })
         return rows
     }
-}
-function Predict(data: string, name=''): Promise<number | null>{
-    return new Promise((resolve, reject) => {
-        const shell = new PythonShell('./src/python/predict.py')
-        const datarow = data.split(',')
-        const datas = datarow.map(x => {return x == 'null' ? 'None': x})
-        shell.send(`${datas}`)
-        let result: number| null = null
-        shell.on('message', async function(message){
-            result = Number(message.replace('[', '').replace(']', ''))
-            resolve(result)
-        })
-    })
-
 }
