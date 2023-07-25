@@ -91,7 +91,7 @@ from (
             on TA.ID = RHI.Average
     where
             RHI.HorseID is not null
-        and RI.Direction <> 3
+        and RI.Direction is not nul
         and HorseWeight is not null
         and OutValue = 0
 ) as RHI

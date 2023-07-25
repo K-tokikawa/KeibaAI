@@ -37,7 +37,7 @@ from RaceInfomation as RI
         on RHI.RaceID = RI.ID
 where
     RI.ID between ${this.parameter?.Start} and ${this.parameter?.Finish}
-    and RI.Direction <> 3`
+    and RI.Direction is not null`
         return await this.ExecGet(sql)
     }
 }

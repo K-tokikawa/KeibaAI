@@ -102,7 +102,7 @@ from (
             on RHI.HorseID = weightave.HorseID
     where
             RHI.HorseID is not null
-        and RI.Direction <> 3
+        and RI.Direction is not null
 ) as RHI
 where
 ${this.parameter?.IDs == null ? `RHI.HorseID between ${this.parameter?.Start} and ${this.parameter?.Finish}`: `RHI.HorseID in (${this.parameter?.IDs})`}

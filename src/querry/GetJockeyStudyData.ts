@@ -73,7 +73,6 @@ from (
 ) as RHI
 where
     RHI.Rank is not null
-    and RHI.JockeyID = 5339
     and RHI.ID between ${this.parameter?.Start} and ${this.parameter?.Finish}
 `
         return await this.ExecGet(sql)

@@ -32,7 +32,7 @@ from (
             on RI.ID = RHI.RaceID
     where
         RHI.HorseID is not null
-        and RI.Direction <> 3
+        and RI.Direction is not null
 ) as RHI
 `
         return await this.ExecGet(sql)

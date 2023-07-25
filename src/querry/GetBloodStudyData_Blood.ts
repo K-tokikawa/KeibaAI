@@ -839,7 +839,7 @@ from (
         where
             GoalTime is not null
             and RHI.OutValue = 0
-            and RI.Direction <> 3
+            and RI.Direction is not null
     ) as BD
 where
     ${this.parameter?.IDs == null?`BD.num BETWEEN ${this.parameter?.Start} and ${this.parameter?.Finish}`: `BD.HorseID in {${this.parameter?.IDs}}`}

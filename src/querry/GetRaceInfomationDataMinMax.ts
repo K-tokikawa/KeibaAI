@@ -13,7 +13,7 @@ select
     , max(RI.ID) as max
 from RaceInfomation as RI
 where
-    RI.Direction <> 3
+    RI.Direction is not null
 `
         return await this.ExecGet(sql)
     }
