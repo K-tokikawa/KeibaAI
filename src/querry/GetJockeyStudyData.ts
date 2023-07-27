@@ -12,7 +12,7 @@ export default class GetJockyStudyData extends SQLBase<EntJockyStudyData[]>
     public async Execsql(): Promise<EntJockyStudyData[]> {
         const sql = `
 select
-      Rank
+      GoalTime
     , JockeyID
     , HorseGender
     , Venue
@@ -31,7 +31,7 @@ select
 from (
     select
         ROW_NUMBER()over(order by JM.JockeyID) as ID
-        , case when RHI.Rank < 6 then RHI.Rank else 5 end as Rank
+        , RHI.GoalTime - TA.Average as GoalTime
         , JM.ID as JockeyID
         , RHI.HorseGender
         , case when RI.Year > 2000 then RHI.HorseAge else RHI.HorseAge - 1 end as Age
@@ -52,6 +52,8 @@ from (
             on RI.ID = RHI.RaceID
         left outer join JockeyMaster as JM
             on JM.JockeyID = RHI.JockeyID
+		inner join TimeAverage as TA
+			on TA.ID = RHI.Average
     where
             RHI.OutValue = 0
         and RI.Direction <> 3
@@ -72,7 +74,7 @@ from (
         )
 ) as RHI
 where
-    RHI.Rank is not null
+    RHI.GoalTime is not null
     and RHI.ID between ${this.parameter?.Start} and ${this.parameter?.Finish}
 `
         return await this.ExecGet(sql)

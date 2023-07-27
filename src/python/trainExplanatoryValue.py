@@ -12,10 +12,10 @@ aptitude = 'aptitude'
 achievement = 'achievement'
 Jockey = 'Jockey'
 blood = 'blood'
-nural = 'nural'
+predict = 'predict'
 
-mode = nural
-trial = 100
+mode = predict
+trial = 10
 
 DEFAULT_ATTRIBUTES = (
     'index',

@@ -139,7 +139,7 @@ async function main(mode: number) {
                     sql = new GetJockeyStudyData(param)
                     value = await sql.Execsql() as EntJockeyStudyData[]
                     console.log(`${count}`)
-                    rows = value.map(x => { return `${x.Rank},${x.JockeyID},${x.HorseGender},${x.Venue},${x.Range},${x.Ground},${x.GroundCondition},${x.HorseNo},${x.Age},${x.HoldMonth},${x.Weather},${x.Popularity},${x.Weight},${x.Hold},${x.Day},${x.Round}`})
+                    rows = value.map(x => { return `${x.GoalTime},${x.JockeyID},${x.HorseGender},${x.Venue},${x.Range},${x.Ground},${x.GroundCondition},${x.HorseNo},${x.Age},${x.HoldMonth},${x.Weather},${x.Weight},${x.Hold},${x.Day},${x.Round}`})
                     filePath = `./data/Jockey/${Start}.csv`
                     break
                 case 3:
@@ -401,7 +401,7 @@ async function CreateRacePredictData(value: EntRaceInfomationData[], shell: Pyth
             const HorseID = Number(strHorseID)
             const Horsevalue = Horse[HorseID]
 
-            const JockeyData = `Jockey,0,${Horsevalue.Jockey},${Horsevalue.HorseGender},${info.Venue},${info.Range},${info.Ground},${info.GroundCondition},${Horsevalue.HorseNo},${Horsevalue.HorseAge},${info.HoldMonth},${info.Weather},${Horsevalue.Popularity},${Horsevalue.Weight},${info.Hold},${info.Day},${info.Round}`
+            const JockeyData = `Jockey,0,${Horsevalue.Jockey},${Horsevalue.HorseGender},${info.Venue},${info.Range},${info.Ground},${info.GroundCondition},${Horsevalue.HorseNo},${Horsevalue.HorseAge},${info.HoldMonth},${info.Weather},${Horsevalue.Weight},${info.Hold},${info.Day},${info.Round}`
             const blood = blooddata[HorseID]
             const BloodData = `blood,0,${info.Range},${info.Venue},${info.Ground},${info.GroundCondition},${Horsevalue.HorseGender},${Horsevalue.Weight},${Horsevalue.HorseAge},${blood}`
 
@@ -434,6 +434,8 @@ async function CreateRacePredictData(value: EntRaceInfomationData[], shell: Pyth
                     if (EnemyNo != HorseNo) {
                         const Enemyvalue = dicpredict[RaceID].Horses[EnemyNo]
                         row += `${Enemyvalue.horseinfo}`
+                    } else {
+                        row += ',None,None,None,None,None'
                     }
                 }
                 rows.push(row)
