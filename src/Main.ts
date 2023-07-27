@@ -46,6 +46,7 @@ const totalling = 8
 main(nural)
 
 async function main(mode: number) {
+    const shell = new PythonShell('./src/python/whilepredict.py')
     let ID = 0
     ID++
     const valuenum = 100
@@ -175,7 +176,7 @@ async function main(mode: number) {
                     sql = new GetRaceInfomationData(param)
                     console.log(count)
                     value = await sql.Execsql() as EntRaceInfomationData[]
-                    rows = await CreateRacePredictData(value)
+                    rows = await CreateRacePredictData(value, shell)
                     filePath = `./data/nural/${Start}.csv`
                     break
                 case 8:
@@ -222,7 +223,9 @@ async function CreateTotallingData(value: EntHorseIDsData[]){
 }
 
 
-async function CreateRacePredictData(value: EntRaceInfomationData[]) {
+async function CreateRacePredictData(value: EntRaceInfomationData[], shell: PythonShell) {
+
+
     const ProgressBar = simpleProgress()
     const rows: string[] = []
     const dicRace: {
@@ -372,6 +375,8 @@ async function CreateRacePredictData(value: EntRaceInfomationData[]) {
     }
     const multiProgressber = multiProgress()
     const Raceprogress = multiProgressber().addProgress(Object.keys(dicRace).length, 20, 'Race')
+
+
     for (const strRaceID of Object.keys(dicRace)) {
         const RaceID = Number(strRaceID)
         const info = dicRace[RaceID]
@@ -390,6 +395,7 @@ async function CreateRacePredictData(value: EntRaceInfomationData[]) {
         const Horse = dicHorse[RaceID]
 
         const predictprogress = multiProgressber().addProgress(Object.keys(Horse).length, 20, 'predict')
+
         for (const strHorseID of Object.keys(Horse)) {
             predictprogress.addCount(1)
             const HorseID = Number(strHorseID)
@@ -406,13 +412,12 @@ async function CreateRacePredictData(value: EntRaceInfomationData[]) {
             const rowAptitude = `aptitude,0,${info.Venue},${info.Range},${info.Weather}.${info.Ground},${info.GroundCondition},${info.HoldMonth},${info.Hold},${Horsevalue.HorseNo},${info.Day},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.Fluctuation},${Horsevalue.Jockey},${Horsevalue.HorseAge},${Aptitude.Aptitude},${blood}`
             const rowRotation = `rotation,0,${info.Direction},${info.Venue},${info.HoldMonth},${info.Hold},${info.Day},${info.Range},${info.Ground},${info.GroundCondition},${info.Weather},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.HorseNo},${Horsevalue.HorseAge},${Horsevalue.Fluctuation},${Horsevalue.Jockey},0,${Rotation.Rotation}`
             const rowAchievement = `achievement,0,${info.Venue},${info.Range},${info.Ground},${Horsevalue.HorseAge},${info.GroundCondition},${info.HoldMonth},${info.Hold},${info.Day},${info.Weather},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.HorseNo},${Horsevalue.Fluctuation},${Horsevalue.Jockey},${Achievement.Achievement}`
-            const [Blood, Jockey, preAchievement, preRotation, preAptitude] = await Promise.all([
-                    Predict(BloodData),
-                    Predict(JockeyData),
-                    Predict(rowAchievement),
-                    Predict(rowRotation),
-                    Predict(rowAptitude)
-                ])
+            const Blood = await Predict(BloodData, shell)
+            const Jockey = await Predict(JockeyData, shell)
+            const preAchievement = await Predict(rowAchievement, shell)
+            const preRotation = await Predict(rowRotation, shell)
+            const preAptitude = await Predict(rowAptitude, shell)
+
             dicpredict[RaceID].Horses[Horsevalue.HorseNo] = {
                 horseinfo: `,${Blood},${Jockey},${preAchievement},${preRotation},${preAptitude}`,
                 rank: Horsevalue.Rank
@@ -440,14 +445,13 @@ async function CreateRacePredictData(value: EntRaceInfomationData[]) {
 
     return rows
 }
-function Predict(data: string, name=''): Promise<number | null>{
+function Predict(data: string,shell: PythonShell, name=''): Promise<number | null>{
     return new Promise((resolve, reject) => {
-        const shell = new PythonShell('./src/python/predict.py')
         const datarow = data.split(',')
         const datas = datarow.map(x => {return x == null || x == 'null' ? 'None': x})
         shell.send(`${datas}`)
         let result: number| null = null
-        shell.on('message', async function(message){
+        shell.once('message', async function(message){
             result = Number(message.replace('[', '').replace(']', ''))
             resolve(result)
         })

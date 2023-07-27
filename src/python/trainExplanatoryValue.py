@@ -12,8 +12,10 @@ aptitude = 'aptitude'
 achievement = 'achievement'
 Jockey = 'Jockey'
 blood = 'blood'
-mode = achievement
-trial = 10
+nural = 'nural'
+
+mode = nural
+trial = 100
 
 DEFAULT_ATTRIBUTES = (
     'index',
@@ -36,7 +38,7 @@ def objective(trial):
         'eta': trial.suggest_float("eta", 0.01, 1.0, log=False),
         'objective': 'reg:squarederror',
         'eval_metric': 'rmse',
-        'max_depth': trial.suggest_int("max_depth", 5, 9),
+        'max_depth': trial.suggest_int("max_depth", 3, 9),
         'lambda': trial.suggest_int("lambda", 100, 1000),
         'tree_method':'gpu_hist' 
         }
@@ -70,6 +72,7 @@ for file in files:
         datas = pd.concat((r for r in data_reader), ignore_index=True)
     else :
         datas = pd.concat([datas, pd.concat((r for r in data_reader), ignore_index=True)])
+datas = datas.dropna(subset=[0])
 datas = datas.sample(frac=1)
 row = datas.shape[0]
 train = round(row * 0.7)

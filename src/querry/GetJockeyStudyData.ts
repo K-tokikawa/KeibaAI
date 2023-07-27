@@ -31,7 +31,7 @@ select
 from (
     select
         ROW_NUMBER()over(order by JM.JockeyID) as ID
-        , RHI.Rank
+        , case when RHI.Rank < 6 then RHI.Rank else 5 end as Rank
         , JM.ID as JockeyID
         , RHI.HorseGender
         , case when RI.Year > 2000 then RHI.HorseAge else RHI.HorseAge - 1 end as Age

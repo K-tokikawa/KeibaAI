@@ -14,7 +14,7 @@ export default class GetRaceHorseInfomationData extends SQLBase<EntRaceHorseInfo
 select
       RaceID
     , HorseID
-    , Rank
+    , Case when Rank < 6 then Rank else 5 end as Rank
     , HorseNo
     , JM.ID as JockeyID
     , HorseAge
