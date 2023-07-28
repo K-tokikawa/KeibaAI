@@ -34,6 +34,7 @@ import GetRotationData from "./querry/GetRotationData"
 import EntRotationData from "./entity/EntRotationData"
 import { PythonShell } from "python-shell"
 import simpleProgress, { multiProgress } from "./ProgressBar"
+import DeletePredictRecord from "./querry/DeletePredictRecord"
 
 const blood_prt = 1
 const Jockey = 2
@@ -41,15 +42,15 @@ const blood = 3
 const Rotation = 4
 const Achievement = 5
 const Aptitude = 6
-const nural = 7
+const predict = 7
 const totalling = 8
-main(nural)
+main(totalling)
 
 async function main(mode: number) {
     const shell = new PythonShell('./src/python/whilepredict.py')
     let ID = 0
     ID++
-    const valuenum = 100
+    const valuenum = 1000
     let Count: EntStudyDataCount[] = []
     let minmax: EntStudyDataMinMax[] = []
     let sql: GetBloodStudyDataCount | GetJockeyStudyDataCount | GetBloodStudyDataCount_Blood | GetRaceHorseStudyDataMinMax | GetRaceInfomationMinMax
@@ -177,7 +178,7 @@ async function main(mode: number) {
                     console.log(count)
                     value = await sql.Execsql() as EntRaceInfomationData[]
                     rows = await CreateRacePredictData(value, shell)
-                    filePath = `./data/nural/${Start}.csv`
+                    filePath = `./data/predict/${Start}.csv`
                     break
                 case 8:
                     sql = new GetHorseIDs(param)
@@ -213,6 +214,9 @@ async function CreateTotallingData(value: EntHorseIDsData[]){
     // FileUtil.OutputFile(dic.strAchievement, 'strAchievement.txt')
     // FileUtil.OutputFile(dic.data, 'data.txt')
     // FileUtil.OutputFile(dic.strPassage, 'strPassage.txt')
+    const param = new PrmStudyData(0, 0, RaceDatas.map(x => { return x.RaceID}))
+    const deletesql = new DeletePredictRecord(param)
+    await deletesql.Execsql()
     const Achievement = new BulkInsert(dic.strAchievement, 'AchievementTable')
     await Achievement.BulkInsert('AchievementTable')
     const Aptitude = new BulkInsert(dic.strPassage, 'AptitudeTable')
