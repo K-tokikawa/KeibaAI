@@ -4,6 +4,7 @@ export default class EntBloodStudyDataBlood {
     public Venue: string
     public GroundCondition: number
     public HorseGender: number
+    public pace: number
     public Weight: number
     public Age: number
     public time: number | null
@@ -401,6 +402,7 @@ export default class EntBloodStudyDataBlood {
         this.Ground = 0
         this.GroundCondition = 0
         this.HorseGender = 0
+        this.pace = 0
         this.Weight = 0
         this.Age = 0
         this.time = 0

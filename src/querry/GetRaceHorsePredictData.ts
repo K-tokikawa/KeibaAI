@@ -28,6 +28,7 @@ select
     , Ground
     , GroundCondition
     , Round
+    , pace
     , Weight
     , TrainerID
     , Age
@@ -63,6 +64,7 @@ from (
         , RI.Ground
         , RI.GroundCondition
         , RI.Round
+        , RT.pace
         , RHI.Weight
         , convert(int, RHI.TrainerID) as TrainerID
         , RHI.HorseAge as Age
@@ -87,6 +89,8 @@ from (
             on RM.ID = RI.RaceMasterID
         left outer join JockeyMaster as JM
             on JM.JockeyID = RHI.JockeyID
+        left outer join RapTable as RT
+            on RT.ID = RI.ID
         inner join TimeAverage as TA
             on TA.ID = RHI.Average
         left outer join (

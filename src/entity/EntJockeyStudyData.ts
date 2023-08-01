@@ -15,6 +15,7 @@ export default class EntJockeyStudyData{
     public Round : number
     public Day : number
     public Hold : number
+    public pace: number
     constructor(){
         this.GoalTime = 0
         this.JockeyID = 0
@@ -32,6 +33,7 @@ export default class EntJockeyStudyData{
         this.Hold = 0
         this.Day = 0
         this.Round = 0
+        this.pace = 0
     }
 
 }

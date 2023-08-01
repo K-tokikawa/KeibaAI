@@ -18,6 +18,7 @@ select
     , Range
     , Ground
     , GroundCondition
+    , pace
     , Weather
     , HoldMonth
     , Hold
@@ -26,6 +27,8 @@ select
     , Round
     , hc
 from RaceInfomation as RI
+    left outer join RapTable as RT
+        as RT.ID = RI.ID
     left outer join( 
         select
             RHI.RaceID

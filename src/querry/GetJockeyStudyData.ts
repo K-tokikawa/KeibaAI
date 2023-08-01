@@ -28,6 +28,7 @@ select
     , Hold
     , Day
     , Round
+    , pace
 from (
     select
         ROW_NUMBER()over(order by JM.JockeyID) as ID
@@ -47,9 +48,12 @@ from (
         , RI.Hold
         , RI.Day
         , RI.Round
+        , RT.pace
     from RaceHorseInfomation as RHI
         left outer join RaceInfomation as RI
             on RI.ID = RHI.RaceID
+        left outer join RapTable as RT
+            on RT.ID = RI.ID
         left outer join JockeyMaster as JM
             on JM.JockeyID = RHI.JockeyID
 		inner join TimeAverage as TA

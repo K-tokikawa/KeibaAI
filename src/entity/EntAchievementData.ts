@@ -3,1740 +3,2320 @@ export default class EntAchievementData{
     public RaceID: number
     public GoalTime_1: number
     public Weight_1: number
+    public pace_1: number
     public before_1: number
     public GoalTime_4: number
     public Weight_4: number
+    public pace_4: number
     public before_4: number
     public GoalTime_5: number
     public Weight_5: number
+    public pace_5: number
     public before_5: number
     public GoalTime_6: number
     public Weight_6: number
+    public pace_6: number
     public before_6: number
     public GoalTime_8: number
     public Weight_8: number
+    public pace_8: number
     public before_8: number
     public GoalTime_12: number
     public Weight_12: number
+    public pace_12: number
     public before_12: number
     public GoalTime_13: number
     public Weight_13: number
+    public pace_13: number
     public before_13: number
     public GoalTime_14: number
     public Weight_14: number
+    public pace_14: number
     public before_14: number
     public GoalTime_15: number
     public Weight_15: number
+    public pace_15: number
     public before_15: number
     public GoalTime_16: number
     public Weight_16: number
+    public pace_16: number
     public before_16: number
     public GoalTime_20: number
     public Weight_20: number
+    public pace_20: number
     public before_20: number
     public GoalTime_21: number
     public Weight_21: number
+    public pace_21: number
     public before_21: number
     public GoalTime_22: number
     public Weight_22: number
+    public pace_22: number
     public before_22: number
     public GoalTime_23: number
     public Weight_23: number
+    public pace_23: number
     public before_23: number
     public GoalTime_24: number
     public Weight_24: number
+    public pace_24: number
     public before_24: number
     public GoalTime_25: number
     public Weight_25: number
+    public pace_25: number
     public before_25: number
     public GoalTime_28: number
     public Weight_28: number
+    public pace_28: number
     public before_28: number
     public GoalTime_32: number
     public Weight_32: number
+    public pace_32: number
     public before_32: number
     public GoalTime_40: number
     public Weight_40: number
+    public pace_40: number
     public before_40: number
     public GoalTime_41: number
     public Weight_41: number
+    public pace_41: number
     public before_41: number
     public GoalTime_42: number
     public Weight_42: number
+    public pace_42: number
     public before_42: number
     public GoalTime_43: number
     public Weight_43: number
+    public pace_43: number
     public before_43: number
     public GoalTime_44: number
     public Weight_44: number
+    public pace_44: number
     public before_44: number
     public GoalTime_48: number
     public Weight_48: number
+    public pace_48: number
     public before_48: number
     public GoalTime_49: number
     public Weight_49: number
+    public pace_49: number
     public before_49: number
     public GoalTime_50: number
     public Weight_50: number
+    public pace_50: number
     public before_50: number
     public GoalTime_51: number
     public Weight_51: number
+    public pace_51: number
     public before_51: number
     public GoalTime_54: number
     public Weight_54: number
+    public pace_54: number
     public before_54: number
     public GoalTime_55: number
     public Weight_55: number
+    public pace_55: number
     public before_55: number
     public GoalTime_56: number
     public Weight_56: number
+    public pace_56: number
     public before_56: number
     public GoalTime_58: number
     public Weight_58: number
+    public pace_58: number
     public before_58: number
     public GoalTime_59: number
     public Weight_59: number
+    public pace_59: number
     public before_59: number
     public GoalTime_61: number
     public Weight_61: number
+    public pace_61: number
     public before_61: number
     public GoalTime_65: number
     public Weight_65: number
+    public pace_65: number
     public before_65: number
     public GoalTime_66: number
     public Weight_66: number
+    public pace_66: number
     public before_66: number
     public GoalTime_67: number
     public Weight_67: number
+    public pace_67: number
     public before_67: number
     public GoalTime_68: number
     public Weight_68: number
+    public pace_68: number
     public before_68: number
     public GoalTime_69: number
     public Weight_69: number
+    public pace_69: number
     public before_69: number
     public GoalTime_70: number
     public Weight_70: number
+    public pace_70: number
     public before_70: number
     public GoalTime_71: number
     public Weight_71: number
+    public pace_71: number
     public before_71: number
     public GoalTime_72: number
     public Weight_72: number
+    public pace_72: number
     public before_72: number
     public GoalTime_73: number
     public Weight_73: number
+    public pace_73: number
     public before_73: number
     public GoalTime_74: number
     public Weight_74: number
+    public pace_74: number
     public before_74: number
     public GoalTime_75: number
     public Weight_75: number
+    public pace_75: number
     public before_75: number
     public GoalTime_77: number
     public Weight_77: number
+    public pace_77: number
     public before_77: number
     public GoalTime_78: number
     public Weight_78: number
+    public pace_78: number
     public before_78: number
     public GoalTime_79: number
     public Weight_79: number
+    public pace_79: number
     public before_79: number
     public GoalTime_80: number
     public Weight_80: number
+    public pace_80: number
     public before_80: number
     public GoalTime_81: number
     public Weight_81: number
+    public pace_81: number
     public before_81: number
     public GoalTime_82: number
     public Weight_82: number
+    public pace_82: number
     public before_82: number
     public GoalTime_83: number
     public Weight_83: number
+    public pace_83: number
     public before_83: number
     public GoalTime_84: number
     public Weight_84: number
+    public pace_84: number
     public before_84: number
     public GoalTime_85: number
     public Weight_85: number
+    public pace_85: number
     public before_85: number
     public GoalTime_86: number
     public Weight_86: number
+    public pace_86: number
     public before_86: number
     public GoalTime_87: number
     public Weight_87: number
+    public pace_87: number
     public before_87: number
     public GoalTime_88: number
     public Weight_88: number
+    public pace_88: number
     public before_88: number
     public GoalTime_89: number
     public Weight_89: number
+    public pace_89: number
     public before_89: number
     public GoalTime_90: number
     public Weight_90: number
+    public pace_90: number
     public before_90: number
     public GoalTime_91: number
     public Weight_91: number
+    public pace_91: number
     public before_91: number
     public GoalTime_92: number
     public Weight_92: number
+    public pace_92: number
     public before_92: number
     public GoalTime_93: number
     public Weight_93: number
+    public pace_93: number
     public before_93: number
     public GoalTime_94: number
     public Weight_94: number
+    public pace_94: number
     public before_94: number
     public GoalTime_95: number
     public Weight_95: number
+    public pace_95: number
     public before_95: number
     public GoalTime_96: number
     public Weight_96: number
+    public pace_96: number
     public before_96: number
     public GoalTime_97: number
     public Weight_97: number
+    public pace_97: number
     public before_97: number
     public GoalTime_98: number
     public Weight_98: number
+    public pace_98: number
     public before_98: number
     public GoalTime_99: number
     public Weight_99: number
+    public pace_99: number
     public before_99: number
     public GoalTime_101: number
     public Weight_101: number
+    public pace_101: number
     public before_101: number
     public GoalTime_102: number
     public Weight_102: number
+    public pace_102: number
     public before_102: number
     public GoalTime_105: number
     public Weight_105: number
+    public pace_105: number
     public before_105: number
     public GoalTime_106: number
     public Weight_106: number
+    public pace_106: number
     public before_106: number
     public GoalTime_107: number
     public Weight_107: number
+    public pace_107: number
     public before_107: number
     public GoalTime_108: number
     public Weight_108: number
+    public pace_108: number
     public before_108: number
     public GoalTime_109: number
     public Weight_109: number
+    public pace_109: number
     public before_109: number
     public GoalTime_110: number
     public Weight_110: number
+    public pace_110: number
     public before_110: number
     public GoalTime_113: number
     public Weight_113: number
+    public pace_113: number
     public before_113: number
     public GoalTime_114: number
     public Weight_114: number
+    public pace_114: number
     public before_114: number
     public GoalTime_115: number
     public Weight_115: number
+    public pace_115: number
     public before_115: number
     public GoalTime_116: number
     public Weight_116: number
+    public pace_116: number
     public before_116: number
     public GoalTime_117: number
     public Weight_117: number
+    public pace_117: number
     public before_117: number
     public GoalTime_118: number
     public Weight_118: number
+    public pace_118: number
     public before_118: number
     public GoalTime_119: number
     public Weight_119: number
+    public pace_119: number
     public before_119: number
     public GoalTime_120: number
     public Weight_120: number
+    public pace_120: number
     public before_120: number
     public GoalTime_121: number
     public Weight_121: number
+    public pace_121: number
     public before_121: number
     public GoalTime_122: number
     public Weight_122: number
+    public pace_122: number
     public before_122: number
     public GoalTime_123: number
     public Weight_123: number
+    public pace_123: number
     public before_123: number
     public GoalTime_125: number
     public Weight_125: number
+    public pace_125: number
     public before_125: number
     public GoalTime_126: number
     public Weight_126: number
+    public pace_126: number
     public before_126: number
     public GoalTime_127: number
     public Weight_127: number
+    public pace_127: number
     public before_127: number
     public GoalTime_129: number
     public Weight_129: number
+    public pace_129: number
     public before_129: number
     public GoalTime_130: number
     public Weight_130: number
+    public pace_130: number
     public before_130: number
     public GoalTime_131: number
     public Weight_131: number
+    public pace_131: number
     public before_131: number
     public GoalTime_132: number
     public Weight_132: number
+    public pace_132: number
     public before_132: number
     public GoalTime_133: number
     public Weight_133: number
+    public pace_133: number
     public before_133: number
     public GoalTime_134: number
     public Weight_134: number
+    public pace_134: number
     public before_134: number
     public GoalTime_135: number
     public Weight_135: number
+    public pace_135: number
     public before_135: number
     public GoalTime_136: number
     public Weight_136: number
+    public pace_136: number
     public before_136: number
     public GoalTime_140: number
     public Weight_140: number
+    public pace_140: number
     public before_140: number
     public GoalTime_141: number
     public Weight_141: number
+    public pace_141: number
     public before_141: number
     public GoalTime_144: number
     public Weight_144: number
+    public pace_144: number
     public before_144: number
     public GoalTime_145: number
     public Weight_145: number
+    public pace_145: number
     public before_145: number
     public GoalTime_146: number
     public Weight_146: number
+    public pace_146: number
     public before_146: number
     public GoalTime_148: number
     public Weight_148: number
+    public pace_148: number
     public before_148: number
     public GoalTime_149: number
     public Weight_149: number
+    public pace_149: number
     public before_149: number
     public GoalTime_150: number
     public Weight_150: number
+    public pace_150: number
     public before_150: number
     public GoalTime_152: number
     public Weight_152: number
+    public pace_152: number
     public before_152: number
     public GoalTime_153: number
     public Weight_153: number
+    public pace_153: number
     public before_153: number
     public GoalTime_154: number
     public Weight_154: number
+    public pace_154: number
     public before_154: number
     public GoalTime_155: number
     public Weight_155: number
+    public pace_155: number
     public before_155: number
     public GoalTime_156: number
     public Weight_156: number
+    public pace_156: number
     public before_156: number
     public GoalTime_157: number
     public Weight_157: number
+    public pace_157: number
     public before_157: number
     public GoalTime_160: number
     public Weight_160: number
+    public pace_160: number
     public before_160: number
     public GoalTime_161: number
     public Weight_161: number
+    public pace_161: number
     public before_161: number
     public GoalTime_162: number
     public Weight_162: number
+    public pace_162: number
     public before_162: number
     public GoalTime_163: number
     public Weight_163: number
+    public pace_163: number
     public before_163: number
     public GoalTime_164: number
     public Weight_164: number
+    public pace_164: number
     public before_164: number
     public GoalTime_167: number
     public Weight_167: number
+    public pace_167: number
     public before_167: number
     public GoalTime_171: number
     public Weight_171: number
+    public pace_171: number
     public before_171: number
     public GoalTime_172: number
     public Weight_172: number
+    public pace_172: number
     public before_172: number
     public GoalTime_173: number
     public Weight_173: number
+    public pace_173: number
     public before_173: number
     public GoalTime_175: number
     public Weight_175: number
+    public pace_175: number
     public before_175: number
     public GoalTime_176: number
     public Weight_176: number
+    public pace_176: number
     public before_176: number
     public GoalTime_177: number
     public Weight_177: number
+    public pace_177: number
     public before_177: number
     public GoalTime_178: number
     public Weight_178: number
+    public pace_178: number
     public before_178: number
     public GoalTime_179: number
     public Weight_179: number
+    public pace_179: number
     public before_179: number
     public GoalTime_180: number
     public Weight_180: number
+    public pace_180: number
     public before_180: number
     public GoalTime_181: number
     public Weight_181: number
+    public pace_181: number
     public before_181: number
     public GoalTime_182: number
     public Weight_182: number
+    public pace_182: number
     public before_182: number
     public GoalTime_183: number
     public Weight_183: number
+    public pace_183: number
     public before_183: number
     public GoalTime_184: number
     public Weight_184: number
+    public pace_184: number
     public before_184: number
     public GoalTime_185: number
     public Weight_185: number
+    public pace_185: number
     public before_185: number
     public GoalTime_186: number
     public Weight_186: number
+    public pace_186: number
     public before_186: number
     public GoalTime_187: number
     public Weight_187: number
+    public pace_187: number
     public before_187: number
     public GoalTime_188: number
     public Weight_188: number
+    public pace_188: number
     public before_188: number
     public GoalTime_191: number
     public Weight_191: number
+    public pace_191: number
     public before_191: number
     public GoalTime_195: number
     public Weight_195: number
+    public pace_195: number
     public before_195: number
     public GoalTime_196: number
     public Weight_196: number
+    public pace_196: number
     public before_196: number
     public GoalTime_197: number
     public Weight_197: number
+    public pace_197: number
     public before_197: number
     public GoalTime_199: number
     public Weight_199: number
+    public pace_199: number
     public before_199: number
     public GoalTime_200: number
     public Weight_200: number
+    public pace_200: number
     public before_200: number
     public GoalTime_201: number
     public Weight_201: number
+    public pace_201: number
     public before_201: number
     public GoalTime_203: number
     public Weight_203: number
+    public pace_203: number
     public before_203: number
     public GoalTime_204: number
     public Weight_204: number
+    public pace_204: number
     public before_204: number
     public GoalTime_205: number
     public Weight_205: number
+    public pace_205: number
     public before_205: number
     public GoalTime_206: number
     public Weight_206: number
+    public pace_206: number
     public before_206: number
     public GoalTime_211: number
     public Weight_211: number
+    public pace_211: number
     public before_211: number
     public GoalTime_212: number
     public Weight_212: number
+    public pace_212: number
     public before_212: number
     public GoalTime_213: number
     public Weight_213: number
+    public pace_213: number
     public before_213: number
     public GoalTime_214: number
     public Weight_214: number
+    public pace_214: number
     public before_214: number
     public GoalTime_215: number
     public Weight_215: number
+    public pace_215: number
     public before_215: number
     public GoalTime_216: number
     public Weight_216: number
+    public pace_216: number
     public before_216: number
     public GoalTime_219: number
     public Weight_219: number
+    public pace_219: number
     public before_219: number
     public GoalTime_220: number
     public Weight_220: number
+    public pace_220: number
     public before_220: number
     public GoalTime_221: number
     public Weight_221: number
+    public pace_221: number
     public before_221: number
     public GoalTime_222: number
     public Weight_222: number
+    public pace_222: number
     public before_222: number
     public GoalTime_223: number
     public Weight_223: number
+    public pace_223: number
     public before_223: number
     public GoalTime_224: number
     public Weight_224: number
+    public pace_224: number
     public before_224: number
     public GoalTime_225: number
     public Weight_225: number
+    public pace_225: number
     public before_225: number
     public GoalTime_227: number
     public Weight_227: number
+    public pace_227: number
     public before_227: number
     public GoalTime_235: number
     public Weight_235: number
+    public pace_235: number
     public before_235: number
     public GoalTime_239: number
     public Weight_239: number
+    public pace_239: number
     public before_239: number
     public GoalTime_240: number
     public Weight_240: number
+    public pace_240: number
     public before_240: number
     public GoalTime_241: number
     public Weight_241: number
+    public pace_241: number
     public before_241: number
     public GoalTime_242: number
     public Weight_242: number
+    public pace_242: number
     public before_242: number
     public GoalTime_243: number
     public Weight_243: number
+    public pace_243: number
     public before_243: number
     public GoalTime_247: number
     public Weight_247: number
+    public pace_247: number
     public before_247: number
     public GoalTime_251: number
     public Weight_251: number
+    public pace_251: number
     public before_251: number
     public GoalTime_255: number
     public Weight_255: number
+    public pace_255: number
     public before_255: number
     public GoalTime_256: number
     public Weight_256: number
+    public pace_256: number
     public before_256: number
     public GoalTime_257: number
     public Weight_257: number
+    public pace_257: number
     public before_257: number
     public GoalTime_258: number
     public Weight_258: number
+    public pace_258: number
     public before_258: number
     public GoalTime_259: number
     public Weight_259: number
+    public pace_259: number
     public before_259: number
     public GoalTime_260: number
     public Weight_260: number
+    public pace_260: number
     public before_260: number
     public GoalTime_262: number
     public Weight_262: number
+    public pace_262: number
     public before_262: number
     public GoalTime_266: number
     public Weight_266: number
+    public pace_266: number
     public before_266: number
     public GoalTime_267: number
     public Weight_267: number
+    public pace_267: number
     public before_267: number
     public GoalTime_268: number
     public Weight_268: number
+    public pace_268: number
     public before_268: number
     public GoalTime_269: number
     public Weight_269: number
+    public pace_269: number
     public before_269: number
     public GoalTime_270: number
     public Weight_270: number
+    public pace_270: number
     public before_270: number
     public GoalTime_271: number
     public Weight_271: number
+    public pace_271: number
     public before_271: number
     public GoalTime_272: number
     public Weight_272: number
+    public pace_272: number
     public before_272: number
     public GoalTime_273: number
     public Weight_273: number
+    public pace_273: number
     public before_273: number
     public GoalTime_274: number
     public Weight_274: number
+    public pace_274: number
     public before_274: number
     public GoalTime_275: number
     public Weight_275: number
+    public pace_275: number
     public before_275: number
     public GoalTime_276: number
     public Weight_276: number
+    public pace_276: number
     public before_276: number
     public GoalTime_278: number
     public Weight_278: number
+    public pace_278: number
     public before_278: number
     public GoalTime_279: number
     public Weight_279: number
+    public pace_279: number
     public before_279: number
     public GoalTime_280: number
     public Weight_280: number
+    public pace_280: number
     public before_280: number
     public GoalTime_281: number
     public Weight_281: number
+    public pace_281: number
     public before_281: number
     public GoalTime_282: number
     public Weight_282: number
+    public pace_282: number
     public before_282: number
     public GoalTime_283: number
     public Weight_283: number
+    public pace_283: number
     public before_283: number
     public GoalTime_284: number
     public Weight_284: number
+    public pace_284: number
     public before_284: number
     public GoalTime_285: number
     public Weight_285: number
+    public pace_285: number
     public before_285: number
     public GoalTime_286: number
     public Weight_286: number
+    public pace_286: number
     public before_286: number
     public GoalTime_287: number
     public Weight_287: number
+    public pace_287: number
     public before_287: number
     public GoalTime_288: number
     public Weight_288: number
+    public pace_288: number
     public before_288: number
     public GoalTime_290: number
     public Weight_290: number
+    public pace_290: number
     public before_290: number
     public GoalTime_291: number
     public Weight_291: number
+    public pace_291: number
     public before_291: number
     public GoalTime_292: number
     public Weight_292: number
+    public pace_292: number
     public before_292: number
     public GoalTime_293: number
     public Weight_293: number
+    public pace_293: number
     public before_293: number
     public GoalTime_294: number
     public Weight_294: number
+    public pace_294: number
     public before_294: number
     public GoalTime_295: number
     public Weight_295: number
+    public pace_295: number
     public before_295: number
     public GoalTime_298: number
     public Weight_298: number
+    public pace_298: number
     public before_298: number
     public GoalTime_299: number
     public Weight_299: number
+    public pace_299: number
     public before_299: number
     public GoalTime_300: number
     public Weight_300: number
+    public pace_300: number
     public before_300: number
     public GoalTime_301: number
     public Weight_301: number
+    public pace_301: number
     public before_301: number
     public GoalTime_302: number
     public Weight_302: number
+    public pace_302: number
     public before_302: number
     public GoalTime_303: number
     public Weight_303: number
+    public pace_303: number
     public before_303: number
     public GoalTime_304: number
     public Weight_304: number
+    public pace_304: number
     public before_304: number
     public GoalTime_306: number
     public Weight_306: number
+    public pace_306: number
     public before_306: number
     public GoalTime_307: number
     public Weight_307: number
+    public pace_307: number
     public before_307: number
     public GoalTime_308: number
     public Weight_308: number
+    public pace_308: number
     public before_308: number
     public GoalTime_309: number
     public Weight_309: number
+    public pace_309: number
     public before_309: number
     public GoalTime_310: number
     public Weight_310: number
+    public pace_310: number
     public before_310: number
     public GoalTime_311: number
     public Weight_311: number
+    public pace_311: number
     public before_311: number
     public GoalTime_314: number
     public Weight_314: number
+    public pace_314: number
     public before_314: number
     public GoalTime_315: number
     public Weight_315: number
+    public pace_315: number
     public before_315: number
     public GoalTime_316: number
     public Weight_316: number
+    public pace_316: number
     public before_316: number
     public GoalTime_317: number
     public Weight_317: number
+    public pace_317: number
     public before_317: number
     public GoalTime_318: number
     public Weight_318: number
+    public pace_318: number
     public before_318: number
     public GoalTime_319: number
     public Weight_319: number
+    public pace_319: number
     public before_319: number
     public GoalTime_320: number
     public Weight_320: number
+    public pace_320: number
     public before_320: number
     public GoalTime_321: number
     public Weight_321: number
+    public pace_321: number
     public before_321: number
     public GoalTime_322: number
     public Weight_322: number
+    public pace_322: number
     public before_322: number
     public GoalTime_326: number
     public Weight_326: number
+    public pace_326: number
     public before_326: number
     public GoalTime_332: number
     public Weight_332: number
+    public pace_332: number
     public before_332: number
     public GoalTime_333: number
     public Weight_333: number
+    public pace_333: number
     public before_333: number
     public GoalTime_339: number
     public Weight_339: number
+    public pace_339: number
     public before_339: number
     public GoalTime_340: number
     public Weight_340: number
+    public pace_340: number
     public before_340: number
     public GoalTime_341: number
     public Weight_341: number
+    public pace_341: number
     public before_341: number
     public GoalTime_343: number
     public Weight_343: number
+    public pace_343: number
     public before_343: number
     public GoalTime_344: number
     public Weight_344: number
+    public pace_344: number
     public before_344: number
     public GoalTime_347: number
     public Weight_347: number
+    public pace_347: number
     public before_347: number
     public GoalTime_348: number
     public Weight_348: number
+    public pace_348: number
     public before_348: number
     public GoalTime_349: number
     public Weight_349: number
+    public pace_349: number
     public before_349: number
     public GoalTime_351: number
     public Weight_351: number
+    public pace_351: number
     public before_351: number
     public GoalTime_352: number
     public Weight_352: number
+    public pace_352: number
     public before_352: number
     public GoalTime_353: number
     public Weight_353: number
+    public pace_353: number
     public before_353: number
     public GoalTime_355: number
     public Weight_355: number
+    public pace_355: number
     public before_355: number
     public GoalTime_356: number
     public Weight_356: number
+    public pace_356: number
     public before_356: number
     public GoalTime_357: number
     public Weight_357: number
+    public pace_357: number
     public before_357: number
     public GoalTime_358: number
     public Weight_358: number
+    public pace_358: number
     public before_358: number
     public GoalTime_359: number
     public Weight_359: number
+    public pace_359: number
     public before_359: number
     public GoalTime_360: number
     public Weight_360: number
+    public pace_360: number
     public before_360: number
     public GoalTime_361: number
     public Weight_361: number
+    public pace_361: number
     public before_361: number
     public GoalTime_363: number
     public Weight_363: number
+    public pace_363: number
     public before_363: number
     public GoalTime_364: number
     public Weight_364: number
+    public pace_364: number
     public before_364: number
     public GoalTime_365: number
     public Weight_365: number
+    public pace_365: number
     public before_365: number
     public GoalTime_367: number
     public Weight_367: number
+    public pace_367: number
     public before_367: number
     public GoalTime_368: number
     public Weight_368: number
+    public pace_368: number
     public before_368: number
     public GoalTime_369: number
     public Weight_369: number
+    public pace_369: number
     public before_369: number
     public GoalTime_371: number
     public Weight_371: number
+    public pace_371: number
     public before_371: number
     public GoalTime_372: number
     public Weight_372: number
+    public pace_372: number
     public before_372: number
     public GoalTime_375: number
     public Weight_375: number
+    public pace_375: number
     public before_375: number
     public GoalTime_376: number
     public Weight_376: number
+    public pace_376: number
     public before_376: number
     public GoalTime_377: number
     public Weight_377: number
+    public pace_377: number
     public before_377: number
     public GoalTime_378: number
     public Weight_378: number
+    public pace_378: number
     public before_378: number
     public GoalTime_379: number
     public Weight_379: number
+    public pace_379: number
     public before_379: number
     public GoalTime_380: number
     public Weight_380: number
+    public pace_380: number
     public before_380: number
     public GoalTime_381: number
     public Weight_381: number
+    public pace_381: number
     public before_381: number
     public GoalTime_382: number
     public Weight_382: number
+    public pace_382: number
     public before_382: number
     public GoalTime_383: number
     public Weight_383: number
+    public pace_383: number
     public before_383: number
     public GoalTime_384: number
     public Weight_384: number
+    public pace_384: number
     public before_384: number
     public GoalTime_391: number
     public Weight_391: number
+    public pace_391: number
     public before_391: number
     public GoalTime_392: number
     public Weight_392: number
+    public pace_392: number
     public before_392: number
     public GoalTime_395: number
     public Weight_395: number
+    public pace_395: number
     public before_395: number
     public GoalTime_402: number
     public Weight_402: number
+    public pace_402: number
     public before_402: number
     public GoalTime_406: number
     public Weight_406: number
+    public pace_406: number
     public before_406: number
     public GoalTime_407: number
     public Weight_407: number
+    public pace_407: number
     public before_407: number
     public GoalTime_410: number
     public Weight_410: number
+    public pace_410: number
     public before_410: number
     public GoalTime_417: number
     public Weight_417: number
+    public pace_417: number
     public before_417: number
     public GoalTime_436: number
     public Weight_436: number
+    public pace_436: number
     public before_436: number
     public GoalTime_440: number
     public Weight_440: number
+    public pace_440: number
     public before_440: number
     public GoalTime_441: number
     public Weight_441: number
+    public pace_441: number
     public before_441: number
     public GoalTime_448: number
     public Weight_448: number
+    public pace_448: number
     public before_448: number
     public GoalTime_452: number
     public Weight_452: number
+    public pace_452: number
     public before_452: number
     public GoalTime_453: number
     public Weight_453: number
+    public pace_453: number
     public before_453: number
     public GoalTime_456: number
     public Weight_456: number
+    public pace_456: number
     public before_456: number
     public GoalTime_472: number
     public Weight_472: number
+    public pace_472: number
     public before_472: number
     public GoalTime_476: number
     public Weight_476: number
+    public pace_476: number
     public before_476: number
     public GoalTime_477: number
     public Weight_477: number
+    public pace_477: number
     public before_477: number
     public GoalTime_483: number
     public Weight_483: number
+    public pace_483: number
     public before_483: number
     public GoalTime_488: number
     public Weight_488: number
+    public pace_488: number
     public before_488: number
     public GoalTime_492: number
     public Weight_492: number
+    public pace_492: number
     public before_492: number
     public GoalTime_495: number
     public Weight_495: number
+    public pace_495: number
     public before_495: number
     public GoalTime_499: number
     public Weight_499: number
+    public pace_499: number
     public before_499: number
     public GoalTime_508: number
     public Weight_508: number
+    public pace_508: number
     public before_508: number
     public GoalTime_536: number
     public Weight_536: number
+    public pace_536: number
     public before_536: number
     public GoalTime_585: number
     public Weight_585: number
+    public pace_585: number
     public before_585: number
+    
     constructor(){
         this.HorseID = 0
         this.RaceID = 0
         this.GoalTime_1 = 0
         this.Weight_1 = 0
+        this.pace_1 = 0
         this.before_1 = 0
         this.GoalTime_4 = 0
         this.Weight_4 = 0
+        this.pace_4 = 0
         this.before_4 = 0
         this.GoalTime_5 = 0
         this.Weight_5 = 0
+        this.pace_5 = 0
         this.before_5 = 0
         this.GoalTime_6 = 0
         this.Weight_6 = 0
+        this.pace_6 = 0
         this.before_6 = 0
         this.GoalTime_8 = 0
         this.Weight_8 = 0
+        this.pace_8 = 0
         this.before_8 = 0
         this.GoalTime_12 = 0
         this.Weight_12 = 0
+        this.pace_12 = 0
         this.before_12 = 0
         this.GoalTime_13 = 0
         this.Weight_13 = 0
+        this.pace_13 = 0
         this.before_13 = 0
         this.GoalTime_14 = 0
         this.Weight_14 = 0
+        this.pace_14 = 0
         this.before_14 = 0
         this.GoalTime_15 = 0
         this.Weight_15 = 0
+        this.pace_15 = 0
         this.before_15 = 0
         this.GoalTime_16 = 0
         this.Weight_16 = 0
+        this.pace_16 = 0
         this.before_16 = 0
         this.GoalTime_20 = 0
         this.Weight_20 = 0
+        this.pace_20 = 0
         this.before_20 = 0
         this.GoalTime_21 = 0
         this.Weight_21 = 0
+        this.pace_21 = 0
         this.before_21 = 0
         this.GoalTime_22 = 0
         this.Weight_22 = 0
+        this.pace_22 = 0
         this.before_22 = 0
         this.GoalTime_23 = 0
         this.Weight_23 = 0
+        this.pace_23 = 0
         this.before_23 = 0
         this.GoalTime_24 = 0
         this.Weight_24 = 0
+        this.pace_24 = 0
         this.before_24 = 0
         this.GoalTime_25 = 0
         this.Weight_25 = 0
+        this.pace_25 = 0
         this.before_25 = 0
         this.GoalTime_28 = 0
         this.Weight_28 = 0
+        this.pace_28 = 0
         this.before_28 = 0
         this.GoalTime_32 = 0
         this.Weight_32 = 0
+        this.pace_32 = 0
         this.before_32 = 0
         this.GoalTime_40 = 0
         this.Weight_40 = 0
+        this.pace_40 = 0
         this.before_40 = 0
         this.GoalTime_41 = 0
         this.Weight_41 = 0
+        this.pace_41 = 0
         this.before_41 = 0
         this.GoalTime_42 = 0
         this.Weight_42 = 0
+        this.pace_42 = 0
         this.before_42 = 0
         this.GoalTime_43 = 0
         this.Weight_43 = 0
+        this.pace_43 = 0
         this.before_43 = 0
         this.GoalTime_44 = 0
         this.Weight_44 = 0
+        this.pace_44 = 0
         this.before_44 = 0
         this.GoalTime_48 = 0
         this.Weight_48 = 0
+        this.pace_48 = 0
         this.before_48 = 0
         this.GoalTime_49 = 0
         this.Weight_49 = 0
+        this.pace_49 = 0
         this.before_49 = 0
         this.GoalTime_50 = 0
         this.Weight_50 = 0
+        this.pace_50 = 0
         this.before_50 = 0
         this.GoalTime_51 = 0
         this.Weight_51 = 0
+        this.pace_51 = 0
         this.before_51 = 0
         this.GoalTime_54 = 0
         this.Weight_54 = 0
+        this.pace_54 = 0
         this.before_54 = 0
         this.GoalTime_55 = 0
         this.Weight_55 = 0
+        this.pace_55 = 0
         this.before_55 = 0
         this.GoalTime_56 = 0
         this.Weight_56 = 0
+        this.pace_56 = 0
         this.before_56 = 0
         this.GoalTime_58 = 0
         this.Weight_58 = 0
+        this.pace_58 = 0
         this.before_58 = 0
         this.GoalTime_59 = 0
         this.Weight_59 = 0
+        this.pace_59 = 0
         this.before_59 = 0
         this.GoalTime_61 = 0
         this.Weight_61 = 0
+        this.pace_61 = 0
         this.before_61 = 0
         this.GoalTime_65 = 0
         this.Weight_65 = 0
+        this.pace_65 = 0
         this.before_65 = 0
         this.GoalTime_66 = 0
         this.Weight_66 = 0
+        this.pace_66 = 0
         this.before_66 = 0
         this.GoalTime_67 = 0
         this.Weight_67 = 0
+        this.pace_67 = 0
         this.before_67 = 0
         this.GoalTime_68 = 0
         this.Weight_68 = 0
+        this.pace_68 = 0
         this.before_68 = 0
         this.GoalTime_69 = 0
         this.Weight_69 = 0
+        this.pace_69 = 0
         this.before_69 = 0
         this.GoalTime_70 = 0
         this.Weight_70 = 0
+        this.pace_70 = 0
         this.before_70 = 0
         this.GoalTime_71 = 0
         this.Weight_71 = 0
+        this.pace_71 = 0
         this.before_71 = 0
         this.GoalTime_72 = 0
         this.Weight_72 = 0
+        this.pace_72 = 0
         this.before_72 = 0
         this.GoalTime_73 = 0
         this.Weight_73 = 0
+        this.pace_73 = 0
         this.before_73 = 0
         this.GoalTime_74 = 0
         this.Weight_74 = 0
+        this.pace_74 = 0
         this.before_74 = 0
         this.GoalTime_75 = 0
         this.Weight_75 = 0
+        this.pace_75 = 0
         this.before_75 = 0
         this.GoalTime_77 = 0
         this.Weight_77 = 0
+        this.pace_77 = 0
         this.before_77 = 0
         this.GoalTime_78 = 0
         this.Weight_78 = 0
+        this.pace_78 = 0
         this.before_78 = 0
         this.GoalTime_79 = 0
         this.Weight_79 = 0
+        this.pace_79 = 0
         this.before_79 = 0
         this.GoalTime_80 = 0
         this.Weight_80 = 0
+        this.pace_80 = 0
         this.before_80 = 0
         this.GoalTime_81 = 0
         this.Weight_81 = 0
+        this.pace_81 = 0
         this.before_81 = 0
         this.GoalTime_82 = 0
         this.Weight_82 = 0
+        this.pace_82 = 0
         this.before_82 = 0
         this.GoalTime_83 = 0
         this.Weight_83 = 0
+        this.pace_83 = 0
         this.before_83 = 0
         this.GoalTime_84 = 0
         this.Weight_84 = 0
+        this.pace_84 = 0
         this.before_84 = 0
         this.GoalTime_85 = 0
         this.Weight_85 = 0
+        this.pace_85 = 0
         this.before_85 = 0
         this.GoalTime_86 = 0
         this.Weight_86 = 0
+        this.pace_86 = 0
         this.before_86 = 0
         this.GoalTime_87 = 0
         this.Weight_87 = 0
+        this.pace_87 = 0
         this.before_87 = 0
         this.GoalTime_88 = 0
         this.Weight_88 = 0
+        this.pace_88 = 0
         this.before_88 = 0
         this.GoalTime_89 = 0
         this.Weight_89 = 0
+        this.pace_89 = 0
         this.before_89 = 0
         this.GoalTime_90 = 0
         this.Weight_90 = 0
+        this.pace_90 = 0
         this.before_90 = 0
         this.GoalTime_91 = 0
         this.Weight_91 = 0
+        this.pace_91 = 0
         this.before_91 = 0
         this.GoalTime_92 = 0
         this.Weight_92 = 0
+        this.pace_92 = 0
         this.before_92 = 0
         this.GoalTime_93 = 0
         this.Weight_93 = 0
+        this.pace_93 = 0
         this.before_93 = 0
         this.GoalTime_94 = 0
         this.Weight_94 = 0
+        this.pace_94 = 0
         this.before_94 = 0
         this.GoalTime_95 = 0
         this.Weight_95 = 0
+        this.pace_95 = 0
         this.before_95 = 0
         this.GoalTime_96 = 0
         this.Weight_96 = 0
+        this.pace_96 = 0
         this.before_96 = 0
         this.GoalTime_97 = 0
         this.Weight_97 = 0
+        this.pace_97 = 0
         this.before_97 = 0
         this.GoalTime_98 = 0
         this.Weight_98 = 0
+        this.pace_98 = 0
         this.before_98 = 0
         this.GoalTime_99 = 0
         this.Weight_99 = 0
+        this.pace_99 = 0
         this.before_99 = 0
         this.GoalTime_101 = 0
         this.Weight_101 = 0
+        this.pace_101 = 0
         this.before_101 = 0
         this.GoalTime_102 = 0
         this.Weight_102 = 0
+        this.pace_102 = 0
         this.before_102 = 0
         this.GoalTime_105 = 0
         this.Weight_105 = 0
+        this.pace_105 = 0
         this.before_105 = 0
         this.GoalTime_106 = 0
         this.Weight_106 = 0
+        this.pace_106 = 0
         this.before_106 = 0
         this.GoalTime_107 = 0
         this.Weight_107 = 0
+        this.pace_107 = 0
         this.before_107 = 0
         this.GoalTime_108 = 0
         this.Weight_108 = 0
+        this.pace_108 = 0
         this.before_108 = 0
         this.GoalTime_109 = 0
         this.Weight_109 = 0
+        this.pace_109 = 0
         this.before_109 = 0
         this.GoalTime_110 = 0
         this.Weight_110 = 0
+        this.pace_110 = 0
         this.before_110 = 0
         this.GoalTime_113 = 0
         this.Weight_113 = 0
+        this.pace_113 = 0
         this.before_113 = 0
         this.GoalTime_114 = 0
         this.Weight_114 = 0
+        this.pace_114 = 0
         this.before_114 = 0
         this.GoalTime_115 = 0
         this.Weight_115 = 0
+        this.pace_115 = 0
         this.before_115 = 0
         this.GoalTime_116 = 0
         this.Weight_116 = 0
+        this.pace_116 = 0
         this.before_116 = 0
         this.GoalTime_117 = 0
         this.Weight_117 = 0
+        this.pace_117 = 0
         this.before_117 = 0
         this.GoalTime_118 = 0
         this.Weight_118 = 0
+        this.pace_118 = 0
         this.before_118 = 0
         this.GoalTime_119 = 0
         this.Weight_119 = 0
+        this.pace_119 = 0
         this.before_119 = 0
         this.GoalTime_120 = 0
         this.Weight_120 = 0
+        this.pace_120 = 0
         this.before_120 = 0
         this.GoalTime_121 = 0
         this.Weight_121 = 0
+        this.pace_121 = 0
         this.before_121 = 0
         this.GoalTime_122 = 0
         this.Weight_122 = 0
+        this.pace_122 = 0
         this.before_122 = 0
         this.GoalTime_123 = 0
         this.Weight_123 = 0
+        this.pace_123 = 0
         this.before_123 = 0
         this.GoalTime_125 = 0
         this.Weight_125 = 0
+        this.pace_125 = 0
         this.before_125 = 0
         this.GoalTime_126 = 0
         this.Weight_126 = 0
+        this.pace_126 = 0
         this.before_126 = 0
         this.GoalTime_127 = 0
         this.Weight_127 = 0
+        this.pace_127 = 0
         this.before_127 = 0
         this.GoalTime_129 = 0
         this.Weight_129 = 0
+        this.pace_129 = 0
         this.before_129 = 0
         this.GoalTime_130 = 0
         this.Weight_130 = 0
+        this.pace_130 = 0
         this.before_130 = 0
         this.GoalTime_131 = 0
         this.Weight_131 = 0
+        this.pace_131 = 0
         this.before_131 = 0
         this.GoalTime_132 = 0
         this.Weight_132 = 0
+        this.pace_132 = 0
         this.before_132 = 0
         this.GoalTime_133 = 0
         this.Weight_133 = 0
+        this.pace_133 = 0
         this.before_133 = 0
         this.GoalTime_134 = 0
         this.Weight_134 = 0
+        this.pace_134 = 0
         this.before_134 = 0
         this.GoalTime_135 = 0
         this.Weight_135 = 0
+        this.pace_135 = 0
         this.before_135 = 0
         this.GoalTime_136 = 0
         this.Weight_136 = 0
+        this.pace_136 = 0
         this.before_136 = 0
         this.GoalTime_140 = 0
         this.Weight_140 = 0
+        this.pace_140 = 0
         this.before_140 = 0
         this.GoalTime_141 = 0
         this.Weight_141 = 0
+        this.pace_141 = 0
         this.before_141 = 0
         this.GoalTime_144 = 0
         this.Weight_144 = 0
+        this.pace_144 = 0
         this.before_144 = 0
         this.GoalTime_145 = 0
         this.Weight_145 = 0
+        this.pace_145 = 0
         this.before_145 = 0
         this.GoalTime_146 = 0
         this.Weight_146 = 0
+        this.pace_146 = 0
         this.before_146 = 0
         this.GoalTime_148 = 0
         this.Weight_148 = 0
+        this.pace_148 = 0
         this.before_148 = 0
         this.GoalTime_149 = 0
         this.Weight_149 = 0
+        this.pace_149 = 0
         this.before_149 = 0
         this.GoalTime_150 = 0
         this.Weight_150 = 0
+        this.pace_150 = 0
         this.before_150 = 0
         this.GoalTime_152 = 0
         this.Weight_152 = 0
+        this.pace_152 = 0
         this.before_152 = 0
         this.GoalTime_153 = 0
         this.Weight_153 = 0
+        this.pace_153 = 0
         this.before_153 = 0
         this.GoalTime_154 = 0
         this.Weight_154 = 0
+        this.pace_154 = 0
         this.before_154 = 0
         this.GoalTime_155 = 0
         this.Weight_155 = 0
+        this.pace_155 = 0
         this.before_155 = 0
         this.GoalTime_156 = 0
         this.Weight_156 = 0
+        this.pace_156 = 0
         this.before_156 = 0
         this.GoalTime_157 = 0
         this.Weight_157 = 0
+        this.pace_157 = 0
         this.before_157 = 0
         this.GoalTime_160 = 0
         this.Weight_160 = 0
+        this.pace_160 = 0
         this.before_160 = 0
         this.GoalTime_161 = 0
         this.Weight_161 = 0
+        this.pace_161 = 0
         this.before_161 = 0
         this.GoalTime_162 = 0
         this.Weight_162 = 0
+        this.pace_162 = 0
         this.before_162 = 0
         this.GoalTime_163 = 0
         this.Weight_163 = 0
+        this.pace_163 = 0
         this.before_163 = 0
         this.GoalTime_164 = 0
         this.Weight_164 = 0
+        this.pace_164 = 0
         this.before_164 = 0
         this.GoalTime_167 = 0
         this.Weight_167 = 0
+        this.pace_167 = 0
         this.before_167 = 0
         this.GoalTime_171 = 0
         this.Weight_171 = 0
+        this.pace_171 = 0
         this.before_171 = 0
         this.GoalTime_172 = 0
         this.Weight_172 = 0
+        this.pace_172 = 0
         this.before_172 = 0
         this.GoalTime_173 = 0
         this.Weight_173 = 0
+        this.pace_173 = 0
         this.before_173 = 0
         this.GoalTime_175 = 0
         this.Weight_175 = 0
+        this.pace_175 = 0
         this.before_175 = 0
         this.GoalTime_176 = 0
         this.Weight_176 = 0
+        this.pace_176 = 0
         this.before_176 = 0
         this.GoalTime_177 = 0
         this.Weight_177 = 0
+        this.pace_177 = 0
         this.before_177 = 0
         this.GoalTime_178 = 0
         this.Weight_178 = 0
+        this.pace_178 = 0
         this.before_178 = 0
         this.GoalTime_179 = 0
         this.Weight_179 = 0
+        this.pace_179 = 0
         this.before_179 = 0
         this.GoalTime_180 = 0
         this.Weight_180 = 0
+        this.pace_180 = 0
         this.before_180 = 0
         this.GoalTime_181 = 0
         this.Weight_181 = 0
+        this.pace_181 = 0
         this.before_181 = 0
         this.GoalTime_182 = 0
         this.Weight_182 = 0
+        this.pace_182 = 0
         this.before_182 = 0
         this.GoalTime_183 = 0
         this.Weight_183 = 0
+        this.pace_183 = 0
         this.before_183 = 0
         this.GoalTime_184 = 0
         this.Weight_184 = 0
+        this.pace_184 = 0
         this.before_184 = 0
         this.GoalTime_185 = 0
         this.Weight_185 = 0
+        this.pace_185 = 0
         this.before_185 = 0
         this.GoalTime_186 = 0
         this.Weight_186 = 0
+        this.pace_186 = 0
         this.before_186 = 0
         this.GoalTime_187 = 0
         this.Weight_187 = 0
+        this.pace_187 = 0
         this.before_187 = 0
         this.GoalTime_188 = 0
         this.Weight_188 = 0
+        this.pace_188 = 0
         this.before_188 = 0
         this.GoalTime_191 = 0
         this.Weight_191 = 0
+        this.pace_191 = 0
         this.before_191 = 0
         this.GoalTime_195 = 0
         this.Weight_195 = 0
+        this.pace_195 = 0
         this.before_195 = 0
         this.GoalTime_196 = 0
         this.Weight_196 = 0
+        this.pace_196 = 0
         this.before_196 = 0
         this.GoalTime_197 = 0
         this.Weight_197 = 0
+        this.pace_197 = 0
         this.before_197 = 0
         this.GoalTime_199 = 0
         this.Weight_199 = 0
+        this.pace_199 = 0
         this.before_199 = 0
         this.GoalTime_200 = 0
         this.Weight_200 = 0
+        this.pace_200 = 0
         this.before_200 = 0
         this.GoalTime_201 = 0
         this.Weight_201 = 0
+        this.pace_201 = 0
         this.before_201 = 0
         this.GoalTime_203 = 0
         this.Weight_203 = 0
+        this.pace_203 = 0
         this.before_203 = 0
         this.GoalTime_204 = 0
         this.Weight_204 = 0
+        this.pace_204 = 0
         this.before_204 = 0
         this.GoalTime_205 = 0
         this.Weight_205 = 0
+        this.pace_205 = 0
         this.before_205 = 0
         this.GoalTime_206 = 0
         this.Weight_206 = 0
+        this.pace_206 = 0
         this.before_206 = 0
         this.GoalTime_211 = 0
         this.Weight_211 = 0
+        this.pace_211 = 0
         this.before_211 = 0
         this.GoalTime_212 = 0
         this.Weight_212 = 0
+        this.pace_212 = 0
         this.before_212 = 0
         this.GoalTime_213 = 0
         this.Weight_213 = 0
+        this.pace_213 = 0
         this.before_213 = 0
         this.GoalTime_214 = 0
         this.Weight_214 = 0
+        this.pace_214 = 0
         this.before_214 = 0
         this.GoalTime_215 = 0
         this.Weight_215 = 0
+        this.pace_215 = 0
         this.before_215 = 0
         this.GoalTime_216 = 0
         this.Weight_216 = 0
+        this.pace_216 = 0
         this.before_216 = 0
         this.GoalTime_219 = 0
         this.Weight_219 = 0
+        this.pace_219 = 0
         this.before_219 = 0
         this.GoalTime_220 = 0
         this.Weight_220 = 0
+        this.pace_220 = 0
         this.before_220 = 0
         this.GoalTime_221 = 0
         this.Weight_221 = 0
+        this.pace_221 = 0
         this.before_221 = 0
         this.GoalTime_222 = 0
         this.Weight_222 = 0
+        this.pace_222 = 0
         this.before_222 = 0
         this.GoalTime_223 = 0
         this.Weight_223 = 0
+        this.pace_223 = 0
         this.before_223 = 0
         this.GoalTime_224 = 0
         this.Weight_224 = 0
+        this.pace_224 = 0
         this.before_224 = 0
         this.GoalTime_225 = 0
         this.Weight_225 = 0
+        this.pace_225 = 0
         this.before_225 = 0
         this.GoalTime_227 = 0
         this.Weight_227 = 0
+        this.pace_227 = 0
         this.before_227 = 0
         this.GoalTime_235 = 0
         this.Weight_235 = 0
+        this.pace_235 = 0
         this.before_235 = 0
         this.GoalTime_239 = 0
         this.Weight_239 = 0
+        this.pace_239 = 0
         this.before_239 = 0
         this.GoalTime_240 = 0
         this.Weight_240 = 0
+        this.pace_240 = 0
         this.before_240 = 0
         this.GoalTime_241 = 0
         this.Weight_241 = 0
+        this.pace_241 = 0
         this.before_241 = 0
         this.GoalTime_242 = 0
         this.Weight_242 = 0
+        this.pace_242 = 0
         this.before_242 = 0
         this.GoalTime_243 = 0
         this.Weight_243 = 0
+        this.pace_243 = 0
         this.before_243 = 0
         this.GoalTime_247 = 0
         this.Weight_247 = 0
+        this.pace_247 = 0
         this.before_247 = 0
         this.GoalTime_251 = 0
         this.Weight_251 = 0
+        this.pace_251 = 0
         this.before_251 = 0
         this.GoalTime_255 = 0
         this.Weight_255 = 0
+        this.pace_255 = 0
         this.before_255 = 0
         this.GoalTime_256 = 0
         this.Weight_256 = 0
+        this.pace_256 = 0
         this.before_256 = 0
         this.GoalTime_257 = 0
         this.Weight_257 = 0
+        this.pace_257 = 0
         this.before_257 = 0
         this.GoalTime_258 = 0
         this.Weight_258 = 0
+        this.pace_258 = 0
         this.before_258 = 0
         this.GoalTime_259 = 0
         this.Weight_259 = 0
+        this.pace_259 = 0
         this.before_259 = 0
         this.GoalTime_260 = 0
         this.Weight_260 = 0
+        this.pace_260 = 0
         this.before_260 = 0
         this.GoalTime_262 = 0
         this.Weight_262 = 0
+        this.pace_262 = 0
         this.before_262 = 0
         this.GoalTime_266 = 0
         this.Weight_266 = 0
+        this.pace_266 = 0
         this.before_266 = 0
         this.GoalTime_267 = 0
         this.Weight_267 = 0
+        this.pace_267 = 0
         this.before_267 = 0
         this.GoalTime_268 = 0
         this.Weight_268 = 0
+        this.pace_268 = 0
         this.before_268 = 0
         this.GoalTime_269 = 0
         this.Weight_269 = 0
+        this.pace_269 = 0
         this.before_269 = 0
         this.GoalTime_270 = 0
         this.Weight_270 = 0
+        this.pace_270 = 0
         this.before_270 = 0
         this.GoalTime_271 = 0
         this.Weight_271 = 0
+        this.pace_271 = 0
         this.before_271 = 0
         this.GoalTime_272 = 0
         this.Weight_272 = 0
+        this.pace_272 = 0
         this.before_272 = 0
         this.GoalTime_273 = 0
         this.Weight_273 = 0
+        this.pace_273 = 0
         this.before_273 = 0
         this.GoalTime_274 = 0
         this.Weight_274 = 0
+        this.pace_274 = 0
         this.before_274 = 0
         this.GoalTime_275 = 0
         this.Weight_275 = 0
+        this.pace_275 = 0
         this.before_275 = 0
         this.GoalTime_276 = 0
         this.Weight_276 = 0
+        this.pace_276 = 0
         this.before_276 = 0
         this.GoalTime_278 = 0
         this.Weight_278 = 0
+        this.pace_278 = 0
         this.before_278 = 0
         this.GoalTime_279 = 0
         this.Weight_279 = 0
+        this.pace_279 = 0
         this.before_279 = 0
         this.GoalTime_280 = 0
         this.Weight_280 = 0
+        this.pace_280 = 0
         this.before_280 = 0
         this.GoalTime_281 = 0
         this.Weight_281 = 0
+        this.pace_281 = 0
         this.before_281 = 0
         this.GoalTime_282 = 0
         this.Weight_282 = 0
+        this.pace_282 = 0
         this.before_282 = 0
         this.GoalTime_283 = 0
         this.Weight_283 = 0
+        this.pace_283 = 0
         this.before_283 = 0
         this.GoalTime_284 = 0
         this.Weight_284 = 0
+        this.pace_284 = 0
         this.before_284 = 0
         this.GoalTime_285 = 0
         this.Weight_285 = 0
+        this.pace_285 = 0
         this.before_285 = 0
         this.GoalTime_286 = 0
         this.Weight_286 = 0
+        this.pace_286 = 0
         this.before_286 = 0
         this.GoalTime_287 = 0
         this.Weight_287 = 0
+        this.pace_287 = 0
         this.before_287 = 0
         this.GoalTime_288 = 0
         this.Weight_288 = 0
+        this.pace_288 = 0
         this.before_288 = 0
         this.GoalTime_290 = 0
         this.Weight_290 = 0
+        this.pace_290 = 0
         this.before_290 = 0
         this.GoalTime_291 = 0
         this.Weight_291 = 0
+        this.pace_291 = 0
         this.before_291 = 0
         this.GoalTime_292 = 0
         this.Weight_292 = 0
+        this.pace_292 = 0
         this.before_292 = 0
         this.GoalTime_293 = 0
         this.Weight_293 = 0
+        this.pace_293 = 0
         this.before_293 = 0
         this.GoalTime_294 = 0
         this.Weight_294 = 0
+        this.pace_294 = 0
         this.before_294 = 0
         this.GoalTime_295 = 0
         this.Weight_295 = 0
+        this.pace_295 = 0
         this.before_295 = 0
         this.GoalTime_298 = 0
         this.Weight_298 = 0
+        this.pace_298 = 0
         this.before_298 = 0
         this.GoalTime_299 = 0
         this.Weight_299 = 0
+        this.pace_299 = 0
         this.before_299 = 0
         this.GoalTime_300 = 0
         this.Weight_300 = 0
+        this.pace_300 = 0
         this.before_300 = 0
         this.GoalTime_301 = 0
         this.Weight_301 = 0
+        this.pace_301 = 0
         this.before_301 = 0
         this.GoalTime_302 = 0
         this.Weight_302 = 0
+        this.pace_302 = 0
         this.before_302 = 0
         this.GoalTime_303 = 0
         this.Weight_303 = 0
+        this.pace_303 = 0
         this.before_303 = 0
         this.GoalTime_304 = 0
         this.Weight_304 = 0
+        this.pace_304 = 0
         this.before_304 = 0
         this.GoalTime_306 = 0
         this.Weight_306 = 0
+        this.pace_306 = 0
         this.before_306 = 0
         this.GoalTime_307 = 0
         this.Weight_307 = 0
+        this.pace_307 = 0
         this.before_307 = 0
         this.GoalTime_308 = 0
         this.Weight_308 = 0
+        this.pace_308 = 0
         this.before_308 = 0
         this.GoalTime_309 = 0
         this.Weight_309 = 0
+        this.pace_309 = 0
         this.before_309 = 0
         this.GoalTime_310 = 0
         this.Weight_310 = 0
+        this.pace_310 = 0
         this.before_310 = 0
         this.GoalTime_311 = 0
         this.Weight_311 = 0
+        this.pace_311 = 0
         this.before_311 = 0
         this.GoalTime_314 = 0
         this.Weight_314 = 0
+        this.pace_314 = 0
         this.before_314 = 0
         this.GoalTime_315 = 0
         this.Weight_315 = 0
+        this.pace_315 = 0
         this.before_315 = 0
         this.GoalTime_316 = 0
         this.Weight_316 = 0
+        this.pace_316 = 0
         this.before_316 = 0
         this.GoalTime_317 = 0
         this.Weight_317 = 0
+        this.pace_317 = 0
         this.before_317 = 0
         this.GoalTime_318 = 0
         this.Weight_318 = 0
+        this.pace_318 = 0
         this.before_318 = 0
         this.GoalTime_319 = 0
         this.Weight_319 = 0
+        this.pace_319 = 0
         this.before_319 = 0
         this.GoalTime_320 = 0
         this.Weight_320 = 0
+        this.pace_320 = 0
         this.before_320 = 0
         this.GoalTime_321 = 0
         this.Weight_321 = 0
+        this.pace_321 = 0
         this.before_321 = 0
         this.GoalTime_322 = 0
         this.Weight_322 = 0
+        this.pace_322 = 0
         this.before_322 = 0
         this.GoalTime_326 = 0
         this.Weight_326 = 0
+        this.pace_326 = 0
         this.before_326 = 0
         this.GoalTime_332 = 0
         this.Weight_332 = 0
+        this.pace_332 = 0
         this.before_332 = 0
         this.GoalTime_333 = 0
         this.Weight_333 = 0
+        this.pace_333 = 0
         this.before_333 = 0
         this.GoalTime_339 = 0
         this.Weight_339 = 0
+        this.pace_339 = 0
         this.before_339 = 0
         this.GoalTime_340 = 0
         this.Weight_340 = 0
+        this.pace_340 = 0
         this.before_340 = 0
         this.GoalTime_341 = 0
         this.Weight_341 = 0
+        this.pace_341 = 0
         this.before_341 = 0
         this.GoalTime_343 = 0
         this.Weight_343 = 0
+        this.pace_343 = 0
         this.before_343 = 0
         this.GoalTime_344 = 0
         this.Weight_344 = 0
+        this.pace_344 = 0
         this.before_344 = 0
         this.GoalTime_347 = 0
         this.Weight_347 = 0
+        this.pace_347 = 0
         this.before_347 = 0
         this.GoalTime_348 = 0
         this.Weight_348 = 0
+        this.pace_348 = 0
         this.before_348 = 0
         this.GoalTime_349 = 0
         this.Weight_349 = 0
+        this.pace_349 = 0
         this.before_349 = 0
         this.GoalTime_351 = 0
         this.Weight_351 = 0
+        this.pace_351 = 0
         this.before_351 = 0
         this.GoalTime_352 = 0
         this.Weight_352 = 0
+        this.pace_352 = 0
         this.before_352 = 0
         this.GoalTime_353 = 0
         this.Weight_353 = 0
+        this.pace_353 = 0
         this.before_353 = 0
         this.GoalTime_355 = 0
         this.Weight_355 = 0
+        this.pace_355 = 0
         this.before_355 = 0
         this.GoalTime_356 = 0
         this.Weight_356 = 0
+        this.pace_356 = 0
         this.before_356 = 0
         this.GoalTime_357 = 0
         this.Weight_357 = 0
+        this.pace_357 = 0
         this.before_357 = 0
         this.GoalTime_358 = 0
         this.Weight_358 = 0
+        this.pace_358 = 0
         this.before_358 = 0
         this.GoalTime_359 = 0
         this.Weight_359 = 0
+        this.pace_359 = 0
         this.before_359 = 0
         this.GoalTime_360 = 0
         this.Weight_360 = 0
+        this.pace_360 = 0
         this.before_360 = 0
         this.GoalTime_361 = 0
         this.Weight_361 = 0
+        this.pace_361 = 0
         this.before_361 = 0
         this.GoalTime_363 = 0
         this.Weight_363 = 0
+        this.pace_363 = 0
         this.before_363 = 0
         this.GoalTime_364 = 0
         this.Weight_364 = 0
+        this.pace_364 = 0
         this.before_364 = 0
         this.GoalTime_365 = 0
         this.Weight_365 = 0
+        this.pace_365 = 0
         this.before_365 = 0
         this.GoalTime_367 = 0
         this.Weight_367 = 0
+        this.pace_367 = 0
         this.before_367 = 0
         this.GoalTime_368 = 0
         this.Weight_368 = 0
+        this.pace_368 = 0
         this.before_368 = 0
         this.GoalTime_369 = 0
         this.Weight_369 = 0
+        this.pace_369 = 0
         this.before_369 = 0
         this.GoalTime_371 = 0
         this.Weight_371 = 0
+        this.pace_371 = 0
         this.before_371 = 0
         this.GoalTime_372 = 0
         this.Weight_372 = 0
+        this.pace_372 = 0
         this.before_372 = 0
         this.GoalTime_375 = 0
         this.Weight_375 = 0
+        this.pace_375 = 0
         this.before_375 = 0
         this.GoalTime_376 = 0
         this.Weight_376 = 0
+        this.pace_376 = 0
         this.before_376 = 0
         this.GoalTime_377 = 0
         this.Weight_377 = 0
+        this.pace_377 = 0
         this.before_377 = 0
         this.GoalTime_378 = 0
         this.Weight_378 = 0
+        this.pace_378 = 0
         this.before_378 = 0
         this.GoalTime_379 = 0
         this.Weight_379 = 0
+        this.pace_379 = 0
         this.before_379 = 0
         this.GoalTime_380 = 0
         this.Weight_380 = 0
+        this.pace_380 = 0
         this.before_380 = 0
         this.GoalTime_381 = 0
         this.Weight_381 = 0
+        this.pace_381 = 0
         this.before_381 = 0
         this.GoalTime_382 = 0
         this.Weight_382 = 0
+        this.pace_382 = 0
         this.before_382 = 0
         this.GoalTime_383 = 0
         this.Weight_383 = 0
+        this.pace_383 = 0
         this.before_383 = 0
         this.GoalTime_384 = 0
         this.Weight_384 = 0
+        this.pace_384 = 0
         this.before_384 = 0
         this.GoalTime_391 = 0
         this.Weight_391 = 0
+        this.pace_391 = 0
         this.before_391 = 0
         this.GoalTime_392 = 0
         this.Weight_392 = 0
+        this.pace_392 = 0
         this.before_392 = 0
         this.GoalTime_395 = 0
         this.Weight_395 = 0
+        this.pace_395 = 0
         this.before_395 = 0
         this.GoalTime_402 = 0
         this.Weight_402 = 0
+        this.pace_402 = 0
         this.before_402 = 0
         this.GoalTime_406 = 0
         this.Weight_406 = 0
+        this.pace_406 = 0
         this.before_406 = 0
         this.GoalTime_407 = 0
         this.Weight_407 = 0
+        this.pace_407 = 0
         this.before_407 = 0
         this.GoalTime_410 = 0
         this.Weight_410 = 0
+        this.pace_410 = 0
         this.before_410 = 0
         this.GoalTime_417 = 0
         this.Weight_417 = 0
+        this.pace_417 = 0
         this.before_417 = 0
         this.GoalTime_436 = 0
         this.Weight_436 = 0
+        this.pace_436 = 0
         this.before_436 = 0
         this.GoalTime_440 = 0
         this.Weight_440 = 0
+        this.pace_440 = 0
         this.before_440 = 0
         this.GoalTime_441 = 0
         this.Weight_441 = 0
+        this.pace_441 = 0
         this.before_441 = 0
         this.GoalTime_448 = 0
         this.Weight_448 = 0
+        this.pace_448 = 0
         this.before_448 = 0
         this.GoalTime_452 = 0
         this.Weight_452 = 0
+        this.pace_452 = 0
         this.before_452 = 0
         this.GoalTime_453 = 0
         this.Weight_453 = 0
+        this.pace_453 = 0
         this.before_453 = 0
         this.GoalTime_456 = 0
         this.Weight_456 = 0
+        this.pace_456 = 0
         this.before_456 = 0
         this.GoalTime_472 = 0
         this.Weight_472 = 0
+        this.pace_472 = 0
         this.before_472 = 0
         this.GoalTime_476 = 0
         this.Weight_476 = 0
+        this.pace_476 = 0
         this.before_476 = 0
         this.GoalTime_477 = 0
         this.Weight_477 = 0
+        this.pace_477 = 0
         this.before_477 = 0
         this.GoalTime_483 = 0
         this.Weight_483 = 0
+        this.pace_483 = 0
         this.before_483 = 0
         this.GoalTime_488 = 0
         this.Weight_488 = 0
+        this.pace_488 = 0
         this.before_488 = 0
         this.GoalTime_492 = 0
         this.Weight_492 = 0
+        this.pace_492 = 0
         this.before_492 = 0
         this.GoalTime_495 = 0
         this.Weight_495 = 0
+        this.pace_495 = 0
         this.before_495 = 0
         this.GoalTime_499 = 0
         this.Weight_499 = 0
+        this.pace_499 = 0
         this.before_499 = 0
         this.GoalTime_508 = 0
         this.Weight_508 = 0
+        this.pace_508 = 0
         this.before_508 = 0
         this.GoalTime_536 = 0
         this.Weight_536 = 0
+        this.pace_536 = 0
         this.before_536 = 0
         this.GoalTime_585 = 0
         this.Weight_585 = 0
+        this.pace_585 = 0
         this.before_585 = 0
+        
     }
 }

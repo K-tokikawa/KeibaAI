@@ -23,6 +23,7 @@ select
     , Weight
     , TrainerID
     , Fluctuation
+    , pace
     , Popularity
 from RaceHorseInfomation as RHI
     left outer join JockeyMaster as JM

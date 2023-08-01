@@ -5,6 +5,7 @@ export default class EntRaceInfomationData{
     public Range: number
     public Ground: number
     public GroundCondition: number
+    public pace: number
     public Weather: number
     public HoldMonth: number
     public Hold: number
@@ -20,6 +21,7 @@ export default class EntRaceInfomationData{
         this.Range = 0
         this.Ground = 0
         this.GroundCondition = 0
+        this.pace = 0
         this.Weather = 0
         this.HoldMonth = 0
         this.Hold = 0

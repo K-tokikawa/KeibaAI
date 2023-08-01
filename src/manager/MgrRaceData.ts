@@ -5,7 +5,6 @@ import EntBloodStudyData_Blood from "../entity/EntBloodStudyData_Blood";
 import GetHorseIDBloodStudyData_Blood from "../querry/GetHorseIDBloodStudyData_Blood"
 import PrmStudyData from "../param/PrmStudyData";
 import ClassAchievementData from "../class/ClassAchievementData";
-import { PythonShell } from "python-shell";
 import ClassHorseData from "../class/ClassHorseData";
 import simpleProgress from "../ProgressBar";
 
@@ -19,19 +18,19 @@ export default class MgrRaceData{
     private m_insertDic: {
         strAchievement: string[],
         data: string[],
-        strPassage: string[]
+        strPassage: string[],
+        pace: string[]
     }
     constructor(RaceData: EntRaceHorseStudyData[]) {
         this.m_RaceData = RaceData
         this.m_dic = {}
-        this.m_insertDic = {strAchievement: [], data: [], strPassage: []}
-
+        this.m_insertDic = {strAchievement: [], data: [], strPassage: [], pace: []}
     }
 
     public get dic(){return this.m_dic}
     public get insertDic() { return this.m_insertDic }
 
-    async dicCreate(valueblood: {[ID: number]: string}){
+    async dicCreate(){
         return new Promise (async (resolve) => {
             const dic = this.m_dic
             console.log('start')
@@ -48,19 +47,11 @@ export default class MgrRaceData{
                 const HorseID = row.HorseID
                 const num = row.num
                 const HorseNo = row.HorseNo
+
                 // Jockey
                 const dicHorse = dic[HorseID]
                 if (dicHorse == undefined) {
-                    // const JockeyData = `Jockey,0,${row.JockeyID},${row.HorseGender},${row.Venue},${row.Range},${row.Ground},${row.GroundCondition},${row.HorseNo},${row.Age},${row.HoldMonth},${row.Weather},${row.Popularity},${row.Weight},${row.Hold},${row.Day},${row.Round}`
-                    // // Blood
-                    // const blood = valueblood[HorseID]
-                    // const BloodData = `blood,0,${row.Range},${row.Venue},${row.Ground},${row.GroundCondition},${row.HorseGender},${row.Weight},${row.Age},${blood}`
-                    // const [Blood, Jockey] = await Promise.all([
-                    //         Predict(BloodData, 'blood'),
-                    //         Predict(JockeyData, 'jockey')
-                    //     ])
                     dic[HorseID] = {data: new ClassHorseData()}
-                    // dic[HorseID] = {data: new ClassHorseData(1, 1)}
                 }
                 const horseData = dic[HorseID].data
                 const PassageData = new ClassPassageData(data)
@@ -93,28 +84,27 @@ export default class MgrRaceData{
                 HorseIDs.push(HorseID)
                 if (HorseIDs.length % 5 == 0){
                     await Promise.all([
-                        this.CreateRacePredict(valueblood, HorseIDs[0]),
-                        this.CreateRacePredict(valueblood, HorseIDs[1]),
-                        this.CreateRacePredict(valueblood, HorseIDs[2]),
-                        this.CreateRacePredict(valueblood, HorseIDs[3]),
-                        this.CreateRacePredict(valueblood, HorseIDs[4]),
+                        this.CreateRacePredict(HorseIDs[0]),
+                        this.CreateRacePredict(HorseIDs[1]),
+                        this.CreateRacePredict(HorseIDs[2]),
+                        this.CreateRacePredict(HorseIDs[3]),
+                        this.CreateRacePredict(HorseIDs[4]),
                     ])
                     HorseIDs = [] // 再度初期化
                 }
             }
             // あまり
             for (const id of HorseIDs) {
-                await this.CreateRacePredict(valueblood, id)
+                await this.CreateRacePredict(id)
             }
             resolve(true)
         })
     }
 
-    async CreateRacePredict(valueblood: {[ID: number]: string}, HorseID: number){
+    async CreateRacePredict(HorseID: number){
         return new Promise(async (resolve) =>{
             const dic = this.m_dic
             const horseData = dic[HorseID].data
-            const blood = valueblood[HorseID]
             const entitys: {[num: number]: {PassageData: ClassPassageData, AchievementData: ClassAchievementData, RotationData: ClassRaceHorseData[], RaceID: number, Rank: number}} = horseData.HorseData
             for (const keynum of Object.keys(entitys)){
                 const num = Number(keynum)
@@ -122,50 +112,46 @@ export default class MgrRaceData{
                 const Achievemententity = entitys[num].AchievementData
                 const RaceHorseData = entitys[num].RotationData
                 const RaceID = entitys[num].RaceID
-                const Rank = entitys[num].Rank
                 // Rotation
                 let data = ''
+                let pace = ''
                 if (RaceHorseData.length > 0) {
-                    let a = 0
                     for (const value of RaceHorseData){
-                        a++
                         if (data == ''){
-                            // data += `${HorseID},${RaceID}${value.Direction},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
                             data += `${HorseID},${RaceID}`
-                            // data += `HorseID bigint,RaceID bigint`
+                            pace += `${HorseID},${RaceID}`
                         } else {
                             data += `,${value.GoalTime}`.replace('null', '')
-                            data += `,${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
-                            // data += `,GoalTime_${a} decomal(18, 0),Venue_${a} bigint, HoldMonth_${a} int,Hold_${a} int,Day_${a} int,Range_${a} int,Ground_${a} int,GroundCondition_${a} int,Weather_${a} int,Weight_${a} int,TrainerID_${a} int,HorseGender_${a} int,HorseWeight_${a} int,HorseNo_${a} int,HorseAge_${a} int,Fluctuation_${a} int,JockeyID_${a} int,before_${a}`
+                            data += `,${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
+                            pace += `,${value.Pace},${value.Passage1},${value.Passage2},${value.Passage3},${value.Passage4}`
                         }
                     }
-                    // const empty = ',null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null'
                     const empty = ',,,,,,,,,,,,,,,,,,'
+                    const paceempty = ',,,,,'
                     if (RaceHorseData.length == 1){
                         data = data + empty + empty + empty + empty + empty
+                        pace = pace + paceempty + paceempty + paceempty + paceempty + paceempty 
                     }
                     if (RaceHorseData.length == 2){
                         data = data + empty + empty + empty + empty
+                        pace = pace + paceempty + paceempty + paceempty  + paceempty
                     }
                     if (RaceHorseData.length == 3){
                         data = data + empty + empty + empty
+                        pace = pace + paceempty + paceempty + paceempty
                     }
                     if (RaceHorseData.length == 4){
                         data = data + empty + empty
+                        pace = pace + paceempty + paceempty
                     }
                     if (RaceHorseData.length == 5){
                         data = data + empty
+                        pace = pace + paceempty
                     }
-                    // data = 'rotation,0,' + data
                 }
-    
+
                 // aptitude
-                const represent = Passageentity.represent
-                // let strPassage = `${HorseID},${RaceID}${represent.Venue},${represent.Range},${represent.Weather}.${represent.Ground},${represent.GroundCondition},${represent.HoldMonth},${represent.Hold},${represent.HorseNo},${represent.Day},${represent.Weight},${represent.TrainerID},${represent.HorseGender},${represent.HorseWeight},${represent.Fluctuation},${represent.JockeyID},${represent.HorseAge},`
                 let strPassage = `${HorseID},${RaceID}`
-                // strPassage += blood
-                // let strPassage = `HorseID bigint,RaceID bigint,`
-                // strPassage += `FID,MID,FFID,FMID,MFID,MMID,FFFID,FFMID,FMFID,FMMID,MFFID,MFMID,MMFID,MMMID,FFFFID,FFFMID,FFFFFID,FFFFMID,FFFMFID,FFFMMID,FFFFFFID,FFFFFMID,FFFFMFID,FFFFMMID,FFFMFFID,FFFMFMID,FFFMMFID,FFFMMMID,FFMFID,FFMMID,FFMFFID,FFMFMID,FFMMFID,FFMMMID,FFMFFFID,FFMFFMID,FFMFMFID,FFMFMMID,FFMMFFID,FFMMFMID,FFMMMFID,FFMMMMID,FMFFID,FMFMID,FMFFFID,FMFFMID,FMFMFID,FMFMMID,FMFFFFID,FMFFFMID,FMFFMFID,FMFFMMID,FMFMFFID,FMFMFMID,FMFMMFID,FMFMMMID,FMMFID,FMMMID,FMMFFID,FMMFMID,FMMMFID,FMMMMID,FMMFFFID,FMMFFMID,FMMFMFID,FMMFMMID,FMMMFFID,FMMMFMID,FMMMMFID,FMMMMMID,MFFFID,MFFMID,MFFFFID,MFFFMID,MFFMFID,MFFMMID,MFFFFFID,MFFFFMID,MFFFMFID,MFFFMMID,MFFMFFID,MFFMFMID,MFFMMFID,MFFMMMID,MFMFID,MFMMID,MFMFFID,MFMFMID,MFMMFID,MFMMMID,MFMFFFID,MFMFFMID,MFMFMFID,MFMFMMID,MFMMFFID,MFMMFMID,MFMMMFID,MFMMMMID,MMFFID,MMFMID,MMFFFID,MMFFMID,MMFMFID,MMFMMID,MMFFFFID,MMFFFMID,MMFFMFID,MMFFMMID,MMFMFFID,MMFMFMID,MMFMMFID,MMFMMMID,MMMFID,MMMMID,MMMFFID,MMMFMID,MMMMFID,MMMMMID,MMMFFFID,MMMFFMID,MMMFMFID,MMMFMMID,MMMMFFID,MMMMFMID,MMMMMFID,MMMMMMID,FID1,FID2,FID3,FID4,FID5,FID6,FID7,FID8,FID9,FID10,FID11,FID12,FID13,FID14,FID15,FID16,FID17,FID18,FID19,FID20,FID21,FID22,FID23,FID24,FID25,FID26,FID27,FID28,FID29,FID30,FID31,FID32,FID33,FID34,FID35,FID36,FID37,FID38,FID39,FID40,FID41,FID42,FID43,FID44,FID45,FID46,FID47,FID48,FID49,FID50,FID51,FID52,FID53,FID54,FID55,FID56,FID57,FID58,FID59,FID60,FID61,FID62,FID63,FID64,FID65,FID66,FID67,FID68,FID69,FID70,FID71,FID72,FID73,FID74,FID75,FID76,FID77,FID78,FID79,FID80,FID81,FID82,FID83,FID84,FID85,FID86,FID87,MFSID1,MFSID2,MFSID3,MFSID4,MFSID5,MFSID6,MFSID7,MFSID8,MFSID9,MFSID10,MFSID11,MFSID12,MFSID13,MFSID14,MFSID15,MFSID16,MFSID17,MFSID18,MFSID19,MFSID20,MFSID21,MFSID22,MFSID23,MFSID24,MFSID25,MFSID26,MFSID27,MFSID28,MFSID29,MFSID30,MFSID31,MFSID32,MFSID33,MFSID34,MFSID35,MFSID36,MFSID37,MFSID38,MFSID39,MFSID40,MFSID41,MFSID42,MFSID43,MFSID44,MFSID45,MFSID46,MFSID47,MFSID48,MFSID49,MFSID50,MFSID51,MFSID52,MFSID53,MFSID54,MFSID55,MFSID56,MFSID57,MFSID58,MFSID59,MFSID60,MFSID61,MFSID62,MFSID63,MFSID64,MFSID65,MFSID66,MFSID67,MFSID68,MFSID69,MFSID70,MFSID71,MFSID72,MFSID73,MFSID74,MFSID75,MFSID76,MFSID77,MFSID78,MFSID79,MFSID80,MFSID81,MFSID82,MFSID83,MFSID84,MFSID85,MFSID86,MFSID87,MMFSID1,MMFSID2,MMFSID3,MMFSID4,MMFSID5,MMFSID6,MMFSID7,MMFSID8,MMFSID9,MMFSID10,MMFSID11,MMFSID12,MMFSID13,MMFSID14,MMFSID15,MMFSID16,MMFSID17,MMFSID18,MMFSID19,MMFSID20,MMFSID21,MMFSID22,MMFSID23,MMFSID24,MMFSID25,MMFSID26,MMFSID27,MMFSID28,MMFSID29,MMFSID30,MMFSID31,MMFSID32,MMFSID33,MMFSID34,MMFSID35,MMFSID36,MMFSID37,MMFSID38,MMFSID39,MMFSID40,MMFSID41,MMFSID42,MMFSID43,MMFSID44,MMFSID45,MMFSID46,MMFSID47,MMFSID48,MMFSID49,MMFSID50,MMFSID51,MMFSID52,MMFSID53,MMFSID54,MMFSID55,MMFSID56,MMFSID57,MMFSID58,MMFSID59,MMFSID60,MMFSID61,MMFSID62,MMFSID63,MMFSID64,MMFSID65,MMFSID66,MMFSID67,MMFSID68,MMFSID69,MMFSID70,MMFSID71,MMFSID72,MMFSID73,MMFSID74,MMFSID75,MMFSID76,MMFSID77,MMFSID78,MMFSID79,MMFSID80,MMFSID81,MMFSID82,MMFSID83,MMFSID84,MMFSID85,MMFSID86,MMFSID87`
                 for (const row of this.m_RaceData) {
                     // Passage
                     if (row.HorseID == HorseID) {
@@ -176,6 +162,7 @@ export default class MgrRaceData{
                             Passageentity.addPassage4(row.Passage4)
                         }
                     }
+
                     if (row.HorseID == HorseID) {
                         if (row.HoldDay.getTime() < Achievemententity.represent.HoldDay.getTime()){
                             const before = row.before == null ? 0 :(row.HoldDay.getTime() - Achievemententity.represent.HoldDay.getTime()) / 86400000
@@ -194,33 +181,25 @@ export default class MgrRaceData{
                         }
                     }
                 }
-                // strPassage += `,AveragePassage1,AveragePassage2,AveragePassage3,AveragePassage4`
                 strPassage += `,${Passageentity.AveragePassage1},${Passageentity.AveragePassage2},${Passageentity.AveragePassage3},${Passageentity.AveragePassage4}`
-                // strPassage = 'aptitude,0,' + strPassage
 
                 // Acievement
-                const value = entitys[num].AchievementData.represent
                 const achievements = entitys[num].AchievementData.achievements
-                // let strAchievement = `${HorseID},${RaceID},${value.Venue},${value.Range},${value.Ground},${value.HorseAge},${value.GroundCondition},${value.HoldMonth},${value.Hold},${value.Day},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.Fluctuation},${value.JockeyID}`
                 let strAchievement = `${HorseID},${RaceID}`
-                // let strAchievement = `HorseID,RaceID`
                 for (const key of Object.keys(achievements)){
                     const id = Number(key)
                     const achievement = achievements[id]
-                    // strAchievement += `,GoalTime_${id} decimal(18,0),Weight_${id} bigint,before_${id} bigint`
                     if (achievement == null || achievement.GoalTime == null) {
-                        // const empty = `,null,null,null`
                         const empty = `,,,`
                         strAchievement += empty
                     } else {
-                        strAchievement += `,${achievement.GoalTime},${achievement.Weight},${achievement.before}`
+                        strAchievement += `,${achievement.GoalTime},${achievement.Weight},${achievement.Pace},${achievement.before}`
                     }
                 }
-                // strAchievement = 'achievement,0,' + strAchievement
+                this.m_insertDic.pace.push(pace)
                 this.m_insertDic.strAchievement.push(strAchievement)
                 this.m_insertDic.data.push(data)
                 this.m_insertDic.strPassage.push(strPassage)
-
             }
             resolve(true)
         })
@@ -263,7 +242,7 @@ export default class MgrRaceData{
                     const num = Number(keynum)
                     const entity = entitys[num]
                     const represent = entity.represent
-                    let str = `${represent.GoalTime},${represent.Venue},${represent.Range},${represent.Weather}.${represent.Ground},${represent.GroundCondition},${represent.HoldMonth},${represent.Hold},${represent.HorseNo},${represent.Day},${represent.Weight},${represent.TrainerID},${represent.HorseGender},${represent.HorseWeight},${represent.Fluctuation},${represent.JockeyID},${represent.HorseAge}`
+                    let str = `${represent.GoalTime},${represent.Venue},${represent.Range},${represent.Weather},${represent.Ground},${represent.GroundCondition},${represent.Pace},${represent.HoldMonth},${represent.Hold},${represent.HorseNo},${represent.Day},${represent.Weight},${represent.TrainerID},${represent.HorseGender},${represent.HorseWeight},${represent.Fluctuation},${represent.JockeyID},${represent.HorseAge}`
                     str += blood
                     this.m_RaceData.forEach((row: EntRaceHorseStudyData) => {
                         if (row.HorseID == HorseID) {
@@ -336,14 +315,14 @@ export default class MgrRaceData{
                 const num = Number(key)
                 const value = entitys[num].represent
                 const achievements = entitys[num].achievements
-                let str = `${value.GoalTime},${value.Venue},${value.Range},${value.Ground},${value.HorseAge},${value.GroundCondition},${value.HoldMonth},${value.Hold},${value.Day},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.Fluctuation},${value.JockeyID}`
+                let str = `${value.GoalTime},${value.Venue},${value.Range},${value.Ground},${value.GroundCondition},${value.HoldMonth},${value.Hold},${value.Day},${value.Weather},${value.Pace},${value.HorseAge},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.Fluctuation},${value.JockeyID}`
                 Object.keys(achievements).forEach(key => {
                     const id = Number(key)
                     const achievement = achievements[id]
                     if (achievement == null) {
                         str = str + empty
                     } else {
-                        str = str + `,${achievement.GoalTime},${achievement.Weight},${achievement.before}`
+                        str = str + `,${achievement.GoalTime},${achievement.Weight},${achievement.Pace},${achievement.before}`
                     }
                 })
                 rows.push(str)
@@ -398,9 +377,9 @@ export default class MgrRaceData{
                 if (row.length > 1) {
                     row.forEach((value: ClassRaceHorseData) => {
                         if (data == ''){
-                            data += `${value.GoalTime},${value.Direction},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
+                            data += `${value.GoalTime},${value.Direction},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.SpurtTime},${value.JockeyID},${value.before}`
                         } else {
-                            data += `,${value.GoalTime},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
+                            data += `,${value.GoalTime},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.SpurtTime},${value.JockeyID},${value.before}`
                         }
                     })
                     const empty = ',,,,,,,,,,,,,,,,,,'
@@ -423,3 +402,4 @@ export default class MgrRaceData{
         return rows
     }
 }
+

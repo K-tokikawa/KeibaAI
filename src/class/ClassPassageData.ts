@@ -1,7 +1,7 @@
-import ClassRaceData from "./ClassRaceHorseData"
+import ClassRaceHorseData from "./ClassRaceHorseData"
 
 export default class ClassPassageData{
-    private m_represent: ClassRaceData
+    private m_represent: ClassRaceHorseData
     private m_Passage1: number
     private m_Passage2: number
     private m_Passage3: number
@@ -15,7 +15,7 @@ export default class ClassPassageData{
     private m_CountPassage3: number
     private m_CountPassage4: number
 
-    constructor(data: ClassRaceData){
+    constructor(data: ClassRaceHorseData){
         this.m_represent = data
         this.m_Passage1 = 0
         this.m_Passage2 = 0

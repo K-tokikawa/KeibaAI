@@ -13,6 +13,7 @@ export default class ClassRaceHorseData{
     private m_Range: number
     private m_Ground: number | null
     private m_GroundCondition: number
+    private m_pace: number
     private m_Weight: number
     private m_TrainerID: number
     private m_HorseGender: number
@@ -41,6 +42,7 @@ export default class ClassRaceHorseData{
         this.m_Range = row.Range
         this.m_Ground = row.Ground
         this.m_GroundCondition = row.GroundCondition
+        this.m_pace = row.pace
         this.m_Weight = row.Weight
         this.m_TrainerID = row.TrainerID
         this.m_HorseGender = row.HorseGender
@@ -69,6 +71,7 @@ export default class ClassRaceHorseData{
     public get Range() { return this.m_Range }
     public get Ground() { return this.m_Ground }
     public get GroundCondition() { return this.m_GroundCondition }
+    public get Pace() { return this.m_pace}
     public get Weight() { return this.m_Weight}
     public get TrainerID() { return this.m_TrainerID }
     public get HorseGender() { return this.m_HorseGender }

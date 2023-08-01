@@ -10,6 +10,7 @@ export default class EntRotationData{
     public Ground_2: number
     public GroundCondition_2: number
     public Weather_2: number
+    public pace_2: number
     public Weight_2: number
     public TrainerID_2: number
     public HorseGender_2: number
@@ -28,6 +29,7 @@ export default class EntRotationData{
     public Ground_3: number
     public GroundCondition_3: number
     public Weather_3: number
+    public pace_3: number
     public Weight_3: number
     public TrainerID_3: number
     public HorseGender_3: number
@@ -46,6 +48,7 @@ export default class EntRotationData{
     public Ground_4: number
     public GroundCondition_4: number
     public Weather_4: number
+    public pace_4: number
     public Weight_4: number
     public TrainerID_4: number
     public HorseGender_4: number
@@ -64,6 +67,7 @@ export default class EntRotationData{
     public Ground_5: number
     public GroundCondition_5: number
     public Weather_5: number
+    public pace_5: number
     public Weight_5: number
     public TrainerID_5: number
     public HorseGender_5: number
@@ -82,6 +86,7 @@ export default class EntRotationData{
     public Ground_6: number
     public GroundCondition_6: number
     public Weather_6: number
+    public pace_6: number
     public Weight_6: number
     public TrainerID_6: number
     public HorseGender_6: number
@@ -103,6 +108,7 @@ export default class EntRotationData{
         this.Ground_2 = 0
         this.GroundCondition_2 = 0
         this.Weather_2 = 0
+        this.pace_2 = 0
         this.Weight_2 = 0
         this.TrainerID_2 = 0
         this.HorseGender_2 = 0
@@ -121,6 +127,7 @@ export default class EntRotationData{
         this.Ground_3 = 0
         this.GroundCondition_3 = 0
         this.Weather_3 = 0
+        this.pace_3 = 0
         this.Weight_3 = 0
         this.TrainerID_3 = 0
         this.HorseGender_3 = 0
@@ -139,6 +146,7 @@ export default class EntRotationData{
         this.Ground_4 = 0
         this.GroundCondition_4 = 0
         this.Weather_4 = 0
+        this.pace_4 = 0
         this.Weight_4 = 0
         this.TrainerID_4 = 0
         this.HorseGender_4 = 0
@@ -157,6 +165,7 @@ export default class EntRotationData{
         this.Ground_5 = 0
         this.GroundCondition_5 = 0
         this.Weather_5 = 0
+        this.pace_5 = 0
         this.Weight_5 = 0
         this.TrainerID_5 = 0
         this.HorseGender_5 = 0
@@ -175,6 +184,7 @@ export default class EntRotationData{
         this.Ground_6 = 0
         this.GroundCondition_6 = 0
         this.Weather_6 = 0
+        this.pace_6 = 0
         this.Weight_6 = 0
         this.TrainerID_6 = 0
         this.HorseGender_6 = 0

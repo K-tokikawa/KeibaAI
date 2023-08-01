@@ -17,6 +17,7 @@ select
     , Venue
     , GroundCondition
     , HorseGender
+    , pace
     , Weight
     , Age
     , time
@@ -416,6 +417,7 @@ from (
         , RM.GroundCondition
         , RHI.Weight
         , RHI.HorseGender
+        , RT.pace
         , case when RI.[Year] > 2000 then RHI.HorseAge else RHI.HorseAge - 1 end as Age
         , ROW_NUMBER()over(order by RHI.ID) as num
         , GoalTime - TA.Average as time
@@ -809,6 +811,8 @@ from (
     from RaceHorseInfomation as RHI
         left outer join RaceInfomation as RI
             on RI.ID = RHI.RaceID
+        left outer join RapTable as RT
+            on RT.ID = RI.ID
         left outer join RaceMaster as RM
             on RM.ID = RI.RaceMasterID
         inner join TimeAverage as TA
