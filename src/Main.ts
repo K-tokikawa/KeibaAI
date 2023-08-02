@@ -44,7 +44,8 @@ const Achievement = 5
 const Aptitude = 6
 const predict = 7
 const totalling = 8
-main(totalling)
+const pace = 9
+main(Rotation)
 
 async function main(mode: number) {
     const shell = new PythonShell('./src/python/whilepredict.py')
@@ -74,6 +75,7 @@ async function main(mode: number) {
         case 4:
         case 5:
         case 6:
+        case 9:
             sql = new GetRaceHorseStudyDataMinMax()
             minmax = await sql.Execsql() as EntStudyDataMinMax[]
             break
@@ -100,6 +102,7 @@ async function main(mode: number) {
         case 5:
         case 6:
         case 7:
+        case 9:
             min = minmax[0].min
             max = minmax[0].max
             const Horsecount = max - min + 1
@@ -118,7 +121,7 @@ async function main(mode: number) {
             if (count + 1 == loop) {
                 Finish = Datanum
             }
-            if (mode == 4 || mode == 5 || mode == 6) {
+            if (mode == 4 || mode == 5 || mode == 6 || mode == 9) {
                 Start = count == 0 ? min : min + valuenum * count
                 Finish = Start + valuenum - 1
             }
@@ -154,12 +157,14 @@ async function main(mode: number) {
                 case 4:
                 case 5:
                 case 6:
+                case 9:
                     sql = new GetRaceHorseStudyData(param)
                     value = await sql.Execsql() as EntRaceHorseStudyData[]
                     const mgr = new MgrRaceData(value)
                     switch (mode){
                         case 4:
-                            rows = mgr.CreateRotationData()
+                            const data = mgr.CreateRotationData()
+                            rows = data[0]
                             filePath = `./data/rotation/${Start}.csv`
                             break
                         case 5:
@@ -170,6 +175,12 @@ async function main(mode: number) {
                             rows = await mgr.CreateAptitudeData()
                             filePath = `./data/aptitude/${Start}.csv`
                             break
+                        case 9:
+                            const createdata = mgr.CreateRotationData()
+                            rows = createdata[1]
+                            filePath = `./data/pace/${Start}.csv`
+                            break
+
                     }
                     
                     break

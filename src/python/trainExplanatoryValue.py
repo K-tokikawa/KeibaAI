@@ -13,8 +13,9 @@ achievement = 'achievement'
 Jockey = 'Jockey'
 blood = 'blood'
 predict = 'predict'
+pace = 'pace'
 
-mode = predict
+mode = rotation
 trial = 10
 
 DEFAULT_ATTRIBUTES = (
