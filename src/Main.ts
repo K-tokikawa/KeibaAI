@@ -35,6 +35,8 @@ import EntRotationData from "./entity/EntRotationData"
 import { PythonShell } from "python-shell"
 import simpleProgress, { multiProgress } from "./ProgressBar"
 import DeletePredictRecord from "./querry/DeletePredictRecord"
+import GetPaceData from "./querry/GetPaceData"
+import EntPaceData from "./entity/EntPaceData"
 
 const blood_prt = 1
 const Jockey = 2
@@ -44,8 +46,9 @@ const Achievement = 5
 const Aptitude = 6
 const predict = 7
 const totalling = 8
-const pace = 9
-main(Rotation)
+const pacerecord = 9
+const pace = 10
+main(Achievement)
 
 async function main(mode: number) {
     const shell = new PythonShell('./src/python/whilepredict.py')
@@ -80,6 +83,7 @@ async function main(mode: number) {
             minmax = await sql.Execsql() as EntStudyDataMinMax[]
             break
         case 7:
+        case 10:
             sql = new GetRaceInfomationMinMax()
             minmax = await sql.Execsql() as EntStudyDataMinMax[]
             break
@@ -103,6 +107,7 @@ async function main(mode: number) {
         case 6:
         case 7:
         case 9:
+        case 10:
             min = minmax[0].min
             max = minmax[0].max
             const Horsecount = max - min + 1
@@ -121,15 +126,18 @@ async function main(mode: number) {
             if (count + 1 == loop) {
                 Finish = Datanum
             }
-            if (mode == 4 || mode == 5 || mode == 6 || mode == 9) {
+            if (mode == 4 || mode == 5 || mode == 6 || mode == 9 || mode == 10) {
                 Start = count == 0 ? min : min + valuenum * count
                 Finish = Start + valuenum - 1
             }
-            const param = new PrmStudyData(Start, Finish)
+            let param = new PrmStudyData(Start, Finish)
+            if (mode == 9) {
+                param = new PrmStudyData(Start, Finish,null,[],[],false)
+            }
 
             let rows: string[] = []
-            let sql: GetBloodStudyData | GetJockeyStudyData | GetBloodStudyData_Blood | GetRaceHorseStudyData | GetRaceInfomationData | GetHorseIDs
-            let value: EntBloodStudyData[] | EntJockeyStudyData[] | EntBloodStudyData_Blood[] | EntRaceHorseStudyData[] | EntRaceInfomationData[] | EntHorseIDsData[]
+            let sql: GetBloodStudyData | GetJockeyStudyData | GetBloodStudyData_Blood | GetRaceHorseStudyData | GetRaceInfomationData | GetHorseIDs | GetPaceData
+            let value: EntBloodStudyData[] | EntJockeyStudyData[] | EntBloodStudyData_Blood[] | EntRaceHorseStudyData[] | EntRaceInfomationData[] | EntHorseIDsData[] | EntPaceData[]
             let filePath = ""
             switch (mode){
                 case 1:
@@ -176,8 +184,9 @@ async function main(mode: number) {
                             filePath = `./data/aptitude/${Start}.csv`
                             break
                         case 9:
-                            const createdata = mgr.CreateRotationData()
-                            rows = createdata[1]
+                            const createdata = mgr.CreatePaceData()
+                            const Pace = new BulkInsert(createdata, 'PaceTable')
+                            await Pace.BulkInsert('PaceTable')
                             filePath = `./data/pace/${Start}.csv`
                             break
 
@@ -197,11 +206,55 @@ async function main(mode: number) {
                     value = await sql.Execsql() as EntHorseIDsData[]
                     await CreateTotallingData(value)
                     break
+                case 10:
+                    sql = new GetPaceData(param)
+                    value = await sql.Execsql() as EntPaceData[]
+                    rows = CreatePaceData(value)
+                    filePath = `./data/pace/${Start}.csv`
+                    break
             }
             await FileUtil.ContinueOutputFile(filePath, rows)
         }
         count++
     } while(count != loop)
+}
+function CreatePaceData(value: EntPaceData[]) {
+    const dic:{
+        [RaceID: number]:{
+            [HorseNo: number]: EntPaceData | null
+        }
+    } = {}
+    for(const data of value){
+        const RaceID = data.RaceID
+        if (dic[RaceID] == undefined) {
+            dic[RaceID] = {}
+            for (let i = 1; i <= 24; i++) {
+                dic[RaceID][i] = null
+            }
+        }
+        dic[RaceID][data.HorseNo] = data
+    }
+    const rows: string[] = []
+    for(const strID of Object.keys(dic)){
+        const RaceID = Number(strID)
+        let row = ''
+        for (const strNo of (Object.keys(dic[RaceID]))){
+            const HorseNo = Number(strNo)
+            const data = dic[RaceID][HorseNo]
+            if (data != null) {
+                if (HorseNo == 1) {
+                    row = `${data.pace},${data.Venue},${data.HoldMonth},${data.Hold},${data.Day},${data.Range},${data.Ground},${data.GroundCondition},${data.Weather},${data.HorseAge},${data.HorseGender},${data.HorseWeight},${data.Fluctuation},${data.Weight},${data.JockeyID},${data.Pace_1},${data.Passage1_1},${data.Passage2_1},${data.Passage3_1},${data.Passage4_1},${data.Pace_2},${data.Passage1_2},${data.Passage2_2},${data.Passage3_2},${data.Passage4_2},${data.Pace_3},${data.Passage1_3},${data.Passage2_3},${data.Passage3_3},${data.Passage4_3},${data.Pace_4},${data.Passage1_4},${data.Passage2_4},${data.Passage3_4},${data.Passage4_4},${data.Pace_5},${data.Passage1_5},${data.Passage2_5},${data.Passage3_5},${data.Passage4_5}`
+                }
+                else {
+                    row += `,${data.HorseAge},${data.HorseGender},${data.HorseWeight},${data.Fluctuation},${data.Weight},${data.JockeyID},${data.Pace_1},${data.Passage1_1},${data.Passage2_1},${data.Passage3_1},${data.Passage4_1},${data.Pace_2},${data.Passage1_2},${data.Passage2_2},${data.Passage3_2},${data.Passage4_2},${data.Pace_3},${data.Passage1_3},${data.Passage2_3},${data.Passage3_3},${data.Passage4_3},${data.Pace_4},${data.Passage1_4},${data.Passage2_4},${data.Passage3_4},${data.Passage4_4},${data.Pace_5},${data.Passage1_5},${data.Passage2_5},${data.Passage3_5},${data.Passage4_5}`
+                }
+            } else {
+                row += `,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,`
+            }
+        }
+        rows.push(row)
+    }
+    return rows
 }
 async function CreateTotallingData(value: EntHorseIDsData[]){
     const HorseIDs = value.map(x => x.Horse)
@@ -217,8 +270,6 @@ async function CreateTotallingData(value: EntHorseIDsData[]){
     const param = new PrmStudyData(0, 0, HorseIDs)
     const deletesql = new DeletePredictRecord(param)
     await deletesql.Execsql()
-    const Pace = new BulkInsert(dic.pace, 'PaceTable')
-    await Pace.BulkInsert('AchievementTable')
     const Achievement = new BulkInsert(dic.strAchievement, 'AchievementTable')
     await Achievement.BulkInsert('AchievementTable')
     const Aptitude = new BulkInsert(dic.strPassage, 'AptitudeTable')
@@ -362,295 +413,7 @@ async function CreateRacePredictData(value: EntRaceInfomationData[], shell: Pyth
         if (dicAchievement[data.RaceID] == undefined) {
             dicAchievement[data.RaceID] = {}
         }
-        dicAchievement[data.RaceID][data.HorseID] =  { Achievement :`${data.GoalTime_1},${data.Weight_1},${data.pace_1},${data.before_1},\
-${data.GoalTime_4},${data.Weight_4},${data.pace_4},${data.before_4},\
-${data.GoalTime_5},${data.Weight_5},${data.pace_5},${data.before_5},\
-${data.GoalTime_6},${data.Weight_6},${data.pace_6},${data.before_6},\
-${data.GoalTime_8},${data.Weight_8},${data.pace_8},${data.before_8},\
-${data.GoalTime_12},${data.Weight_12},${data.pace_12},${data.before_12},\
-${data.GoalTime_13},${data.Weight_13},${data.pace_13},${data.before_13},\
-${data.GoalTime_14},${data.Weight_14},${data.pace_14},${data.before_14},\
-${data.GoalTime_15},${data.Weight_15},${data.pace_15},${data.before_15},\
-${data.GoalTime_16},${data.Weight_16},${data.pace_16},${data.before_16},\
-${data.GoalTime_20},${data.Weight_20},${data.pace_20},${data.before_20},\
-${data.GoalTime_21},${data.Weight_21},${data.pace_21},${data.before_21},\
-${data.GoalTime_22},${data.Weight_22},${data.pace_22},${data.before_22},\
-${data.GoalTime_23},${data.Weight_23},${data.pace_23},${data.before_23},\
-${data.GoalTime_24},${data.Weight_24},${data.pace_24},${data.before_24},\
-${data.GoalTime_25},${data.Weight_25},${data.pace_25},${data.before_25},\
-${data.GoalTime_28},${data.Weight_28},${data.pace_28},${data.before_28},\
-${data.GoalTime_32},${data.Weight_32},${data.pace_32},${data.before_32},\
-${data.GoalTime_40},${data.Weight_40},${data.pace_40},${data.before_40},\
-${data.GoalTime_41},${data.Weight_41},${data.pace_41},${data.before_41},\
-${data.GoalTime_42},${data.Weight_42},${data.pace_42},${data.before_42},\
-${data.GoalTime_43},${data.Weight_43},${data.pace_43},${data.before_43},\
-${data.GoalTime_44},${data.Weight_44},${data.pace_44},${data.before_44},\
-${data.GoalTime_48},${data.Weight_48},${data.pace_48},${data.before_48},\
-${data.GoalTime_49},${data.Weight_49},${data.pace_49},${data.before_49},\
-${data.GoalTime_50},${data.Weight_50},${data.pace_50},${data.before_50},\
-${data.GoalTime_51},${data.Weight_51},${data.pace_51},${data.before_51},\
-${data.GoalTime_54},${data.Weight_54},${data.pace_54},${data.before_54},\
-${data.GoalTime_55},${data.Weight_55},${data.pace_55},${data.before_55},\
-${data.GoalTime_56},${data.Weight_56},${data.pace_56},${data.before_56},\
-${data.GoalTime_58},${data.Weight_58},${data.pace_58},${data.before_58},\
-${data.GoalTime_59},${data.Weight_59},${data.pace_59},${data.before_59},\
-${data.GoalTime_61},${data.Weight_61},${data.pace_61},${data.before_61},\
-${data.GoalTime_65},${data.Weight_65},${data.pace_65},${data.before_65},\
-${data.GoalTime_66},${data.Weight_66},${data.pace_66},${data.before_66},\
-${data.GoalTime_67},${data.Weight_67},${data.pace_67},${data.before_67},\
-${data.GoalTime_68},${data.Weight_68},${data.pace_68},${data.before_68},\
-${data.GoalTime_69},${data.Weight_69},${data.pace_69},${data.before_69},\
-${data.GoalTime_70},${data.Weight_70},${data.pace_70},${data.before_70},\
-${data.GoalTime_71},${data.Weight_71},${data.pace_71},${data.before_71},\
-${data.GoalTime_72},${data.Weight_72},${data.pace_72},${data.before_72},\
-${data.GoalTime_73},${data.Weight_73},${data.pace_73},${data.before_73},\
-${data.GoalTime_74},${data.Weight_74},${data.pace_74},${data.before_74},\
-${data.GoalTime_75},${data.Weight_75},${data.pace_75},${data.before_75},\
-${data.GoalTime_77},${data.Weight_77},${data.pace_77},${data.before_77},\
-${data.GoalTime_78},${data.Weight_78},${data.pace_78},${data.before_78},\
-${data.GoalTime_79},${data.Weight_79},${data.pace_79},${data.before_79},\
-${data.GoalTime_80},${data.Weight_80},${data.pace_80},${data.before_80},\
-${data.GoalTime_81},${data.Weight_81},${data.pace_81},${data.before_81},\
-${data.GoalTime_82},${data.Weight_82},${data.pace_82},${data.before_82},\
-${data.GoalTime_83},${data.Weight_83},${data.pace_83},${data.before_83},\
-${data.GoalTime_84},${data.Weight_84},${data.pace_84},${data.before_84},\
-${data.GoalTime_85},${data.Weight_85},${data.pace_85},${data.before_85},\
-${data.GoalTime_86},${data.Weight_86},${data.pace_86},${data.before_86},\
-${data.GoalTime_87},${data.Weight_87},${data.pace_87},${data.before_87},\
-${data.GoalTime_88},${data.Weight_88},${data.pace_88},${data.before_88},\
-${data.GoalTime_89},${data.Weight_89},${data.pace_89},${data.before_89},\
-${data.GoalTime_90},${data.Weight_90},${data.pace_90},${data.before_90},\
-${data.GoalTime_91},${data.Weight_91},${data.pace_91},${data.before_91},\
-${data.GoalTime_92},${data.Weight_92},${data.pace_92},${data.before_92},\
-${data.GoalTime_93},${data.Weight_93},${data.pace_93},${data.before_93},\
-${data.GoalTime_94},${data.Weight_94},${data.pace_94},${data.before_94},\
-${data.GoalTime_95},${data.Weight_95},${data.pace_95},${data.before_95},\
-${data.GoalTime_96},${data.Weight_96},${data.pace_96},${data.before_96},\
-${data.GoalTime_97},${data.Weight_97},${data.pace_97},${data.before_97},\
-${data.GoalTime_98},${data.Weight_98},${data.pace_98},${data.before_98},\
-${data.GoalTime_99},${data.Weight_99},${data.pace_99},${data.before_99},\
-${data.GoalTime_101},${data.Weight_101},${data.pace_101},${data.before_101},\
-${data.GoalTime_102},${data.Weight_102},${data.pace_102},${data.before_102},\
-${data.GoalTime_105},${data.Weight_105},${data.pace_105},${data.before_105},\
-${data.GoalTime_106},${data.Weight_106},${data.pace_106},${data.before_106},\
-${data.GoalTime_107},${data.Weight_107},${data.pace_107},${data.before_107},\
-${data.GoalTime_108},${data.Weight_108},${data.pace_108},${data.before_108},\
-${data.GoalTime_109},${data.Weight_109},${data.pace_109},${data.before_109},\
-${data.GoalTime_110},${data.Weight_110},${data.pace_110},${data.before_110},\
-${data.GoalTime_113},${data.Weight_113},${data.pace_113},${data.before_113},\
-${data.GoalTime_114},${data.Weight_114},${data.pace_114},${data.before_114},\
-${data.GoalTime_115},${data.Weight_115},${data.pace_115},${data.before_115},\
-${data.GoalTime_116},${data.Weight_116},${data.pace_116},${data.before_116},\
-${data.GoalTime_117},${data.Weight_117},${data.pace_117},${data.before_117},\
-${data.GoalTime_118},${data.Weight_118},${data.pace_118},${data.before_118},\
-${data.GoalTime_119},${data.Weight_119},${data.pace_119},${data.before_119},\
-${data.GoalTime_120},${data.Weight_120},${data.pace_120},${data.before_120},\
-${data.GoalTime_121},${data.Weight_121},${data.pace_121},${data.before_121},\
-${data.GoalTime_122},${data.Weight_122},${data.pace_122},${data.before_122},\
-${data.GoalTime_123},${data.Weight_123},${data.pace_123},${data.before_123},\
-${data.GoalTime_125},${data.Weight_125},${data.pace_125},${data.before_125},\
-${data.GoalTime_126},${data.Weight_126},${data.pace_126},${data.before_126},\
-${data.GoalTime_127},${data.Weight_127},${data.pace_127},${data.before_127},\
-${data.GoalTime_129},${data.Weight_129},${data.pace_129},${data.before_129},\
-${data.GoalTime_130},${data.Weight_130},${data.pace_130},${data.before_130},\
-${data.GoalTime_131},${data.Weight_131},${data.pace_131},${data.before_131},\
-${data.GoalTime_132},${data.Weight_132},${data.pace_132},${data.before_132},\
-${data.GoalTime_133},${data.Weight_133},${data.pace_133},${data.before_133},\
-${data.GoalTime_134},${data.Weight_134},${data.pace_134},${data.before_134},\
-${data.GoalTime_135},${data.Weight_135},${data.pace_135},${data.before_135},\
-${data.GoalTime_136},${data.Weight_136},${data.pace_136},${data.before_136},\
-${data.GoalTime_140},${data.Weight_140},${data.pace_140},${data.before_140},\
-${data.GoalTime_141},${data.Weight_141},${data.pace_141},${data.before_141},\
-${data.GoalTime_144},${data.Weight_144},${data.pace_144},${data.before_144},\
-${data.GoalTime_145},${data.Weight_145},${data.pace_145},${data.before_145},\
-${data.GoalTime_146},${data.Weight_146},${data.pace_146},${data.before_146},\
-${data.GoalTime_148},${data.Weight_148},${data.pace_148},${data.before_148},\
-${data.GoalTime_149},${data.Weight_149},${data.pace_149},${data.before_149},\
-${data.GoalTime_150},${data.Weight_150},${data.pace_150},${data.before_150},\
-${data.GoalTime_152},${data.Weight_152},${data.pace_152},${data.before_152},\
-${data.GoalTime_153},${data.Weight_153},${data.pace_153},${data.before_153},\
-${data.GoalTime_154},${data.Weight_154},${data.pace_154},${data.before_154},\
-${data.GoalTime_155},${data.Weight_155},${data.pace_155},${data.before_155},\
-${data.GoalTime_156},${data.Weight_156},${data.pace_156},${data.before_156},\
-${data.GoalTime_157},${data.Weight_157},${data.pace_157},${data.before_157},\
-${data.GoalTime_160},${data.Weight_160},${data.pace_160},${data.before_160},\
-${data.GoalTime_161},${data.Weight_161},${data.pace_161},${data.before_161},\
-${data.GoalTime_162},${data.Weight_162},${data.pace_162},${data.before_162},\
-${data.GoalTime_163},${data.Weight_163},${data.pace_163},${data.before_163},\
-${data.GoalTime_164},${data.Weight_164},${data.pace_164},${data.before_164},\
-${data.GoalTime_167},${data.Weight_167},${data.pace_167},${data.before_167},\
-${data.GoalTime_171},${data.Weight_171},${data.pace_171},${data.before_171},\
-${data.GoalTime_172},${data.Weight_172},${data.pace_172},${data.before_172},\
-${data.GoalTime_173},${data.Weight_173},${data.pace_173},${data.before_173},\
-${data.GoalTime_175},${data.Weight_175},${data.pace_175},${data.before_175},\
-${data.GoalTime_176},${data.Weight_176},${data.pace_176},${data.before_176},\
-${data.GoalTime_177},${data.Weight_177},${data.pace_177},${data.before_177},\
-${data.GoalTime_178},${data.Weight_178},${data.pace_178},${data.before_178},\
-${data.GoalTime_179},${data.Weight_179},${data.pace_179},${data.before_179},\
-${data.GoalTime_180},${data.Weight_180},${data.pace_180},${data.before_180},\
-${data.GoalTime_181},${data.Weight_181},${data.pace_181},${data.before_181},\
-${data.GoalTime_182},${data.Weight_182},${data.pace_182},${data.before_182},\
-${data.GoalTime_183},${data.Weight_183},${data.pace_183},${data.before_183},\
-${data.GoalTime_184},${data.Weight_184},${data.pace_184},${data.before_184},\
-${data.GoalTime_185},${data.Weight_185},${data.pace_185},${data.before_185},\
-${data.GoalTime_186},${data.Weight_186},${data.pace_186},${data.before_186},\
-${data.GoalTime_187},${data.Weight_187},${data.pace_187},${data.before_187},\
-${data.GoalTime_188},${data.Weight_188},${data.pace_188},${data.before_188},\
-${data.GoalTime_191},${data.Weight_191},${data.pace_191},${data.before_191},\
-${data.GoalTime_195},${data.Weight_195},${data.pace_195},${data.before_195},\
-${data.GoalTime_196},${data.Weight_196},${data.pace_196},${data.before_196},\
-${data.GoalTime_197},${data.Weight_197},${data.pace_197},${data.before_197},\
-${data.GoalTime_199},${data.Weight_199},${data.pace_199},${data.before_199},\
-${data.GoalTime_200},${data.Weight_200},${data.pace_200},${data.before_200},\
-${data.GoalTime_201},${data.Weight_201},${data.pace_201},${data.before_201},\
-${data.GoalTime_203},${data.Weight_203},${data.pace_203},${data.before_203},\
-${data.GoalTime_204},${data.Weight_204},${data.pace_204},${data.before_204},\
-${data.GoalTime_205},${data.Weight_205},${data.pace_205},${data.before_205},\
-${data.GoalTime_206},${data.Weight_206},${data.pace_206},${data.before_206},\
-${data.GoalTime_211},${data.Weight_211},${data.pace_211},${data.before_211},\
-${data.GoalTime_212},${data.Weight_212},${data.pace_212},${data.before_212},\
-${data.GoalTime_213},${data.Weight_213},${data.pace_213},${data.before_213},\
-${data.GoalTime_214},${data.Weight_214},${data.pace_214},${data.before_214},\
-${data.GoalTime_215},${data.Weight_215},${data.pace_215},${data.before_215},\
-${data.GoalTime_216},${data.Weight_216},${data.pace_216},${data.before_216},\
-${data.GoalTime_219},${data.Weight_219},${data.pace_219},${data.before_219},\
-${data.GoalTime_220},${data.Weight_220},${data.pace_220},${data.before_220},\
-${data.GoalTime_221},${data.Weight_221},${data.pace_221},${data.before_221},\
-${data.GoalTime_222},${data.Weight_222},${data.pace_222},${data.before_222},\
-${data.GoalTime_223},${data.Weight_223},${data.pace_223},${data.before_223},\
-${data.GoalTime_224},${data.Weight_224},${data.pace_224},${data.before_224},\
-${data.GoalTime_225},${data.Weight_225},${data.pace_225},${data.before_225},\
-${data.GoalTime_227},${data.Weight_227},${data.pace_227},${data.before_227},\
-${data.GoalTime_235},${data.Weight_235},${data.pace_235},${data.before_235},\
-${data.GoalTime_239},${data.Weight_239},${data.pace_239},${data.before_239},\
-${data.GoalTime_240},${data.Weight_240},${data.pace_240},${data.before_240},\
-${data.GoalTime_241},${data.Weight_241},${data.pace_241},${data.before_241},\
-${data.GoalTime_242},${data.Weight_242},${data.pace_242},${data.before_242},\
-${data.GoalTime_243},${data.Weight_243},${data.pace_243},${data.before_243},\
-${data.GoalTime_247},${data.Weight_247},${data.pace_247},${data.before_247},\
-${data.GoalTime_251},${data.Weight_251},${data.pace_251},${data.before_251},\
-${data.GoalTime_255},${data.Weight_255},${data.pace_255},${data.before_255},\
-${data.GoalTime_256},${data.Weight_256},${data.pace_256},${data.before_256},\
-${data.GoalTime_257},${data.Weight_257},${data.pace_257},${data.before_257},\
-${data.GoalTime_258},${data.Weight_258},${data.pace_258},${data.before_258},\
-${data.GoalTime_259},${data.Weight_259},${data.pace_259},${data.before_259},\
-${data.GoalTime_260},${data.Weight_260},${data.pace_260},${data.before_260},\
-${data.GoalTime_262},${data.Weight_262},${data.pace_262},${data.before_262},\
-${data.GoalTime_266},${data.Weight_266},${data.pace_266},${data.before_266},\
-${data.GoalTime_267},${data.Weight_267},${data.pace_267},${data.before_267},\
-${data.GoalTime_268},${data.Weight_268},${data.pace_268},${data.before_268},\
-${data.GoalTime_269},${data.Weight_269},${data.pace_269},${data.before_269},\
-${data.GoalTime_270},${data.Weight_270},${data.pace_270},${data.before_270},\
-${data.GoalTime_271},${data.Weight_271},${data.pace_271},${data.before_271},\
-${data.GoalTime_272},${data.Weight_272},${data.pace_272},${data.before_272},\
-${data.GoalTime_273},${data.Weight_273},${data.pace_273},${data.before_273},\
-${data.GoalTime_274},${data.Weight_274},${data.pace_274},${data.before_274},\
-${data.GoalTime_275},${data.Weight_275},${data.pace_275},${data.before_275},\
-${data.GoalTime_276},${data.Weight_276},${data.pace_276},${data.before_276},\
-${data.GoalTime_278},${data.Weight_278},${data.pace_278},${data.before_278},\
-${data.GoalTime_279},${data.Weight_279},${data.pace_279},${data.before_279},\
-${data.GoalTime_280},${data.Weight_280},${data.pace_280},${data.before_280},\
-${data.GoalTime_281},${data.Weight_281},${data.pace_281},${data.before_281},\
-${data.GoalTime_282},${data.Weight_282},${data.pace_282},${data.before_282},\
-${data.GoalTime_283},${data.Weight_283},${data.pace_283},${data.before_283},\
-${data.GoalTime_284},${data.Weight_284},${data.pace_284},${data.before_284},\
-${data.GoalTime_285},${data.Weight_285},${data.pace_285},${data.before_285},\
-${data.GoalTime_286},${data.Weight_286},${data.pace_286},${data.before_286},\
-${data.GoalTime_287},${data.Weight_287},${data.pace_287},${data.before_287},\
-${data.GoalTime_288},${data.Weight_288},${data.pace_288},${data.before_288},\
-${data.GoalTime_290},${data.Weight_290},${data.pace_290},${data.before_290},\
-${data.GoalTime_291},${data.Weight_291},${data.pace_291},${data.before_291},\
-${data.GoalTime_292},${data.Weight_292},${data.pace_292},${data.before_292},\
-${data.GoalTime_293},${data.Weight_293},${data.pace_293},${data.before_293},\
-${data.GoalTime_294},${data.Weight_294},${data.pace_294},${data.before_294},\
-${data.GoalTime_295},${data.Weight_295},${data.pace_295},${data.before_295},\
-${data.GoalTime_298},${data.Weight_298},${data.pace_298},${data.before_298},\
-${data.GoalTime_299},${data.Weight_299},${data.pace_299},${data.before_299},\
-${data.GoalTime_300},${data.Weight_300},${data.pace_300},${data.before_300},\
-${data.GoalTime_301},${data.Weight_301},${data.pace_301},${data.before_301},\
-${data.GoalTime_302},${data.Weight_302},${data.pace_302},${data.before_302},\
-${data.GoalTime_303},${data.Weight_303},${data.pace_303},${data.before_303},\
-${data.GoalTime_304},${data.Weight_304},${data.pace_304},${data.before_304},\
-${data.GoalTime_306},${data.Weight_306},${data.pace_306},${data.before_306},\
-${data.GoalTime_307},${data.Weight_307},${data.pace_307},${data.before_307},\
-${data.GoalTime_308},${data.Weight_308},${data.pace_308},${data.before_308},\
-${data.GoalTime_309},${data.Weight_309},${data.pace_309},${data.before_309},\
-${data.GoalTime_310},${data.Weight_310},${data.pace_310},${data.before_310},\
-${data.GoalTime_311},${data.Weight_311},${data.pace_311},${data.before_311},\
-${data.GoalTime_314},${data.Weight_314},${data.pace_314},${data.before_314},\
-${data.GoalTime_315},${data.Weight_315},${data.pace_315},${data.before_315},\
-${data.GoalTime_316},${data.Weight_316},${data.pace_316},${data.before_316},\
-${data.GoalTime_317},${data.Weight_317},${data.pace_317},${data.before_317},\
-${data.GoalTime_318},${data.Weight_318},${data.pace_318},${data.before_318},\
-${data.GoalTime_319},${data.Weight_319},${data.pace_319},${data.before_319},\
-${data.GoalTime_320},${data.Weight_320},${data.pace_320},${data.before_320},\
-${data.GoalTime_321},${data.Weight_321},${data.pace_321},${data.before_321},\
-${data.GoalTime_322},${data.Weight_322},${data.pace_322},${data.before_322},\
-${data.GoalTime_326},${data.Weight_326},${data.pace_326},${data.before_326},\
-${data.GoalTime_332},${data.Weight_332},${data.pace_332},${data.before_332},\
-${data.GoalTime_333},${data.Weight_333},${data.pace_333},${data.before_333},\
-${data.GoalTime_339},${data.Weight_339},${data.pace_339},${data.before_339},\
-${data.GoalTime_340},${data.Weight_340},${data.pace_340},${data.before_340},\
-${data.GoalTime_341},${data.Weight_341},${data.pace_341},${data.before_341},\
-${data.GoalTime_343},${data.Weight_343},${data.pace_343},${data.before_343},\
-${data.GoalTime_344},${data.Weight_344},${data.pace_344},${data.before_344},\
-${data.GoalTime_347},${data.Weight_347},${data.pace_347},${data.before_347},\
-${data.GoalTime_348},${data.Weight_348},${data.pace_348},${data.before_348},\
-${data.GoalTime_349},${data.Weight_349},${data.pace_349},${data.before_349},\
-${data.GoalTime_351},${data.Weight_351},${data.pace_351},${data.before_351},\
-${data.GoalTime_352},${data.Weight_352},${data.pace_352},${data.before_352},\
-${data.GoalTime_353},${data.Weight_353},${data.pace_353},${data.before_353},\
-${data.GoalTime_355},${data.Weight_355},${data.pace_355},${data.before_355},\
-${data.GoalTime_356},${data.Weight_356},${data.pace_356},${data.before_356},\
-${data.GoalTime_357},${data.Weight_357},${data.pace_357},${data.before_357},\
-${data.GoalTime_358},${data.Weight_358},${data.pace_358},${data.before_358},\
-${data.GoalTime_359},${data.Weight_359},${data.pace_359},${data.before_359},\
-${data.GoalTime_360},${data.Weight_360},${data.pace_360},${data.before_360},\
-${data.GoalTime_361},${data.Weight_361},${data.pace_361},${data.before_361},\
-${data.GoalTime_363},${data.Weight_363},${data.pace_363},${data.before_363},\
-${data.GoalTime_364},${data.Weight_364},${data.pace_364},${data.before_364},\
-${data.GoalTime_365},${data.Weight_365},${data.pace_365},${data.before_365},\
-${data.GoalTime_367},${data.Weight_367},${data.pace_367},${data.before_367},\
-${data.GoalTime_368},${data.Weight_368},${data.pace_368},${data.before_368},\
-${data.GoalTime_369},${data.Weight_369},${data.pace_369},${data.before_369},\
-${data.GoalTime_371},${data.Weight_371},${data.pace_371},${data.before_371},\
-${data.GoalTime_372},${data.Weight_372},${data.pace_372},${data.before_372},\
-${data.GoalTime_375},${data.Weight_375},${data.pace_375},${data.before_375},\
-${data.GoalTime_376},${data.Weight_376},${data.pace_376},${data.before_376},\
-${data.GoalTime_377},${data.Weight_377},${data.pace_377},${data.before_377},\
-${data.GoalTime_378},${data.Weight_378},${data.pace_378},${data.before_378},\
-${data.GoalTime_379},${data.Weight_379},${data.pace_379},${data.before_379},\
-${data.GoalTime_380},${data.Weight_380},${data.pace_380},${data.before_380},\
-${data.GoalTime_381},${data.Weight_381},${data.pace_381},${data.before_381},\
-${data.GoalTime_382},${data.Weight_382},${data.pace_382},${data.before_382},\
-${data.GoalTime_383},${data.Weight_383},${data.pace_383},${data.before_383},\
-${data.GoalTime_384},${data.Weight_384},${data.pace_384},${data.before_384},\
-${data.GoalTime_391},${data.Weight_391},${data.pace_391},${data.before_391},\
-${data.GoalTime_392},${data.Weight_392},${data.pace_392},${data.before_392},\
-${data.GoalTime_395},${data.Weight_395},${data.pace_395},${data.before_395},\
-${data.GoalTime_402},${data.Weight_402},${data.pace_402},${data.before_402},\
-${data.GoalTime_406},${data.Weight_406},${data.pace_406},${data.before_406},\
-${data.GoalTime_407},${data.Weight_407},${data.pace_407},${data.before_407},\
-${data.GoalTime_410},${data.Weight_410},${data.pace_410},${data.before_410},\
-${data.GoalTime_417},${data.Weight_417},${data.pace_417},${data.before_417},\
-${data.GoalTime_436},${data.Weight_436},${data.pace_436},${data.before_436},\
-${data.GoalTime_440},${data.Weight_440},${data.pace_440},${data.before_440},\
-${data.GoalTime_441},${data.Weight_441},${data.pace_441},${data.before_441},\
-${data.GoalTime_448},${data.Weight_448},${data.pace_448},${data.before_448},\
-${data.GoalTime_452},${data.Weight_452},${data.pace_452},${data.before_452},\
-${data.GoalTime_453},${data.Weight_453},${data.pace_453},${data.before_453},\
-${data.GoalTime_456},${data.Weight_456},${data.pace_456},${data.before_456},\
-${data.GoalTime_472},${data.Weight_472},${data.pace_472},${data.before_472},\
-${data.GoalTime_476},${data.Weight_476},${data.pace_476},${data.before_476},\
-${data.GoalTime_477},${data.Weight_477},${data.pace_477},${data.before_477},\
-${data.GoalTime_483},${data.Weight_483},${data.pace_483},${data.before_483},\
-${data.GoalTime_488},${data.Weight_488},${data.pace_488},${data.before_488},\
-${data.GoalTime_492},${data.Weight_492},${data.pace_492},${data.before_492},\
-${data.GoalTime_495},${data.Weight_495},${data.pace_495},${data.before_495},\
-${data.GoalTime_499},${data.Weight_499},${data.pace_499},${data.before_499},\
-${data.GoalTime_508},${data.Weight_508},${data.pace_508},${data.before_508},\
-${data.GoalTime_536},${data.Weight_536},${data.pace_536},${data.before_536},\
-${data.GoalTime_585},${data.Weight_585},${data.pace_585},${data.before_585}`}
+        dicAchievement[data.RaceID][data.HorseID] =  { Achievement : `${data.GoalTime_1},${data.Weight_1},${data.before_1},${data.GoalTime_4},${data.Weight_4},${data.before_4},${data.GoalTime_5},${data.Weight_5},${data.before_5},${data.GoalTime_6},${data.Weight_6},${data.before_6},${data.GoalTime_8},${data.Weight_8},${data.before_8},${data.GoalTime_12},${data.Weight_12},${data.before_12},${data.GoalTime_13},${data.Weight_13},${data.before_13},${data.GoalTime_14},${data.Weight_14},${data.before_14},${data.GoalTime_15},${data.Weight_15},${data.before_15},${data.GoalTime_16},${data.Weight_16},${data.before_16},${data.GoalTime_20},${data.Weight_20},${data.before_20},${data.GoalTime_21},${data.Weight_21},${data.before_21},${data.GoalTime_22},${data.Weight_22},${data.before_22},${data.GoalTime_23},${data.Weight_23},${data.before_23},${data.GoalTime_24},${data.Weight_24},${data.before_24},${data.GoalTime_25},${data.Weight_25},${data.before_25},${data.GoalTime_28},${data.Weight_28},${data.before_28},${data.GoalTime_32},${data.Weight_32},${data.before_32},${data.GoalTime_40},${data.Weight_40},${data.before_40},${data.GoalTime_41},${data.Weight_41},${data.before_41},${data.GoalTime_42},${data.Weight_42},${data.before_42},${data.GoalTime_43},${data.Weight_43},${data.before_43},${data.GoalTime_44},${data.Weight_44},${data.before_44},${data.GoalTime_48},${data.Weight_48},${data.before_48},${data.GoalTime_49},${data.Weight_49},${data.before_49},${data.GoalTime_50},${data.Weight_50},${data.before_50},${data.GoalTime_51},${data.Weight_51},${data.before_51},${data.GoalTime_54},${data.Weight_54},${data.before_54},${data.GoalTime_55},${data.Weight_55},${data.before_55},${data.GoalTime_56},${data.Weight_56},${data.before_56},${data.GoalTime_58},${data.Weight_58},${data.before_58},${data.GoalTime_59},${data.Weight_59},${data.before_59},${data.GoalTime_61},${data.Weight_61},${data.before_61},${data.GoalTime_65},${data.Weight_65},${data.before_65},${data.GoalTime_66},${data.Weight_66},${data.before_66},${data.GoalTime_67},${data.Weight_67},${data.before_67},${data.GoalTime_68},${data.Weight_68},${data.before_68},${data.GoalTime_69},${data.Weight_69},${data.before_69},${data.GoalTime_70},${data.Weight_70},${data.before_70},${data.GoalTime_71},${data.Weight_71},${data.before_71},${data.GoalTime_72},${data.Weight_72},${data.before_72},${data.GoalTime_73},${data.Weight_73},${data.before_73},${data.GoalTime_74},${data.Weight_74},${data.before_74},${data.GoalTime_75},${data.Weight_75},${data.before_75},${data.GoalTime_77},${data.Weight_77},${data.before_77},${data.GoalTime_78},${data.Weight_78},${data.before_78},${data.GoalTime_79},${data.Weight_79},${data.before_79},${data.GoalTime_80},${data.Weight_80},${data.before_80},${data.GoalTime_81},${data.Weight_81},${data.before_81},${data.GoalTime_82},${data.Weight_82},${data.before_82},${data.GoalTime_83},${data.Weight_83},${data.before_83},${data.GoalTime_84},${data.Weight_84},${data.before_84},${data.GoalTime_85},${data.Weight_85},${data.before_85},${data.GoalTime_86},${data.Weight_86},${data.before_86},${data.GoalTime_87},${data.Weight_87},${data.before_87},${data.GoalTime_88},${data.Weight_88},${data.before_88},${data.GoalTime_89},${data.Weight_89},${data.before_89},${data.GoalTime_90},${data.Weight_90},${data.before_90},${data.GoalTime_91},${data.Weight_91},${data.before_91},${data.GoalTime_92},${data.Weight_92},${data.before_92},${data.GoalTime_93},${data.Weight_93},${data.before_93},${data.GoalTime_94},${data.Weight_94},${data.before_94},${data.GoalTime_95},${data.Weight_95},${data.before_95},${data.GoalTime_96},${data.Weight_96},${data.before_96},${data.GoalTime_97},${data.Weight_97},${data.before_97},${data.GoalTime_98},${data.Weight_98},${data.before_98},${data.GoalTime_99},${data.Weight_99},${data.before_99},${data.GoalTime_101},${data.Weight_101},${data.before_101},${data.GoalTime_102},${data.Weight_102},${data.before_102},${data.GoalTime_105},${data.Weight_105},${data.before_105},${data.GoalTime_106},${data.Weight_106},${data.before_106},${data.GoalTime_107},${data.Weight_107},${data.before_107},${data.GoalTime_108},${data.Weight_108},${data.before_108},${data.GoalTime_109},${data.Weight_109},${data.before_109},${data.GoalTime_110},${data.Weight_110},${data.before_110},${data.GoalTime_113},${data.Weight_113},${data.before_113},${data.GoalTime_114},${data.Weight_114},${data.before_114},${data.GoalTime_115},${data.Weight_115},${data.before_115},${data.GoalTime_116},${data.Weight_116},${data.before_116},${data.GoalTime_117},${data.Weight_117},${data.before_117},${data.GoalTime_118},${data.Weight_118},${data.before_118},${data.GoalTime_119},${data.Weight_119},${data.before_119},${data.GoalTime_120},${data.Weight_120},${data.before_120},${data.GoalTime_121},${data.Weight_121},${data.before_121},${data.GoalTime_122},${data.Weight_122},${data.before_122},${data.GoalTime_123},${data.Weight_123},${data.before_123},${data.GoalTime_125},${data.Weight_125},${data.before_125},${data.GoalTime_126},${data.Weight_126},${data.before_126},${data.GoalTime_127},${data.Weight_127},${data.before_127},${data.GoalTime_129},${data.Weight_129},${data.before_129},${data.GoalTime_130},${data.Weight_130},${data.before_130},${data.GoalTime_131},${data.Weight_131},${data.before_131},${data.GoalTime_132},${data.Weight_132},${data.before_132},${data.GoalTime_133},${data.Weight_133},${data.before_133},${data.GoalTime_134},${data.Weight_134},${data.before_134},${data.GoalTime_135},${data.Weight_135},${data.before_135},${data.GoalTime_136},${data.Weight_136},${data.before_136},${data.GoalTime_140},${data.Weight_140},${data.before_140},${data.GoalTime_141},${data.Weight_141},${data.before_141},${data.GoalTime_144},${data.Weight_144},${data.before_144},${data.GoalTime_145},${data.Weight_145},${data.before_145},${data.GoalTime_146},${data.Weight_146},${data.before_146},${data.GoalTime_148},${data.Weight_148},${data.before_148},${data.GoalTime_149},${data.Weight_149},${data.before_149},${data.GoalTime_150},${data.Weight_150},${data.before_150},${data.GoalTime_152},${data.Weight_152},${data.before_152},${data.GoalTime_153},${data.Weight_153},${data.before_153},${data.GoalTime_154},${data.Weight_154},${data.before_154},${data.GoalTime_155},${data.Weight_155},${data.before_155},${data.GoalTime_156},${data.Weight_156},${data.before_156},${data.GoalTime_157},${data.Weight_157},${data.before_157},${data.GoalTime_160},${data.Weight_160},${data.before_160},${data.GoalTime_161},${data.Weight_161},${data.before_161},${data.GoalTime_162},${data.Weight_162},${data.before_162},${data.GoalTime_163},${data.Weight_163},${data.before_163},${data.GoalTime_164},${data.Weight_164},${data.before_164},${data.GoalTime_167},${data.Weight_167},${data.before_167},${data.GoalTime_171},${data.Weight_171},${data.before_171},${data.GoalTime_172},${data.Weight_172},${data.before_172},${data.GoalTime_173},${data.Weight_173},${data.before_173},${data.GoalTime_175},${data.Weight_175},${data.before_175},${data.GoalTime_176},${data.Weight_176},${data.before_176},${data.GoalTime_177},${data.Weight_177},${data.before_177},${data.GoalTime_178},${data.Weight_178},${data.before_178},${data.GoalTime_179},${data.Weight_179},${data.before_179},${data.GoalTime_180},${data.Weight_180},${data.before_180},${data.GoalTime_181},${data.Weight_181},${data.before_181},${data.GoalTime_182},${data.Weight_182},${data.before_182},${data.GoalTime_183},${data.Weight_183},${data.before_183},${data.GoalTime_184},${data.Weight_184},${data.before_184},${data.GoalTime_185},${data.Weight_185},${data.before_185},${data.GoalTime_186},${data.Weight_186},${data.before_186},${data.GoalTime_187},${data.Weight_187},${data.before_187},${data.GoalTime_188},${data.Weight_188},${data.before_188},${data.GoalTime_191},${data.Weight_191},${data.before_191},${data.GoalTime_195},${data.Weight_195},${data.before_195},${data.GoalTime_196},${data.Weight_196},${data.before_196},${data.GoalTime_197},${data.Weight_197},${data.before_197},${data.GoalTime_199},${data.Weight_199},${data.before_199},${data.GoalTime_200},${data.Weight_200},${data.before_200},${data.GoalTime_201},${data.Weight_201},${data.before_201},${data.GoalTime_203},${data.Weight_203},${data.before_203},${data.GoalTime_204},${data.Weight_204},${data.before_204},${data.GoalTime_205},${data.Weight_205},${data.before_205},${data.GoalTime_206},${data.Weight_206},${data.before_206},${data.GoalTime_211},${data.Weight_211},${data.before_211},${data.GoalTime_212},${data.Weight_212},${data.before_212},${data.GoalTime_213},${data.Weight_213},${data.before_213},${data.GoalTime_214},${data.Weight_214},${data.before_214},${data.GoalTime_215},${data.Weight_215},${data.before_215},${data.GoalTime_216},${data.Weight_216},${data.before_216},${data.GoalTime_219},${data.Weight_219},${data.before_219},${data.GoalTime_220},${data.Weight_220},${data.before_220},${data.GoalTime_221},${data.Weight_221},${data.before_221},${data.GoalTime_222},${data.Weight_222},${data.before_222},${data.GoalTime_223},${data.Weight_223},${data.before_223},${data.GoalTime_224},${data.Weight_224},${data.before_224},${data.GoalTime_225},${data.Weight_225},${data.before_225},${data.GoalTime_227},${data.Weight_227},${data.before_227},${data.GoalTime_235},${data.Weight_235},${data.before_235},${data.GoalTime_239},${data.Weight_239},${data.before_239},${data.GoalTime_240},${data.Weight_240},${data.before_240},${data.GoalTime_241},${data.Weight_241},${data.before_241},${data.GoalTime_242},${data.Weight_242},${data.before_242},${data.GoalTime_243},${data.Weight_243},${data.before_243},${data.GoalTime_247},${data.Weight_247},${data.before_247},${data.GoalTime_251},${data.Weight_251},${data.before_251},${data.GoalTime_255},${data.Weight_255},${data.before_255},${data.GoalTime_256},${data.Weight_256},${data.before_256},${data.GoalTime_257},${data.Weight_257},${data.before_257},${data.GoalTime_258},${data.Weight_258},${data.before_258},${data.GoalTime_259},${data.Weight_259},${data.before_259},${data.GoalTime_260},${data.Weight_260},${data.before_260},${data.GoalTime_262},${data.Weight_262},${data.before_262},${data.GoalTime_266},${data.Weight_266},${data.before_266},${data.GoalTime_267},${data.Weight_267},${data.before_267},${data.GoalTime_268},${data.Weight_268},${data.before_268},${data.GoalTime_269},${data.Weight_269},${data.before_269},${data.GoalTime_270},${data.Weight_270},${data.before_270},${data.GoalTime_271},${data.Weight_271},${data.before_271},${data.GoalTime_272},${data.Weight_272},${data.before_272},${data.GoalTime_273},${data.Weight_273},${data.before_273},${data.GoalTime_274},${data.Weight_274},${data.before_274},${data.GoalTime_275},${data.Weight_275},${data.before_275},${data.GoalTime_276},${data.Weight_276},${data.before_276},${data.GoalTime_278},${data.Weight_278},${data.before_278},${data.GoalTime_279},${data.Weight_279},${data.before_279},${data.GoalTime_280},${data.Weight_280},${data.before_280},${data.GoalTime_281},${data.Weight_281},${data.before_281},${data.GoalTime_282},${data.Weight_282},${data.before_282},${data.GoalTime_283},${data.Weight_283},${data.before_283},${data.GoalTime_284},${data.Weight_284},${data.before_284},${data.GoalTime_285},${data.Weight_285},${data.before_285},${data.GoalTime_286},${data.Weight_286},${data.before_286},${data.GoalTime_287},${data.Weight_287},${data.before_287},${data.GoalTime_288},${data.Weight_288},${data.before_288},${data.GoalTime_290},${data.Weight_290},${data.before_290},${data.GoalTime_291},${data.Weight_291},${data.before_291},${data.GoalTime_292},${data.Weight_292},${data.before_292},${data.GoalTime_293},${data.Weight_293},${data.before_293},${data.GoalTime_294},${data.Weight_294},${data.before_294},${data.GoalTime_295},${data.Weight_295},${data.before_295},${data.GoalTime_298},${data.Weight_298},${data.before_298},${data.GoalTime_299},${data.Weight_299},${data.before_299},${data.GoalTime_300},${data.Weight_300},${data.before_300},${data.GoalTime_301},${data.Weight_301},${data.before_301},${data.GoalTime_302},${data.Weight_302},${data.before_302},${data.GoalTime_303},${data.Weight_303},${data.before_303},${data.GoalTime_304},${data.Weight_304},${data.before_304},${data.GoalTime_306},${data.Weight_306},${data.before_306},${data.GoalTime_307},${data.Weight_307},${data.before_307},${data.GoalTime_308},${data.Weight_308},${data.before_308},${data.GoalTime_309},${data.Weight_309},${data.before_309},${data.GoalTime_310},${data.Weight_310},${data.before_310},${data.GoalTime_311},${data.Weight_311},${data.before_311},${data.GoalTime_314},${data.Weight_314},${data.before_314},${data.GoalTime_315},${data.Weight_315},${data.before_315},${data.GoalTime_316},${data.Weight_316},${data.before_316},${data.GoalTime_317},${data.Weight_317},${data.before_317},${data.GoalTime_318},${data.Weight_318},${data.before_318},${data.GoalTime_319},${data.Weight_319},${data.before_319},${data.GoalTime_320},${data.Weight_320},${data.before_320},${data.GoalTime_321},${data.Weight_321},${data.before_321},${data.GoalTime_322},${data.Weight_322},${data.before_322},${data.GoalTime_326},${data.Weight_326},${data.before_326},${data.GoalTime_332},${data.Weight_332},${data.before_332},${data.GoalTime_333},${data.Weight_333},${data.before_333},${data.GoalTime_339},${data.Weight_339},${data.before_339},${data.GoalTime_340},${data.Weight_340},${data.before_340},${data.GoalTime_341},${data.Weight_341},${data.before_341},${data.GoalTime_343},${data.Weight_343},${data.before_343},${data.GoalTime_344},${data.Weight_344},${data.before_344},${data.GoalTime_347},${data.Weight_347},${data.before_347},${data.GoalTime_348},${data.Weight_348},${data.before_348},${data.GoalTime_349},${data.Weight_349},${data.before_349},${data.GoalTime_351},${data.Weight_351},${data.before_351},${data.GoalTime_352},${data.Weight_352},${data.before_352},${data.GoalTime_353},${data.Weight_353},${data.before_353},${data.GoalTime_355},${data.Weight_355},${data.before_355},${data.GoalTime_356},${data.Weight_356},${data.before_356},${data.GoalTime_357},${data.Weight_357},${data.before_357},${data.GoalTime_358},${data.Weight_358},${data.before_358},${data.GoalTime_359},${data.Weight_359},${data.before_359},${data.GoalTime_360},${data.Weight_360},${data.before_360},${data.GoalTime_361},${data.Weight_361},${data.before_361},${data.GoalTime_363},${data.Weight_363},${data.before_363},${data.GoalTime_364},${data.Weight_364},${data.before_364},${data.GoalTime_365},${data.Weight_365},${data.before_365},${data.GoalTime_367},${data.Weight_367},${data.before_367},${data.GoalTime_368},${data.Weight_368},${data.before_368},${data.GoalTime_369},${data.Weight_369},${data.before_369},${data.GoalTime_371},${data.Weight_371},${data.before_371},${data.GoalTime_372},${data.Weight_372},${data.before_372},${data.GoalTime_375},${data.Weight_375},${data.before_375},${data.GoalTime_376},${data.Weight_376},${data.before_376},${data.GoalTime_377},${data.Weight_377},${data.before_377},${data.GoalTime_378},${data.Weight_378},${data.before_378},${data.GoalTime_379},${data.Weight_379},${data.before_379},${data.GoalTime_380},${data.Weight_380},${data.before_380},${data.GoalTime_381},${data.Weight_381},${data.before_381},${data.GoalTime_382},${data.Weight_382},${data.before_382},${data.GoalTime_383},${data.Weight_383},${data.before_383},${data.GoalTime_384},${data.Weight_384},${data.before_384},${data.GoalTime_391},${data.Weight_391},${data.before_391},${data.GoalTime_392},${data.Weight_392},${data.before_392},${data.GoalTime_395},${data.Weight_395},${data.before_395},${data.GoalTime_402},${data.Weight_402},${data.before_402},${data.GoalTime_406},${data.Weight_406},${data.before_406},${data.GoalTime_407},${data.Weight_407},${data.before_407},${data.GoalTime_410},${data.Weight_410},${data.before_410},${data.GoalTime_417},${data.Weight_417},${data.before_417},${data.GoalTime_436},${data.Weight_436},${data.before_436},${data.GoalTime_440},${data.Weight_440},${data.before_440},${data.GoalTime_441},${data.Weight_441},${data.before_441},${data.GoalTime_448},${data.Weight_448},${data.before_448},${data.GoalTime_452},${data.Weight_452},${data.before_452},${data.GoalTime_453},${data.Weight_453},${data.before_453},${data.GoalTime_456},${data.Weight_456},${data.before_456},${data.GoalTime_472},${data.Weight_472},${data.before_472},${data.GoalTime_476},${data.Weight_476},${data.before_476},${data.GoalTime_477},${data.Weight_477},${data.before_477},${data.GoalTime_483},${data.Weight_483},${data.before_483},${data.GoalTime_488},${data.Weight_488},${data.before_488},${data.GoalTime_492},${data.Weight_492},${data.before_492},${data.GoalTime_495},${data.Weight_495},${data.before_495},${data.GoalTime_499},${data.Weight_499},${data.before_499},${data.GoalTime_508},${data.Weight_508},${data.before_508},${data.GoalTime_536},${data.Weight_536},${data.before_536},${data.GoalTime_585},${data.Weight_585},${data.before_585}`}
     }
     const Rotationsql = new GetRotationData(param)
     const Rotation = await Rotationsql.Execsql() as EntRotationData[]

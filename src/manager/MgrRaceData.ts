@@ -19,12 +19,11 @@ export default class MgrRaceData{
         strAchievement: string[],
         data: string[],
         strPassage: string[],
-        pace: string[]
     }
     constructor(RaceData: EntRaceHorseStudyData[]) {
         this.m_RaceData = RaceData
         this.m_dic = {}
-        this.m_insertDic = {strAchievement: [], data: [], strPassage: [], pace: []}
+        this.m_insertDic = {strAchievement: [], data: [], strPassage: []}
     }
 
     public get dic(){return this.m_dic}
@@ -114,39 +113,30 @@ export default class MgrRaceData{
                 const RaceID = entitys[num].RaceID
                 // Rotation
                 let data = ''
-                let pace = ''
                 if (RaceHorseData.length > 0) {
                     for (const value of RaceHorseData){
                         if (data == ''){
                             data += `${HorseID},${RaceID}`
-                            pace += `${HorseID},${RaceID}`
                         } else {
                             data += `,${value.GoalTime}`.replace('null', '')
-                            data += `,${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
-                            pace += `,${value.Pace},${value.Passage1},${value.Passage2},${value.Passage3},${value.Passage4}`
+                            data += `,${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${value.JockeyID},${value.before}`
                         }
                     }
-                    const empty = ',,,,,,,,,,,,,,,,,,'
-                    const paceempty = ',,,,,'
+                    const empty = ',,,,,,,,,,,,,,,,,,,,'
                     if (RaceHorseData.length == 1){
                         data = data + empty + empty + empty + empty + empty
-                        pace = pace + paceempty + paceempty + paceempty + paceempty + paceempty 
                     }
                     if (RaceHorseData.length == 2){
                         data = data + empty + empty + empty + empty
-                        pace = pace + paceempty + paceempty + paceempty  + paceempty
                     }
                     if (RaceHorseData.length == 3){
                         data = data + empty + empty + empty
-                        pace = pace + paceempty + paceempty + paceempty
                     }
                     if (RaceHorseData.length == 4){
                         data = data + empty + empty
-                        pace = pace + paceempty + paceempty
                     }
                     if (RaceHorseData.length == 5){
                         data = data + empty
-                        pace = pace + paceempty
                     }
                 }
 
@@ -190,13 +180,12 @@ export default class MgrRaceData{
                     const id = Number(key)
                     const achievement = achievements[id]
                     if (achievement == null || achievement.GoalTime == null) {
-                        const empty = `,,,`
+                        const empty = `,,,,`
                         strAchievement += empty
                     } else {
                         strAchievement += `,${achievement.GoalTime},${achievement.Weight},${achievement.Pace},${achievement.before}`
                     }
                 }
-                this.m_insertDic.pace.push(pace)
                 this.m_insertDic.strAchievement.push(strAchievement)
                 this.m_insertDic.data.push(data)
                 this.m_insertDic.strPassage.push(strPassage)
@@ -322,7 +311,7 @@ export default class MgrRaceData{
                     if (achievement == null) {
                         str = str + empty
                     } else {
-                        str = str + `,${achievement.GoalTime},${achievement.Weight},${achievement.Pace},${achievement.before}`
+                        str = str + `,${achievement.GoalTime},${achievement.Weight},${achievement.before}`
                     }
                 })
                 rows.push(str)
@@ -339,7 +328,6 @@ export default class MgrRaceData{
             [number: number]: string[]
         } = {}
         rows[0] = []
-        rows[1] = []
         this.m_RaceData.forEach((row: EntRaceHorseStudyData) => {
             const before = row.before == null ? 0 :(row.before.getTime() - row.HoldDay.getTime()) / 86400000
             const data = new ClassRaceHorseData(
@@ -376,39 +364,107 @@ export default class MgrRaceData{
             const HorseID = Number(strkey)
             Object.keys(dic[HorseID]).forEach(strnum =>{
                 let data = ''
-                let pace = ''
                 const num = Number(strnum)
                 const row = dic[HorseID][num]
                 if (row.length > 1) {
                     row.forEach((value: ClassRaceHorseData) => {
                         if (data == ''){
-                            data += `${value.GoalTime},${value.Direction},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.SpurtTime},${value.JockeyID},${value.before}`
-                            pace += `${value.Pace},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
+                            data += `${value.GoalTime},${value.Direction},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${value.SpurtTime},${value.JockeyID},${value.before}`
                         } else {
-                            data += `,${value.GoalTime},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.SpurtTime},${value.JockeyID},${value.before}`
-                            pace += `,${value.Pace},${value.Passage1},${value.Passage2},${value.Passage3},${value.Passage4}`
+                            data += `,${value.GoalTime},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${value.SpurtTime},${value.JockeyID},${value.before}`
                         }
                     })
-                    const empty = ',,,,,,,,,,,,,,,,,,,,'
-                    const paceempty = ',,,,,'
+                    const empty = ',,,,,,,,,,,,,,,,,,,,,,'
                     if (row.length == 2){
                         data = data + empty + empty + empty + empty
-                        pace = pace + paceempty + paceempty + paceempty + paceempty
                     }
                     if (row.length == 3){
                         data = data + empty + empty + empty
-                        pace = pace + paceempty + paceempty + paceempty
                     }
                     if (row.length == 4){
                         data = data + empty + empty
-                        pace = pace + paceempty + paceempty
                     }
                     if (row.length == 5){
                         data = data + empty
-                        pace = pace + paceempty
                     }
                     rows[0].push(data)
-                    rows[1].push(pace)
+                }
+            })
+        })
+        return rows
+    }
+
+    public CreatePaceData(){
+        const dic: {
+            [horseID: number]:{[num: number]: ClassRaceHorseData[]}
+        } = { }
+        const rows: string[] = []
+        this.m_RaceData.forEach((row: EntRaceHorseStudyData) => {
+            const before = row.before == null ? 0 :(row.before.getTime() - row.HoldDay.getTime()) / 86400000
+            const data = new ClassRaceHorseData(
+                row,
+                before
+            )
+            const num = row.num
+            const HorseID = row.HorseID
+            if (dic[HorseID] == undefined) {
+                dic[HorseID] = []
+            }
+            if (dic[HorseID][num] == undefined){
+                dic[HorseID][num] = []
+            }
+            dic[HorseID][num].push(data)
+    
+            if (num - 1 > 0) {
+                dic[HorseID][num - 1].push(data)
+            }
+            if (num - 2 > 0) {
+                dic[HorseID][num - 2].push(data)
+            }
+            if (num - 3 > 0) {
+                dic[HorseID][num - 3].push(data)
+            }
+            if (num - 4 > 0) {
+                dic[HorseID][num - 4].push(data)
+            }
+            if (num - 5 > 0) {
+                dic[HorseID][num - 5].push(data)
+            }
+        })
+        Object.keys(dic).forEach(strkey => {
+            const HorseID = Number(strkey)
+            Object.keys(dic[HorseID]).forEach(strnum =>{
+                let pace = ''
+                const num = Number(strnum)
+                const row = dic[HorseID][num]
+                if (row.length > 0) {
+                    row.forEach((value: ClassRaceHorseData) => {
+                        if (pace == ''){
+                            pace = `${value.RaceID},${value.HorseNo}`
+                        } else {
+                            pace += `,${value.Pace},${value.Passage1},${value.Passage2},${value.Passage3},${value.Passage4}`
+                        }
+                    })
+                    const paceempty = ',,,,,'
+                    if (row.length == 1){
+                        pace = pace + paceempty + paceempty + paceempty + paceempty + paceempty + paceempty
+                    }
+                    if (row.length == 2){
+                        pace = pace + paceempty + paceempty + paceempty + paceempty + paceempty
+                    }
+                    if (row.length == 3){
+                        pace = pace + paceempty + paceempty + paceempty + paceempty
+                    }
+                    if (row.length == 4){
+                        pace = pace + paceempty + paceempty + paceempty
+                    }
+                    if (row.length == 5){
+                        pace = pace + paceempty + paceempty
+                    }
+                    if (row.length == 6){
+                        pace = pace + paceempty
+                    }
+                    rows.push(pace)
                 }
             })
         })

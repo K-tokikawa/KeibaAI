@@ -16,7 +16,7 @@ predict = 'predict'
 pace = 'pace'
 
 mode = rotation
-trial = 10
+trial = 1
 
 DEFAULT_ATTRIBUTES = (
     'index',
@@ -41,7 +41,7 @@ def objective(trial):
         'eval_metric': 'rmse',
         'max_depth': trial.suggest_int("max_depth", 3, 9),
         'lambda': trial.suggest_int("lambda", 100, 1000),
-        'tree_method':'gpu_hist' 
+        'tree_method':'gpu_hist'
         }
     evals = [(xgb_train, 'train'), (xgb_test, 'eval')]
     evals_result = {}
@@ -105,15 +105,12 @@ trial = study.best_trial
 param = {
     'objective': 'reg:squarederror',
     'eval_metric': 'rmse',
-    'tree_method':'gpu_hist' 
+    'tree_method':'gpu_hist'
 }
 
-# param["max_depth"] = trial.params["max_depth"]
-# param["eta"] = trial.params["eta"]
-# param["lambda"] = trial.params["lambda"]
-param["max_depth"] = 7
-param["eta"] = 0.5930623297418864
-param["lambda"] = 852
+param["max_depth"] = trial.params["max_depth"]
+param["eta"] = trial.params["eta"]
+param["lambda"] = trial.params["lambda"]
 evals = [(xgb_train, 'train'), (xgb_test, 'eval')]
 evals_result = {}
 print('Start Train')

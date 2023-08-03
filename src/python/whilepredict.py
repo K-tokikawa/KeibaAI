@@ -9,24 +9,28 @@ aptitude = '.\\model\\aptitude\\model.json'
 rotation = '.\\model\\rotation\\model.json'
 blood = '.\\model\\blood\\model.json'
 Jockey = '.\\model\\Jockey\\model.json'
+pace = '.\\model\\pace\\model.json'
 
 achievementmodel = xgb.Booster()
 aptitudemodel = xgb.Booster()
 rotationmodel = xgb.Booster()
 bloodmodel = xgb.Booster()
 jockeymodel = xgb.Booster()
+pace = xgb.Booster()
 
 achievementmodel.load_model(achievement)
 aptitudemodel.load_model(aptitude)
 rotationmodel.load_model(rotation)
 bloodmodel.load_model(blood)
 jockeymodel.load_model(Jockey)
+pace.load_model(pace)
 
 achievementmodel.set_param({'tree_method':'gpu_hist'})
 aptitudemodel.set_param({'tree_method':'gpu_hist'})
 rotationmodel.set_param({'tree_method':'gpu_hist'})
 bloodmodel.set_param({'tree_method':'gpu_hist'})
 jockeymodel.set_param({'tree_method':'gpu_hist'})
+pace.set_param({'tree_method':'gpu_hist'})
 
 while(True):
     data = input()
@@ -54,4 +58,6 @@ while(True):
         y_pred = bloodmodel.predict(xgb_test)
     if mode == 'Jockey':
         y_pred = jockeymodel.predict(xgb_test)
+    if mode == 'pace':
+        y_pred = pace.predict(xgb_test)
     print(y_pred)

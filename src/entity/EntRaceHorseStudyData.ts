@@ -30,6 +30,8 @@ export default class EntRaceHorseStudyData{
     public Passage4: number | null
     public SpurtTime: number | null
     public Fluctuation: number
+    public RaceRemarks: number
+    public Remarks: number
     public JockeyID: number
     public before: Date
     public num: number
@@ -65,6 +67,8 @@ export default class EntRaceHorseStudyData{
         this.Passage4 = null
         this.SpurtTime = null
         this.Fluctuation = 0
+        this.RaceRemarks = 0
+        this.Remarks = 0
         this.JockeyID = 0
         this.before = new Date()
         this.num = 0

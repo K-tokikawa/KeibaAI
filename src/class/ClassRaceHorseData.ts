@@ -1,6 +1,7 @@
 import EntRaceHorseStudyData from "../entity/EntRaceHorseStudyData"
 
 export default class ClassRaceHorseData{
+    private m_RaceID: number
     private m_GoalTime: number
     private m_Direction: number
     private m_Venue: number
@@ -26,10 +27,13 @@ export default class ClassRaceHorseData{
     private m_Passage4: number | null
     private m_SpurtTime: number | null
     private m_Fluctuation: number
+    private m_RaceRemarks: number
+    private m_Remarks: number
     private m_JockeyID: number
     private m_before: number
     private m_HoldDay: Date
     constructor(row: EntRaceHorseStudyData, before: number){
+        this.m_RaceID = row.RaceID
         this.m_GoalTime = row.GoalTime
         this.m_Direction = row.Direction
         this.m_Venue = row.Venue
@@ -56,9 +60,12 @@ export default class ClassRaceHorseData{
         this.m_SpurtTime = row.SpurtTime
         this.m_Fluctuation = row.Fluctuation
         this.m_JockeyID = row.JockeyID
+        this.m_RaceRemarks = row.RaceRemarks
+        this.m_Remarks = row.Remarks
         this.m_before = before
         this.m_HoldDay = row.HoldDay
     }
+    public get RaceID() { return this.m_RaceID}
     public get GoalTime() { return this.m_GoalTime }
     public get Direction() { return this.m_Direction}
     public get Venue() { return this.m_Venue }
@@ -84,6 +91,8 @@ export default class ClassRaceHorseData{
     public get Passage4() { return this.m_Passage4}
     public get SpurtTime() { return this.m_SpurtTime}
     public get Fluctuation() { return this.m_Fluctuation }
+    public get RaceRemarks() {return this.m_RaceRemarks}
+    public get Remarks() {return this.m_Remarks}
     public get JockeyID() { return this.m_JockeyID }
     public get before() { return this.m_before }
     public get HoldDay() { return this.m_HoldDay}

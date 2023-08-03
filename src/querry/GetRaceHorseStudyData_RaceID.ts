@@ -1,7 +1,7 @@
 import SQLBase from "../SQLBase"
 import EntRaceHorseStudyData from "../entity/EntRaceHorseStudyData"
 import PrmStudyData from "../param/PrmStudyData"
-export default class GetRaceHorseStudyData extends SQLBase<EntRaceHorseStudyData[]>
+export default class GetRaceHorseStudyData_RaceID extends SQLBase<EntRaceHorseStudyData[]>
 {
     private parameter: PrmStudyData | null
 
@@ -37,14 +37,12 @@ select
     , isnull(HorseWeight, lead(HorseWeight)over(partition by RHI.HorseID order by RHI.num)) as HorseWeight
     , HorseNo
     , HorseAge
-    , isnull(Passage1, 0) as Passage1
-    , isnull(Passage2, 0) as Passage2
-    , isnull(Passage3, 0) as Passage3
-    , isnull(Passage4, 0) as Passage4
+    , Passage1
+    , Passage2
+    , Passage3
+    , Passage4
     , SpurtTime
     , isnull(Fluctuation, 0) as Fluctuation
-    , RaceRemarks
-    , Remarks
     , JockeyID
     , lag(RHI.HoldDay)over(partition by RHI.HorseID order by RHI.num) as before
     , num
@@ -80,8 +78,6 @@ from (
         , RHI.Passage3
         , RHI.Passage4
         , RHI.SpurtTime
-        , RHI.RaceRemarks
-        , RHI.Remarks
         , convert(int, RHI.Fluctuation) as Fluctuation
         , JM.ID as JockeyID
         , RHI.HorseID
@@ -101,10 +97,10 @@ from (
             RHI.HorseID is not null
         and RI.Direction is not null
         and HorseWeight is not null
-        ${this.parameter?.remove3 ? 'and OutValue = 0': '' }
+        and OutValue = 0
 ) as RHI
 where
-${this.parameter?.IDs == null ? `RHI.HorseID between ${this.parameter?.Start} and ${this.parameter?.Finish}`: `RHI.HorseID in (${this.parameter?.IDs})`}
+${this.parameter?.IDs == null ? `RHI.RaceID between ${this.parameter?.Start} and ${this.parameter?.Finish}`: `RHI.Race in (${this.parameter?.IDs})`}
 order by
     RHI.HorseID
 `
