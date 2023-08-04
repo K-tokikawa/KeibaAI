@@ -25,11 +25,19 @@ select
     , Fluctuation
     , pace
     , Popularity
+    , RaceRemarks
+    , Remarks
+    , SpurtTime
 from RaceHorseInfomation as RHI
     left outer join JockeyMaster as JM
         on JM.JockeyID = RHI.JockeyID
+    left outer join RapTable as RT
+        on RT.ID = RHI.RaceID
 where
-    RHI.RaceID in (${this.parameter?.IDs})`
+    RHI.RaceID in (${this.parameter?.IDs})
+    and RHI.HorseID is not null
+    `
+    
         return await this.ExecGet(sql)
     }
 }

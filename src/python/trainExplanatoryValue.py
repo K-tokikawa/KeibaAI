@@ -15,8 +15,8 @@ blood = 'blood'
 predict = 'predict'
 pace = 'pace'
 
-mode = rotation
-trial = 1
+mode = predict
+trial = 10
 
 DEFAULT_ATTRIBUTES = (
     'index',

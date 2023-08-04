@@ -17,7 +17,10 @@ export default class EntRotationData{
     public HorseWeight_2: number
     public HorseNo_2: number
     public HorseAge_2: number
+    public Remarks_2: number
+    public RaceRemarks_2: number
     public Fluctuation_2: number
+    public SpurtTime_2: number
     public JockeyID_2: number
     public before_2: number
     public GoalTime_3: number
@@ -36,7 +39,10 @@ export default class EntRotationData{
     public HorseWeight_3: number
     public HorseNo_3: number
     public HorseAge_3: number
+    public Remarks_3: number
+    public RaceRemarks_3: number
     public Fluctuation_3: number
+    public SpurtTime_3: number
     public JockeyID_3: number
     public before_3: number
     public GoalTime_4: number
@@ -55,7 +61,10 @@ export default class EntRotationData{
     public HorseWeight_4: number
     public HorseNo_4: number
     public HorseAge_4: number
+    public Remarks_4: number
+    public RaceRemarks_4: number
     public Fluctuation_4: number
+    public SpurtTime_4: number
     public JockeyID_4: number
     public before_4: number
     public GoalTime_5: number
@@ -74,7 +83,10 @@ export default class EntRotationData{
     public HorseWeight_5: number
     public HorseNo_5: number
     public HorseAge_5: number
+    public Remarks_5: number
+    public RaceRemarks_5: number
     public Fluctuation_5: number
+    public SpurtTime_5: number
     public JockeyID_5: number
     public before_5: number
     public GoalTime_6: number
@@ -93,7 +105,10 @@ export default class EntRotationData{
     public HorseWeight_6: number
     public HorseNo_6: number
     public HorseAge_6: number
+    public Remarks_6: number
+    public RaceRemarks_6: number
     public Fluctuation_6: number
+    public SpurtTime_6: number
     public JockeyID_6: number
     public before_6: number
     constructor() {
@@ -115,7 +130,10 @@ export default class EntRotationData{
         this.HorseWeight_2 = 0
         this.HorseNo_2 = 0
         this.HorseAge_2 = 0
+        this.Remarks_2 = 0
+        this.RaceRemarks_2 = 0
         this.Fluctuation_2 = 0
+        this.SpurtTime_2 = 0
         this.JockeyID_2 = 0
         this.before_2 = 0
         this.GoalTime_3 = 0
@@ -134,7 +152,10 @@ export default class EntRotationData{
         this.HorseWeight_3 = 0
         this.HorseNo_3 = 0
         this.HorseAge_3 = 0
+        this.Remarks_3 = 0
+        this.RaceRemarks_3 = 0
         this.Fluctuation_3 = 0
+        this.SpurtTime_3 = 0
         this.JockeyID_3 = 0
         this.before_3 = 0
         this.GoalTime_4 = 0
@@ -153,7 +174,10 @@ export default class EntRotationData{
         this.HorseWeight_4 = 0
         this.HorseNo_4 = 0
         this.HorseAge_4 = 0
+        this.Remarks_4 = 0
+        this.RaceRemarks_4 = 0
         this.Fluctuation_4 = 0
+        this.SpurtTime_4 = 0
         this.JockeyID_4 = 0
         this.before_4 = 0
         this.GoalTime_5 = 0
@@ -172,7 +196,10 @@ export default class EntRotationData{
         this.HorseWeight_5 = 0
         this.HorseNo_5 = 0
         this.HorseAge_5 = 0
+        this.Remarks_5 = 0
+        this.RaceRemarks_5 = 0
         this.Fluctuation_5 = 0
+        this.SpurtTime_5 = 0
         this.JockeyID_5 = 0
         this.before_5 = 0
         this.GoalTime_6 = 0
@@ -191,7 +218,10 @@ export default class EntRotationData{
         this.HorseWeight_6 = 0
         this.HorseNo_6 = 0
         this.HorseAge_6 = 0
+        this.Remarks_6 = 0
+        this.RaceRemarks_6 = 0
         this.Fluctuation_6 = 0
+        this.SpurtTime_6 = 0
         this.JockeyID_6 = 0
         this.before_6 = 0
     }

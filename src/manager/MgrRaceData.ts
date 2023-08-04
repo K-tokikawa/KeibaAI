@@ -119,10 +119,10 @@ export default class MgrRaceData{
                             data += `${HorseID},${RaceID}`
                         } else {
                             data += `,${value.GoalTime}`.replace('null', '')
-                            data += `,${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${value.JockeyID},${value.before}`
+                            data += `,${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${`${value.SpurtTime}`.replace('null', '')},${value.JockeyID},${value.before}`
                         }
                     }
-                    const empty = ',,,,,,,,,,,,,,,,,,,,'
+                    const empty = ',,,,,,,,,,,,,,,,,,,,,,'
                     if (RaceHorseData.length == 1){
                         data = data + empty + empty + empty + empty + empty
                     }
@@ -180,10 +180,10 @@ export default class MgrRaceData{
                     const id = Number(key)
                     const achievement = achievements[id]
                     if (achievement == null || achievement.GoalTime == null) {
-                        const empty = `,,,,`
+                        const empty = `,,,`
                         strAchievement += empty
                     } else {
-                        strAchievement += `,${achievement.GoalTime},${achievement.Weight},${achievement.Pace},${achievement.before}`
+                        strAchievement += `,${achievement.GoalTime},${achievement.Weight},${achievement.before}`
                     }
                 }
                 this.m_insertDic.strAchievement.push(strAchievement)
@@ -369,7 +369,7 @@ export default class MgrRaceData{
                 if (row.length > 1) {
                     row.forEach((value: ClassRaceHorseData) => {
                         if (data == ''){
-                            data += `${value.GoalTime},${value.Direction},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${value.SpurtTime},${value.JockeyID},${value.before}`
+                            data += `${value.GoalTime},${value.Direction},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
                         } else {
                             data += `,${value.GoalTime},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${value.SpurtTime},${value.JockeyID},${value.before}`
                         }

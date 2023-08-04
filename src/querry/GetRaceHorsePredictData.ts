@@ -43,6 +43,8 @@ select
     , Passage4
     , SpurtTime
     , isnull(Fluctuation, 0) as Fluctuation
+    , RaceRemarks
+    , Remarks
     , JockeyID
     , lag(RHI.HoldDay)over(partition by RHI.HorseID order by RHI.num) as before
     , num
@@ -79,6 +81,8 @@ from (
         , RHI.Passage4
         , RHI.SpurtTime
         , convert(int, RHI.Fluctuation) as Fluctuation
+        , isnull(RHI.RaceRemarks, 0) as RaceRemarks
+        , isnull(RHI.Remarks, 0) as Remarks
         , JM.ID as JockeyID
         , RHI.HorseID
         , ROW_NUMBER()over(partition by RHI.HorseID order by convert(datetime, convert(nvarchar, RI.Year) + '-' + convert(nvarchar, RI.HoldMonth) + '-' + convert(nvarchar, RI.HoldDay)) desc) as num

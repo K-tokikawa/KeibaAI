@@ -13,7 +13,7 @@ export default class DeletePredictRecord extends SQLBase<void>
 delete AchievementTable where HorseID in (${this.parameter?.IDs})
 delete AptitudeTable where HorseID in (${this.parameter?.IDs})
 delete RotationTable where HorseID in (${this.parameter?.IDs})
-delete PaceTable where HorseID in (${this.parameter?.IDs})
+
 `
         return await this.ExecGet(sql)
     }

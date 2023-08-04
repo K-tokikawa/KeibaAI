@@ -13,7 +13,7 @@ export default class GetPaceData extends SQLBase<EntPaceData[]>
         const sql = `
 select
 	  RT.pace
-    , RI.RaceID
+    , RI.ID
     , RHI.HorseNo
 	, RI.Venue
 	, RI.HoldMonth
