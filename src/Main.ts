@@ -118,7 +118,7 @@ async function main(mode: number) {
     let count = 0
     do {
         let bolstart = false
-        bolstart = count >= 80
+        bolstart = count >= 83
         if (bolstart) {
 
             let Start = count == 0 ? 1 : + valuenum * count + 1
@@ -441,7 +441,7 @@ async function CreateRacePredictData(value: EntRaceInfomationData[], shell: Pyth
     const multiProgressber = multiProgress()
     const Raceprogress = multiProgressber().addProgress(Object.keys(dicRace).length, 20, 'Race')
 
-    
+
     for (const strRaceID of Object.keys(dicRace)) {
         const RaceID = Number(strRaceID)
         const info = dicRace[RaceID]
@@ -472,18 +472,22 @@ async function CreateRacePredictData(value: EntRaceInfomationData[], shell: Pyth
             const Aptitude = dicAptitude[RaceID][HorseID]
             const Rotation = dicRotation[RaceID][HorseID]
             const Achievement = dicAchievement[RaceID][HorseID]
-            const rowAptitude = `aptitude,0,${info.Venue},${info.Range},${info.Weather},${info.Ground},${info.GroundCondition},${info.Pace},${info.HoldMonth},${info.Hold},${Horsevalue.HorseNo},${info.Day},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.Fluctuation},${Horsevalue.Jockey},${Horsevalue.HorseAge},${Aptitude.Aptitude},${blood}`
-            const rowRotation = `rotation,0,${info.Direction},${info.Venue},${info.HoldMonth},${info.Hold},${info.Day},${info.Range},${info.Ground},${info.GroundCondition},${info.Weather},${info.Pace},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.HorseNo},${Horsevalue.HorseAge},${Horsevalue.Fluctuation},${Horsevalue.Jockey},0,${Rotation.Rotation}`
-            const rowAchievement = `achievement,0,${info.Venue},${info.Range},${info.Ground},${info.GroundCondition},${info.HoldMonth},${info.Hold},${info.Day},${info.Weather},${Horsevalue.Pace},${Horsevalue.HorseAge},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.HorseNo},${Horsevalue.Fluctuation},${Horsevalue.Jockey},${Achievement.Achievement}`
-            const Blood = await Predict(BloodData, shell)
-            const Jockey = await Predict(JockeyData, shell)
-            const preAchievement = await Predict(rowAchievement, shell)
-            const preRotation = await Predict(rowRotation, shell)
-            const preAptitude = await Predict(rowAptitude, shell)
-
-            dicpredict[RaceID].Horses[Horsevalue.HorseNo] = {
-                horseinfo: `,${Blood},${Jockey},${preAchievement},${preRotation},${preAptitude}`,
-                rank: Horsevalue.Rank
+            try {
+                const rowAptitude = `aptitude,0,${info.Venue},${info.Range},${info.Weather},${info.Ground},${info.GroundCondition},${info.Pace},${info.HoldMonth},${info.Hold},${Horsevalue.HorseNo},${info.Day},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.Fluctuation},${Horsevalue.Jockey},${Horsevalue.HorseAge},${Aptitude.Aptitude},${blood}`
+                const rowRotation = `rotation,0,${info.Direction},${info.Venue},${info.HoldMonth},${info.Hold},${info.Day},${info.Range},${info.Ground},${info.GroundCondition},${info.Weather},${info.Pace},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.HorseNo},${Horsevalue.HorseAge},${Horsevalue.Fluctuation},${Horsevalue.Jockey},0,${Rotation.Rotation}`
+                const rowAchievement = `achievement,0,${info.Venue},${info.Range},${info.Ground},${info.GroundCondition},${info.HoldMonth},${info.Hold},${info.Day},${info.Weather},${Horsevalue.Pace},${Horsevalue.HorseAge},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.HorseNo},${Horsevalue.Fluctuation},${Horsevalue.Jockey},${Achievement.Achievement}`
+                const Blood = await Predict(BloodData, shell)
+                const Jockey = await Predict(JockeyData, shell)
+                const preAchievement = await Predict(rowAchievement, shell)
+                const preRotation = await Predict(rowRotation, shell)
+                const preAptitude = await Predict(rowAptitude, shell)
+    
+                dicpredict[RaceID].Horses[Horsevalue.HorseNo] = {
+                    horseinfo: `,${Blood},${Jockey},${preAchievement},${preRotation},${preAptitude}`,
+                    rank: Horsevalue.Rank
+                }
+            }catch {
+                FileUtil.OutputFile([`${RaceID}_${Horsevalue.HorseNo}`], `${RaceID}.txt`, false)
             }
         }
 
