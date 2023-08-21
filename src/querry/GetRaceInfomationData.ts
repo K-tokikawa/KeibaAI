@@ -12,7 +12,7 @@ export default class GetRaceInfomationData extends SQLBase<EntRaceInfomationData
     public async Execsql(): Promise<EntRaceInfomationData[]> {
         const sql = `
 select
-      ID
+      RI.ID
     , convert(int, Venue) as Venue
     , Direction
     , Range
@@ -26,18 +26,23 @@ select
     , Round
     , hc
 from RaceInfomation as RI
+    left outer join RapTable as RT
+        on RT.ID = RI.ID
     left outer join( 
         select
             RHI.RaceID
             , count(RHI.HorseID) as hc
         from RaceHorseInfomation as RHI
+        where
+            RHI.HorseID is not null
         group by
             RHI.RaceID
     ) as RHI
         on RHI.RaceID = RI.ID
 where
     RI.ID between ${this.parameter?.Start} and ${this.parameter?.Finish}
-    and RI.Direction is not null`
+    and RI.Direction is not null
+    `
         return await this.ExecGet(sql)
     }
 }

@@ -6,14 +6,15 @@ export default class FileUtil {
 
     public static OutputFile(
         lines: string[],
-        filePath: string
+        filePath: string,
+        bol: boolean = true
     ) {
         console.log('output')
         const ProgressBar = simpleProgress()
         const progress = ProgressBar(lines.length, 20, 'FileOutPut')
         let index = 0
         for (let line of lines){
-            progress(1)
+            if(bol) progress(1)
             line = line + '\n'
             const arybuf = Encoding.convert(line, {
                 from: 'UNICODE',

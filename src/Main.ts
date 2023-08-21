@@ -208,7 +208,7 @@ async function CreateTotallingData(value: EntHorseIDsData[]){
     console.log('RaceDatas')
     const RaceDatas = await RaceDatapsql.Execsql() as EntRaceHorseStudyData[]
     const mgr = new MgrRaceData(RaceDatas)
-    await mgr.dicCreate(blooddata)
+    await mgr.dicCreate()
     const dic = mgr.insertDic
     console.log('insert')
     // FileUtil.OutputFile(dic.strAchievement, 'strAchievement.txt')
@@ -292,7 +292,10 @@ async function CreateRacePredictData(value: EntRaceInfomationData[], shell: Pyth
                 Weight: number,
                 TrainerID: number,
                 Fluctuation: number,
-                Popularity: number
+                Popularity: number,
+                RaceRemarks: number,
+                Remarks: number,
+                SpurtTime: number
             }
         }
     } = {}
@@ -312,7 +315,10 @@ async function CreateRacePredictData(value: EntRaceInfomationData[], shell: Pyth
             Weight: data.Weight,
             TrainerID: data.TrainerID,
             Fluctuation: data.Fluctuation,
-            Popularity: data.Popularity
+            Popularity: data.Popularity,
+            RaceRemarks: data.RaceRemarks,
+            Remarks: data.Remarks,
+            SpurtTime: data.SpurtTime,
         }
     }
     const HorseIDs = Array.from(new Set(HorseIDsvalue.map(x => {return x.HorseID})))
@@ -375,7 +381,7 @@ async function CreateRacePredictData(value: EntRaceInfomationData[], shell: Pyth
         if (dicRotation[data.RaceID] == undefined) {
             dicRotation[data.RaceID] = {}
         }
-        dicRotation[data.RaceID][data.HorseID] = { Rotation : `${data.GoalTime_2},${data.Venue_2},${data.HoldMonth_2},${data.Hold_2},${data.Day_2},${data.Range_2},${data.Ground_2},${data.GroundCondition_2},${data.Weather_2},${data.Weight_2},${data.TrainerID_2},${data.HorseGender_2},${data.HorseWeight_2},${data.HorseNo_2},${data.HorseAge_2},${data.Fluctuation_2},${data.JockeyID_2},${data.before_2},${data.GoalTime_3},${data.Venue_3},${data.HoldMonth_3},${data.Hold_3},${data.Day_3},${data.Range_3},${data.Ground_3},${data.GroundCondition_3},${data.Weather_3},${data.Weight_3},${data.TrainerID_3},${data.HorseGender_3},${data.HorseWeight_3},${data.HorseNo_3},${data.HorseAge_3},${data.Fluctuation_3},${data.JockeyID_3},${data.before_3},${data.GoalTime_4},${data.Venue_4},${data.HoldMonth_4},${data.Hold_4},${data.Day_4},${data.Range_4},${data.Ground_4},${data.GroundCondition_4},${data.Weather_4},${data.Weight_4},${data.TrainerID_4},${data.HorseGender_4},${data.HorseWeight_4},${data.HorseNo_4},${data.HorseAge_4},${data.Fluctuation_4},${data.JockeyID_4},${data.before_4},${data.GoalTime_5},${data.Venue_5},${data.HoldMonth_5},${data.Hold_5},${data.Day_5},${data.Range_5},${data.Ground_5},${data.GroundCondition_5},${data.Weather_5},${data.Weight_5},${data.TrainerID_5},${data.HorseGender_5},${data.HorseWeight_5},${data.HorseNo_5},${data.HorseAge_5},${data.Fluctuation_5},${data.JockeyID_5},${data.before_5},${data.GoalTime_6},${data.Venue_6},${data.HoldMonth_6},${data.Hold_6},${data.Day_6},${data.Range_6},${data.Ground_6},${data.GroundCondition_6},${data.Weather_6},${data.Weight_6},${data.TrainerID_6},${data.HorseGender_6},${data.HorseWeight_6},${data.HorseNo_6},${data.HorseAge_6},${data.Fluctuation_6},${data.JockeyID_6},${data.before_6}`}
+        dicRotation[data.RaceID][data.HorseID] = { Rotation : `${data.GoalTime_2},${data.Venue_2},${data.HoldMonth_2},${data.Hold_2},${data.Day_2},${data.Range_2},${data.Ground_2},${data.GroundCondition_2},${data.Weather_2},${data.Weight_2},${data.TrainerID_2},${data.HorseGender_2},${data.HorseWeight_2},${data.HorseNo_2},${data.HorseAge_2},${data.Remarks_2},${data.RaceRemarks_2},${data.Fluctuation_2},${data.SpurtTime_2},${data.JockeyID_2},${data.before_2},${data.GoalTime_3},${data.Venue_3},${data.HoldMonth_3},${data.Hold_3},${data.Day_3},${data.Range_3},${data.Ground_3},${data.GroundCondition_3},${data.Weather_3},${data.Weight_3},${data.TrainerID_3},${data.HorseGender_3},${data.HorseWeight_3},${data.HorseNo_3},${data.HorseAge_3},${data.Remarks_3},${data.RaceRemarks_3},${data.Fluctuation_3},${data.SpurtTime_3},${data.JockeyID_3},${data.before_3},${data.GoalTime_4},${data.Venue_4},${data.HoldMonth_4},${data.Hold_4},${data.Day_4},${data.Range_4},${data.Ground_4},${data.GroundCondition_4},${data.Weather_4},${data.Weight_4},${data.TrainerID_4},${data.HorseGender_4},${data.HorseWeight_4},${data.HorseNo_4},${data.HorseAge_4},${data.Remarks_4},${data.RaceRemarks_4},${data.Fluctuation_4},${data.SpurtTime_4},${data.JockeyID_4},${data.before_4},${data.GoalTime_5},${data.Venue_5},${data.HoldMonth_5},${data.Hold_5},${data.Day_5},${data.Range_5},${data.Ground_5},${data.GroundCondition_5},${data.Weather_5},${data.Weight_5},${data.TrainerID_5},${data.HorseGender_5},${data.HorseWeight_5},${data.HorseNo_5},${data.HorseAge_5},${data.Remarks_5},${data.RaceRemarks_5},${data.Fluctuation_5},${data.SpurtTime_5},${data.JockeyID_5},${data.before_5},${data.GoalTime_6},${data.Venue_6},${data.HoldMonth_6},${data.Hold_6},${data.Day_6},${data.Range_6},${data.Ground_6},${data.GroundCondition_6},${data.Weather_6},${data.Weight_6},${data.TrainerID_6},${data.HorseGender_6},${data.HorseWeight_6},${data.HorseNo_6},${data.HorseAge_6},${data.Remarks_6},${data.RaceRemarks_6},${data.Fluctuation_6},${data.SpurtTime_6},${data.JockeyID_6},${data.before_6}`}
     }
     const multiProgressber = multiProgress()
     const Raceprogress = multiProgressber().addProgress(Object.keys(dicRace).length, 20, 'Race')
@@ -408,25 +414,29 @@ async function CreateRacePredictData(value: EntRaceInfomationData[], shell: Pyth
             const JockeyData = `Jockey,0,${Horsevalue.Jockey},${Horsevalue.HorseGender},${info.Venue},${info.Range},${info.Ground},${info.GroundCondition},${Horsevalue.HorseNo},${Horsevalue.HorseAge},${info.HoldMonth},${info.Weather},${Horsevalue.Weight},${info.Hold},${info.Day},${info.Round}`
             const blood = blooddata[HorseID]
             const BloodData = `blood,0,${info.Range},${info.Venue},${info.Ground},${info.GroundCondition},${Horsevalue.HorseGender},${Horsevalue.Weight},${Horsevalue.HorseAge},${blood}`
+            try {
+                const Aptitude = dicAptitude[RaceID][HorseID]
+                const Rotation = dicRotation[RaceID][HorseID]
+                const Achievement = dicAchievement[RaceID][HorseID]
 
-            const Aptitude = dicAptitude[RaceID][HorseID]
-            const Rotation = dicRotation[RaceID][HorseID]
-            const Achievement = dicAchievement[RaceID][HorseID]
+                const rowAptitude = `aptitude,0,${info.Venue},${info.Range},${info.Weather},${info.Ground},${info.GroundCondition},${info.HoldMonth},${info.Hold},${Horsevalue.HorseNo},${info.Day},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.Fluctuation},${Horsevalue.Jockey},${Horsevalue.HorseAge},${Aptitude.Aptitude},${blood}`
+                const rowRotation = `rotation,0,${info.Direction},${info.Venue},${info.HoldMonth},${info.Hold},${info.Day},${info.Range},${info.Ground},${info.GroundCondition},${info.Weather},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.HorseNo},${Horsevalue.HorseAge},${Horsevalue.Fluctuation},${Horsevalue.Jockey},0,${Rotation.Rotation}`
+                const rowAchievement = `achievement,0,${info.Venue},${info.Range},${info.Ground},${Horsevalue.HorseAge},${info.GroundCondition},${info.HoldMonth},${info.Hold},${info.Day},${info.Weather},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.HorseNo},${Horsevalue.Fluctuation},${Horsevalue.Jockey},${Achievement.Achievement}`
+                const Blood = await Predict(BloodData, shell)
+                const Jockey = await Predict(JockeyData, shell)
+                const preAchievement = await Predict(rowAchievement, shell)
+                const preRotation = await Predict(rowRotation, shell)
+                const preAptitude = await Predict(rowAptitude, shell)
 
-            const rowAptitude = `aptitude,0,${info.Venue},${info.Range},${info.Weather}.${info.Ground},${info.GroundCondition},${info.HoldMonth},${info.Hold},${Horsevalue.HorseNo},${info.Day},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.Fluctuation},${Horsevalue.Jockey},${Horsevalue.HorseAge},${Aptitude.Aptitude},${blood}`
-            const rowRotation = `rotation,0,${info.Direction},${info.Venue},${info.HoldMonth},${info.Hold},${info.Day},${info.Range},${info.Ground},${info.GroundCondition},${info.Weather},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.HorseNo},${Horsevalue.HorseAge},${Horsevalue.Fluctuation},${Horsevalue.Jockey},0,${Rotation.Rotation}`
-            const rowAchievement = `achievement,0,${info.Venue},${info.Range},${info.Ground},${Horsevalue.HorseAge},${info.GroundCondition},${info.HoldMonth},${info.Hold},${info.Day},${info.Weather},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.HorseNo},${Horsevalue.Fluctuation},${Horsevalue.Jockey},${Achievement.Achievement}`
-            const Blood = await Predict(BloodData, shell)
-            const Jockey = await Predict(JockeyData, shell)
-            const preAchievement = await Predict(rowAchievement, shell)
-            const preRotation = await Predict(rowRotation, shell)
-            const preAptitude = await Predict(rowAptitude, shell)
-
-            dicpredict[RaceID].Horses[Horsevalue.HorseNo] = {
-                horseinfo: `,${Blood},${Jockey},${preAchievement},${preRotation},${preAptitude}`,
-                rank: Horsevalue.Rank
+                dicpredict[RaceID].Horses[Horsevalue.HorseNo] = {
+                    horseinfo: `,${Blood},${Jockey},${preAchievement},${preRotation},${preAptitude}`,
+                    rank: Horsevalue.Rank
+                }
+            }catch {
+                FileUtil.OutputFile([`${RaceID}_${Horsevalue.HorseNo}`], `${RaceID}.txt`, false)
             }
         }
+
 
         for (const strHorseNo of Object.keys(dicpredict[RaceID].Horses)) {
             const HorseNo = Number(strHorseNo)
