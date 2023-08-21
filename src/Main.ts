@@ -118,7 +118,7 @@ async function main(mode: number) {
     let count = 0
     do {
         let bolstart = false
-        bolstart = count >= 83
+        bolstart = count == 0 // 20230817 100~
         if (bolstart) {
 
             let Start = count == 0 ? 1 : + valuenum * count + 1
@@ -235,6 +235,8 @@ function CreatePaceData(value: EntPaceData[]) {
         dic[RaceID][data.HorseNo] = data
     }
     const rows: string[] = []
+    const ProgressBar = simpleProgress()
+    const initprogress = ProgressBar(Object.keys(dic).length, 20, 'init')
     for(const strID of Object.keys(dic)){
         const RaceID = Number(strID)
         let row = ''
@@ -253,6 +255,7 @@ function CreatePaceData(value: EntPaceData[]) {
             }
         }
         rows.push(row)
+        initprogress(1)
     }
     return rows
 }
@@ -469,10 +472,10 @@ async function CreateRacePredictData(value: EntRaceInfomationData[], shell: Pyth
             const blood = blooddata[HorseID]
             const BloodData = `blood,0,${info.Range},${info.Venue},${info.Ground},${info.GroundCondition},${info.Pace},${Horsevalue.HorseGender},${Horsevalue.Weight},${Horsevalue.HorseAge},${blood}`
 
-            const Aptitude = dicAptitude[RaceID][HorseID]
-            const Rotation = dicRotation[RaceID][HorseID]
-            const Achievement = dicAchievement[RaceID][HorseID]
             try {
+                const Aptitude = dicAptitude[RaceID][HorseID]
+                const Rotation = dicRotation[RaceID][HorseID]
+                const Achievement = dicAchievement[RaceID][HorseID]
                 const rowAptitude = `aptitude,0,${info.Venue},${info.Range},${info.Weather},${info.Ground},${info.GroundCondition},${info.Pace},${info.HoldMonth},${info.Hold},${Horsevalue.HorseNo},${info.Day},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.Fluctuation},${Horsevalue.Jockey},${Horsevalue.HorseAge},${Aptitude.Aptitude},${blood}`
                 const rowRotation = `rotation,0,${info.Direction},${info.Venue},${info.HoldMonth},${info.Hold},${info.Day},${info.Range},${info.Ground},${info.GroundCondition},${info.Weather},${info.Pace},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.HorseNo},${Horsevalue.HorseAge},${Horsevalue.Fluctuation},${Horsevalue.Jockey},0,${Rotation.Rotation}`
                 const rowAchievement = `achievement,0,${info.Venue},${info.Range},${info.Ground},${info.GroundCondition},${info.HoldMonth},${info.Hold},${info.Day},${info.Weather},${Horsevalue.Pace},${Horsevalue.HorseAge},${Horsevalue.Weight},${Horsevalue.TrainerID},${Horsevalue.HorseGender},${Horsevalue.HorseWeight},${Horsevalue.HorseNo},${Horsevalue.Fluctuation},${Horsevalue.Jockey},${Achievement.Achievement}`

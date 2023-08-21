@@ -13,7 +13,7 @@ export default class GetPaceData extends SQLBase<EntPaceData[]>
         const sql = `
 select
 	  RT.pace
-    , RI.ID
+    , RI.ID as RaceID
     , RHI.HorseNo
 	, RI.Venue
 	, RI.HoldMonth
@@ -59,6 +59,7 @@ from RaceInfomation as RI
         on RHI.RaceID = RI.ID
     inner join PaceTable as PT
 		on PT.RaceID = RI.ID
+		and PT.HorseNo = RHI.HorseNo
 	left outer join RapTable as RT
 		on RT.ID = RI.ID
 where
