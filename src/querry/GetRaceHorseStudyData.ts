@@ -82,7 +82,7 @@ from (
         , isnull(RHI.Remarks, 0) as Remarks
         , convert(int, RHI.Fluctuation) as Fluctuation
         , JM.ID as JockeyID
-        , RHI.HorseIDa
+        , RHI.HorseID
         , ROW_NUMBER()over(partition by RHI.HorseID order by convert(datetime, convert(nvarchar, RI.Year) + '-' + convert(nvarchar, RI.HoldMonth) + '-' + convert(nvarchar, RI.HoldDay)) desc) as num
     from RaceHorseInfomation as RHI
         left outer join RaceInfomation as RI

@@ -122,7 +122,7 @@ export default class MgrRaceData{
                             data += `,${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${`${value.SpurtTime}`.replace('null', '')},${value.JockeyID},${value.before}`
                         }
                     }
-                    const empty = ',,,,,,,,,,,,,,,,,,,,,,'
+                    const empty = ',,,,,,,,,,,,,,,,,,,,,'
                     if (RaceHorseData.length == 1){
                         data = data + empty + empty + empty + empty + empty
                     }
@@ -371,7 +371,7 @@ export default class MgrRaceData{
                             data += `,${value.GoalTime},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${value.SpurtTime},${value.JockeyID},${value.before}`
                         }
                     })
-                    const empty = ',,,,,,,,,,,,,,,,,,,,,,'
+                    const empty = ',,,,,,,,,,,,,,,,,,,,,'
                     if (row.length == 2){
                         data = data + empty + empty + empty + empty
                     }
