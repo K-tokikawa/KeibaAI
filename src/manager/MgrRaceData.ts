@@ -231,7 +231,7 @@ export default class MgrRaceData{
                     const num = Number(keynum)
                     const entity = entitys[num]
                     const represent = entity.represent
-                    let str = `${represent.GoalTime},${represent.Venue},${represent.Range},${represent.Weather},${represent.Ground},${represent.GroundCondition},${represent.HoldMonth},${represent.Hold},${represent.HorseNo},${represent.Day},${represent.Weight},${represent.TrainerID},${represent.HorseGender},${represent.HorseWeight},${represent.Fluctuation},${represent.JockeyID},${represent.HorseAge}`
+                    let str = `${represent.GoalTime} ,${represent.Venue} ,${represent.Range} ,${represent.Weather} ,${represent.Ground} ,${represent.GroundCondition} ,${represent.HoldMonth} ,${represent.Hold} ,${represent.HorseNo}  ,${represent.Day} ,${represent.Weight}  ,${represent.TrainerID}  ,${represent.HorseGender}  ,${represent.HorseWeight}  ,${represent.Fluctuation}  ,${represent.JockeyID} ,${represent.HorseAge}`
                     str += blood
                     this.m_RaceData.forEach((row: EntRaceHorseStudyData) => {
                         if (row.HorseID == HorseID) {

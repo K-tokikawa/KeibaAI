@@ -34,7 +34,7 @@ while(True):
     mode = data[0]
     datas = []
     for d in data:
-        if (d == 'None'):
+        if (d == 'None' or d == 'null'):
             datas.append(None)
         else:
             try:

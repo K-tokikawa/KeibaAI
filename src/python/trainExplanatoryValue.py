@@ -107,12 +107,12 @@ param = {
     'tree_method':'gpu_hist' 
 }
 
-# param["max_depth"] = trial.params["max_depth"]
-# param["eta"] = trial.params["eta"]
-# param["lambda"] = trial.params["lambda"]
-param["max_depth"] = 7
-param["eta"] = 0.5930623297418864
-param["lambda"] = 852
+param["max_depth"] = trial.params["max_depth"]
+param["eta"] = trial.params["eta"]
+param["lambda"] = trial.params["lambda"]
+# param["max_depth"] = 7
+# param["eta"] = 0.5930623297418864
+# param["lambda"] = 852
 evals = [(xgb_train, 'train'), (xgb_test, 'eval')]
 evals_result = {}
 print('Start Train')
