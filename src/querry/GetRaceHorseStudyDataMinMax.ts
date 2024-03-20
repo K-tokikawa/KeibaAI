@@ -13,20 +13,7 @@ select
     , max(RHI.HorseID) as max
 from (
     select
-          RHI.GoalTime
-        , convert(datetime, convert(nvarchar, RI.Year) + '-' + convert(nvarchar, RI.HoldMonth) + '-' + convert(nvarchar, RI.HoldDay)) as HoldDay
-        , RI.Weather
-        , RI.Range
-        , RI.Venue
-        , RI.Ground
-        , RI.GroundCondition
-        , RHI.TrainerID
-        , RHI.HorseGender
-        , RHI.HorseWeight
-        , convert(int, RHI.Fluctuation) as Fluctuation
-        , RHI.JockeyID
-        , RHI.HorseID
-        , ROW_NUMBER()over(partition by RHI.HorseID order by convert(datetime, convert(nvarchar, RI.Year) + '-' + convert(nvarchar, RI.HoldMonth) + '-' + convert(nvarchar, RI.HoldDay))) as num
+        RHI.HorseID
     from RaceHorseInfomation as RHI
         left outer join RaceInfomation as RI
             on RI.ID = RHI.RaceID

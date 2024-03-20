@@ -47,6 +47,7 @@ select
     , Remarks
     , JockeyID
     , lag(RHI.HoldDay)over(partition by RHI.HorseID order by RHI.num) as before
+    , DateDIFF(day, lag(RHI.HoldDay)over(partition by RHI.HorseID order by RHI.num), RHI.HoldDay) as interval
     , num
     , RHI.OutValue
 from (

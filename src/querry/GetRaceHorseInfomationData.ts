@@ -28,6 +28,7 @@ select
     , RaceRemarks
     , Remarks
     , SpurtTime
+    , GoalTime
 from RaceHorseInfomation as RHI
     left outer join JockeyMaster as JM
         on JM.JockeyID = RHI.JockeyID

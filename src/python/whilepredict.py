@@ -46,7 +46,7 @@ while(True):
             except ValueError:
                 None
     data = pd.DataFrame([pd.Series(data=datas)])
-    data = data.drop(data.columns[[0, 0]], axis=1)
+    # data = data.drop(data.columns[[0, 0]], axis=1)
     xgb_test = xgb.DMatrix(data)
     if mode == 'achievement':
         y_pred = achievementmodel.predict(xgb_test)

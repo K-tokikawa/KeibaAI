@@ -34,6 +34,7 @@ export default class EntRaceHorseStudyData{
     public Remarks: number
     public JockeyID: number
     public before: Date
+    public interval: number
     public num: number
     public OutValue: number
     constructor(){
@@ -72,6 +73,7 @@ export default class EntRaceHorseStudyData{
         this.Remarks = 0
         this.JockeyID = 0
         this.before = new Date()
+        this.interval = 0
         this.num = 0
         this.OutValue = 0
     }

@@ -22,8 +22,11 @@ from (
         select
             RHI.HorseID
         from RaceHorseInfomation as RHI
+            left outer join RaceInfomation as RI
+                on RI.ID = RHI.RaceID
         where
             RHI.HorseID is not null
+            and RI.Year >= 1992
         group by
             RHI.HorseID
     ) as RHI

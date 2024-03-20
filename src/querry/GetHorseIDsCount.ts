@@ -1,6 +1,5 @@
 import SQLBase from "../SQLBase"
 import EntStudyDataCount from "../entity/EntStudyDataCount"
-import PrmStudyData from "../param/PrmStudyData"
 export default class GetHorseIDsCount extends SQLBase<EntStudyDataCount[]>
 {
     constructor() {
@@ -14,8 +13,14 @@ from (
     select
         RHI.HorseID
     from RaceHorseInfomation as RHI
+        left outer join RaceInfomation as RI
+            on RI.ID = RHI.RaceID
     where
         RHI.HorseID is not null
+        and RHI.OutValue = 0
+        and RI.Year >= 1992
+        and RI.Direction <> 3
+        and RI.Direction is not null
     group by
         RHI.HorseID
 ) as RHI

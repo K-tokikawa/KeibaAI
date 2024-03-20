@@ -15,7 +15,7 @@ export default class EntRaceHorseInfomationData{
     public RaceRemarks: number
     public Remarks: number
     public SpurtTime: number
-
+    public GoalTime: number
     constructor(){
         this.RaceID = 0
         this.HorseID = 0
@@ -33,5 +33,6 @@ export default class EntRaceHorseInfomationData{
         this.RaceRemarks = 0
         this.Remarks = 0
         this.SpurtTime = 0
+        this.GoalTime = 0
     }
 }

@@ -1,45 +1,58 @@
+import { PythonShell } from "python-shell"
 import FileUtil from "../FileUtil"
-import simpleProgress from "../ProgressBar"
-import EntRaceHorseStudyData from "../entity/EntRaceHorseStudyData"
-import EntStudyDataCount from "../entity/EntStudyDataCount"
-import EntStudyDataMinMax from "../entity/EntStudyDataMinMax"
-import MgrRaceData from "../manager/MgrRaceData"
-import PrmStudyData from "../param/PrmStudyData"
-import BulkInsert from "../querry/BulkInsert"
-import GetRaceHorseStudyData from "../querry/GetRaceHorseStudyData"
-import GetRaceHorseStudyDataMinMax from "../querry/GetRaceHorseStudyDataMinMax"
-import { GetLoopMin, GetStartFinishMinMax } from "./CreateUtil"
+import CreateStudyDataBase from "../class/ClassCreateStudyDataBase"
+
+
 
 export async function CreateHorseStudyData(valuenum: number){
-    const sql: GetRaceHorseStudyDataMinMax = new GetRaceHorseStudyDataMinMax()
-    let MinMax: EntStudyDataMinMax[] =  await sql.Execsql()
-    let [loop, min] = GetLoopMin(valuenum, MinMax)
-    let count = 0
-    const ProgressBar = simpleProgress()
-    const progress = ProgressBar(loop, 200, 'Horse')
-    while (loop != 0)
-    {
-        const [Start, Finish] = GetStartFinishMinMax(valuenum, count, min)
+    const classcreate = new ClassCreate()
+    await classcreate.CreateData(valuenum, null) 
+}
 
-        let param = new PrmStudyData(Start, Finish)
-        const sql = new GetRaceHorseStudyData(param)
-        const value = await sql.Execsql() as EntRaceHorseStudyData[]
-        const mgr = new MgrRaceData(value.filter(x => x.OutValue == 0))
+class ClassCreate extends CreateStudyDataBase
+{
+    constructor(){
+        super()
+    }
+    async main(Start: number){
+        for (const RaceID of this.mgr.RaceIDs) {
+            const Aptituderows: string[] = []
+            const Rotationrows: string[] = []
+            const Acievementrows: string[] = []
+            const Race = this.mgr.dicRace[RaceID]
+            const Horses = this.mgr.dicHorse[RaceID]
+            for (const strHorseID of Object.keys(Horses)) {
+                try {
+                    const HorseID = Number(strHorseID)
+                    const Horse = Horses[HorseID]
+                    const blood = this.mgr.BloodData[HorseID]
+                    const row = `${Horse.GoalTime},${Race.Venue},${Race.Range},${Race.Ground},${Race.GroundCondition},${Race.Weather},${Race.HoldMonth},${Race.Hold},${Race.Day},${Horse.HorseNo},${Horse.Weight},${Horse.HorseWeight},${Horse.HorseAge},${Horse.TrainerID},${Horse.HorseGender},${Horse.Fluctuation},${Horse.Jockey}`
+    
+                    const Aptitude = this.mgr.dicAptitude[RaceID][HorseID]
+                    const rowAptitude = `${row},${Aptitude.Aptitude},${blood}`
+                    Aptituderows.push(rowAptitude)
+    
+                    const Rotation = this.mgr.dicRotation[RaceID][HorseID]
+                    const rowRotation = `${row},${Race.Direction},${Rotation.Rotation}`
+                    Rotationrows.push(rowRotation)
+    
+                    const Achievement = this.mgr.dicAchievement[RaceID][HorseID]
+                    const rowAchievement = `${row},${Achievement.Achievement}`
+                    Acievementrows.push(rowAchievement)
+                }
+                catch
+                {
 
-        const Rotationrows = mgr.CreateRotationData()
-        const RotationfilePath = `./data/rotation/${Start}.csv`
-        await FileUtil.ContinueOutputFile(RotationfilePath, Rotationrows)
-        
-        const Acievementrows = mgr.CreateAchievementData()
-        const AchievementfilePath = `./data/achievement/${Start}.csv`
-        await FileUtil.ContinueOutputFile(AchievementfilePath, Acievementrows)
-
-        const Aptituderows = await mgr.CreateAptitudeData()
-        const AptitudefilePath = `./data/aptitude/${Start}.csv`
-        await FileUtil.ContinueOutputFile(AptitudefilePath, Aptituderows)
-
-        progress(1)
-        loop--
-        count++
+                }
+            }
+            const RotationfilePath = `./data/rotation/${Start}.csv`
+            FileUtil.ContinueOutputFile(RotationfilePath, Rotationrows)
+            
+            const AchievementfilePath = `./data/achievement/${Start}.csv`
+            FileUtil.ContinueOutputFile(AchievementfilePath, Acievementrows)
+    
+            const AptitudefilePath = `./data/aptitude/${Start}.csv`
+            FileUtil.ContinueOutputFile(AptitudefilePath, Aptituderows)
+        }
     }
 }

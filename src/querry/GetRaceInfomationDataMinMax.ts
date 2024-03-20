@@ -14,6 +14,8 @@ select
 from RaceInfomation as RI
 where
     RI.Direction is not null
+    and RI.Direction <> 3
+    and RI.Year >= 1992
 `
         return await this.ExecGet(sql)
     }

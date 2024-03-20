@@ -23,7 +23,7 @@ export async function CreateJockeyStydyData(valuenum: number)
         let param = new PrmStudyData(Start, Finish)
         const sql = new GetJockeyStudyData(param)
         const value: EntJockeyStudyData[]  = await sql.Execsql() as EntJockeyStudyData[]
-        const rows: string[] = value.map(x => { return `${x.GoalTime},${x.JockeyID},${x.HorseGender},${x.Venue},${x.Range},${x.Ground},${x.GroundCondition},${x.pace},${x.HorseNo},${x.Age},${x.HoldMonth},${x.Weather},${x.Weight},${x.Hold},${x.Day},${x.Round}`})
+        const rows: string[] = value.map(x => { return `${x.GoalTime},${x.JockeyID},${x.Venue},${x.Range},${x.Ground},${x.GroundCondition},${x.Weather},${x.HoldMonth},${x.Hold},${x.Day},${x.HorseNo},${x.Weight},${x.Age},${x.HorseGender},${x.Round}`})
         const filePath: string = `./data/Jockey/${Start}.csv`
 
         await FileUtil.ContinueOutputFile(filePath, rows)
