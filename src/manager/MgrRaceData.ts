@@ -119,10 +119,10 @@ export default class MgrRaceData{
                             data += `${HorseID},${RaceID}`
                         } else {
                             data += `,${value.GoalTime}`.replace('null', '')
-                            data += `,${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${`${value.SpurtTime}`.replace('null', '')},${value.JockeyID},${value.before}`
+                            data += `,${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${`${value.SpurtTime}`.replace('null', '')},${value.JockeyID},${value.before}`
                         }
                     }
-                    const empty = ',,,,,,,,,,,,,,,,,,,,,,'
+                    const empty = ',,,,,,,,,,,,,,,,,,,,,'
                     if (RaceHorseData.length == 1){
                         data = data + empty + empty + empty + empty + empty
                     }
@@ -231,7 +231,7 @@ export default class MgrRaceData{
                     const num = Number(keynum)
                     const entity = entitys[num]
                     const represent = entity.represent
-                    let str = `${represent.GoalTime},${represent.Venue},${represent.Range},${represent.Weather},${represent.Ground},${represent.GroundCondition},${represent.Pace},${represent.HoldMonth},${represent.Hold},${represent.HorseNo},${represent.Day},${represent.Weight},${represent.TrainerID},${represent.HorseGender},${represent.HorseWeight},${represent.Fluctuation},${represent.JockeyID},${represent.HorseAge}`
+                    let str = `${represent.GoalTime},${represent.Venue},${represent.Range},${represent.Weather},${represent.Ground},${represent.GroundCondition},${represent.HoldMonth},${represent.Hold},${represent.HorseNo},${represent.Day},${represent.Weight},${represent.TrainerID},${represent.HorseGender},${represent.HorseWeight},${represent.Fluctuation},${represent.JockeyID},${represent.HorseAge}`
                     str += blood
                     this.m_RaceData.forEach((row: EntRaceHorseStudyData) => {
                         if (row.HorseID == HorseID) {
@@ -304,7 +304,7 @@ export default class MgrRaceData{
                 const num = Number(key)
                 const value = entitys[num].represent
                 const achievements = entitys[num].achievements
-                let str = `${value.GoalTime},${value.Venue},${value.Range},${value.Ground},${value.GroundCondition},${value.HoldMonth},${value.Hold},${value.Day},${value.Weather},${value.Pace},${value.HorseAge},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.Fluctuation},${value.JockeyID}`
+                let str = `${value.GoalTime},${value.Venue},${value.Range},${value.Ground},${value.GroundCondition},${value.HoldMonth},${value.Hold},${value.Day},${value.Weather},${value.HorseAge},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.Fluctuation},${value.JockeyID}`
                 Object.keys(achievements).forEach(key => {
                     const id = Number(key)
                     const achievement = achievements[id]
@@ -369,12 +369,12 @@ export default class MgrRaceData{
                 if (row.length > 1) {
                     row.forEach((value: ClassRaceHorseData) => {
                         if (data == ''){
-                            data += `${value.GoalTime},${value.Direction},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
+                            data += `${value.GoalTime},${value.Direction},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Fluctuation},${value.JockeyID},${value.before}`
                         } else {
-                            data += `,${value.GoalTime},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Pace},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${value.SpurtTime},${value.JockeyID},${value.before}`
+                            data += `,${value.GoalTime},${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${value.SpurtTime},${value.JockeyID},${value.before}`
                         }
                     })
-                    const empty = ',,,,,,,,,,,,,,,,,,,,,,'
+                    const empty = ',,,,,,,,,,,,,,,,,,,,,'
                     if (row.length == 2){
                         data = data + empty + empty + empty + empty
                     }
