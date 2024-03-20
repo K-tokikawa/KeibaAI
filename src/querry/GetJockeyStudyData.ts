@@ -61,6 +61,7 @@ from (
     where
             RHI.OutValue = 0
         and RI.Direction <> 3
+        and RI.Year >= 1992
         and RHI.JockeyID in (
             select
                 RHI.JockeyID

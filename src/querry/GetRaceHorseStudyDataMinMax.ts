@@ -33,6 +33,7 @@ from (
     where
         RHI.HorseID is not null
         and RI.Direction is not null
+        and RI.Year >= 1992
 ) as RHI
 `
         return await this.ExecGet(sql)

@@ -15,6 +15,7 @@ from RaceHorseInfomation as RHI
 where
         RHI.Rank is not null
     and RHI.OutValue = 0
+    and RI.Year >= 1992
     and RHI.JockeyID in (
         select
             RHI.JockeyID
