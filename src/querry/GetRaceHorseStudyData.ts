@@ -48,6 +48,7 @@ select
     , JockeyID
     , lag(RHI.HoldDay)over(partition by RHI.HorseID order by RHI.num) as before
     , num
+    , RHI.OutValue
 from (
     select
           RHI.GoalTime - TA.Average as GoalTime
@@ -101,7 +102,6 @@ from (
             RHI.HorseID is not null
         and RI.Direction is not null
         and HorseWeight is not null
-        ${this.parameter?.remove3 ? 'and OutValue = 0': '' }
 ) as RHI
 where
 ${this.parameter?.IDs == null ? `RHI.HorseID between ${this.parameter?.Start} and ${this.parameter?.Finish}`: `RHI.HorseID in (${this.parameter?.IDs})`}

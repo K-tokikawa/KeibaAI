@@ -1,7 +1,7 @@
 import SQLBase from "../SQLBase"
 import EntJockyStudyData from "../entity/EntJockeyStudyData"
 import PrmStudyData from "../param/PrmStudyData"
-export default class GetJockyStudyData extends SQLBase<EntJockyStudyData[]>
+export default class GetJockeyStudyData extends SQLBase<EntJockyStudyData[]>
 {
     private parameter: PrmStudyData | null
 

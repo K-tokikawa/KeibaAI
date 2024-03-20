@@ -1,7 +1,7 @@
 import ClassPassageData from "../class/ClassPassageData";
 import ClassRaceHorseData from "../class/ClassRaceHorseData";
 import EntRaceHorseStudyData from "../entity/EntRaceHorseStudyData";
-import EntBloodStudyData_Blood from "../entity/EntBloodStudyData_Blood";
+import EntBloodStudyData_Blood from "../entity/EntBloodStudyData";
 import GetHorseIDBloodStudyData_Blood from "../querry/GetHorseIDBloodStudyData_Blood"
 import PrmStudyData from "../param/PrmStudyData";
 import ClassAchievementData from "../class/ClassAchievementData";
@@ -391,84 +391,7 @@ export default class MgrRaceData{
                 }
             })
         })
-        return rows
-    }
-
-    public CreatePaceData(){
-        const dic: {
-            [horseID: number]:{[num: number]: ClassRaceHorseData[]}
-        } = { }
-        const rows: string[] = []
-        this.m_RaceData.forEach((row: EntRaceHorseStudyData) => {
-            const before = row.before == null ? 0 :(row.before.getTime() - row.HoldDay.getTime()) / 86400000
-            const data = new ClassRaceHorseData(
-                row,
-                before
-            )
-            const num = row.num
-            const HorseID = row.HorseID
-            if (dic[HorseID] == undefined) {
-                dic[HorseID] = []
-            }
-            if (dic[HorseID][num] == undefined){
-                dic[HorseID][num] = []
-            }
-            dic[HorseID][num].push(data)
-    
-            if (num - 1 > 0) {
-                dic[HorseID][num - 1].push(data)
-            }
-            if (num - 2 > 0) {
-                dic[HorseID][num - 2].push(data)
-            }
-            if (num - 3 > 0) {
-                dic[HorseID][num - 3].push(data)
-            }
-            if (num - 4 > 0) {
-                dic[HorseID][num - 4].push(data)
-            }
-            if (num - 5 > 0) {
-                dic[HorseID][num - 5].push(data)
-            }
-        })
-        Object.keys(dic).forEach(strkey => {
-            const HorseID = Number(strkey)
-            Object.keys(dic[HorseID]).forEach(strnum =>{
-                let pace = ''
-                const num = Number(strnum)
-                const row = dic[HorseID][num]
-                if (row.length > 0) {
-                    row.forEach((value: ClassRaceHorseData) => {
-                        if (pace == ''){
-                            pace = `${value.RaceID},${value.HorseNo}`
-                        } else {
-                            pace += `,${value.Pace},${value.Passage1},${value.Passage2},${value.Passage3},${value.Passage4}`
-                        }
-                    })
-                    const paceempty = ',,,,,'
-                    if (row.length == 1){
-                        pace = pace + paceempty + paceempty + paceempty + paceempty + paceempty + paceempty
-                    }
-                    if (row.length == 2){
-                        pace = pace + paceempty + paceempty + paceempty + paceempty + paceempty
-                    }
-                    if (row.length == 3){
-                        pace = pace + paceempty + paceempty + paceempty + paceempty
-                    }
-                    if (row.length == 4){
-                        pace = pace + paceempty + paceempty + paceempty
-                    }
-                    if (row.length == 5){
-                        pace = pace + paceempty + paceempty
-                    }
-                    if (row.length == 6){
-                        pace = pace + paceempty
-                    }
-                    rows.push(pace)
-                }
-            })
-        })
-        return rows
+        return rows[0]
     }
 }
 

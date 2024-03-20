@@ -1,6 +1,6 @@
 import SQLBase from "../SQLBase"
 import EntStudyDataCount from "../entity/EntStudyDataCount"
-export default class GetJockyStudyDataCount extends SQLBase<EntStudyDataCount[]>
+export default class GetJockeyStudyDataCount extends SQLBase<EntStudyDataCount[]>
 {
     constructor() {
         super()
