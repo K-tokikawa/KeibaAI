@@ -94,99 +94,97 @@ export default class MgrRaceData{
     }
 
     async CreateRacePredict(HorseID: number){
-        return new Promise(async (resolve) =>{
-            const dic = this.m_dic
-            const horseData = dic[HorseID].data
-            const entitys: {[num: number]: {PassageData: ClassPassageData, AchievementData: ClassAchievementData, RotationData: ClassRaceHorseData[], RaceID: number, Rank: number}} = horseData.HorseData
-            for (const keynum of Object.keys(entitys)){
-                const num = Number(keynum)
-                const Passageentity = entitys[num].PassageData
-                const Achievemententity = entitys[num].AchievementData
-                const RaceHorseData = entitys[num].RotationData
-                const RaceID = entitys[num].RaceID
-                // Rotation
-                let data = ''
-                if (RaceHorseData.length > 0) {
-                    for (const value of RaceHorseData){
-                        if (data == ''){
-                            data += `${HorseID},${RaceID}`
-                        } else {
-                            data += `,${value.GoalTime}`.replace('null', '')
-                            data += `,${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${`${value.SpurtTime}`.replace('null', '')},${value.JockeyID},${value.interval}`
-                        }
-                    }
-                    const empty = ',,,,,,,,,,,,,,,,,,,,,'
-                    if (RaceHorseData.length == 1){
-                        data = data + empty + empty + empty + empty + empty
-                    }
-                    if (RaceHorseData.length == 2){
-                        data = data + empty + empty + empty + empty
-                    }
-                    if (RaceHorseData.length == 3){
-                        data = data + empty + empty + empty
-                    }
-                    if (RaceHorseData.length == 4){
-                        data = data + empty + empty
-                    }
-                    if (RaceHorseData.length == 5){
-                        data = data + empty
-                    }
-                }
-
-                // aptitude
-                let strPassage = `${HorseID},${RaceID}`
-                for (const row of this.m_RaceData) {
-                    // Passage
-                    if (row.HorseID == HorseID) {
-                        // 予測したいレースより前の日付の情報を保持していく
-                        if (row.HoldDay.getTime() < Passageentity.represent.HoldDay.getTime()){
-                            Passageentity.addPassage1(row.Passage1)
-                            Passageentity.addPassage2(row.Passage2)
-                            Passageentity.addPassage3(row.Passage3)
-                            Passageentity.addPassage4(row.Passage4)
-                        }
-                    }
-
-                    if (row.HorseID == HorseID) {
-                        // 予測したいレースより前の日付の情報を保持していく
-                        if (row.HoldDay.getTime() < Achievemententity.represent.HoldDay.getTime()){
-                            const before = row.before == null ? 0 :(row.HoldDay.getTime() - Achievemententity.represent.HoldDay.getTime()) / 86400000
-                            const data = new ClassRaceHorseData(
-                                row,
-                                before
-                            )
-                            const AchievementData = Achievemententity.getIDAchievementData(data.ID)
-                            if (AchievementData == null) {
-                                Achievemententity.updateAchievement(data)
-                            } else if(AchievementData.GoalTime > data.GoalTime) {
-                                Achievemententity.updateAchievement(data)
-                            } else {
-                                // なにもなし
-                            }
-                        }
-                    }
-                }
-                strPassage += `,${Passageentity.AveragePassage1},${Passageentity.AveragePassage2},${Passageentity.AveragePassage3},${Passageentity.AveragePassage4}`
-
-                // Acievement
-                const achievements = entitys[num].AchievementData.achievements
-                let strAchievement = `${HorseID},${RaceID}`
-                for (const key of Object.keys(achievements)){
-                    const id = Number(key)
-                    const achievement = achievements[id]
-                    if (achievement == null || achievement.GoalTime == null) {
-                        const empty = `,,,`
-                        strAchievement += empty
+        const dic = this.m_dic
+        const horseData = dic[HorseID].data
+        const entitys: {[num: number]: {PassageData: ClassPassageData, AchievementData: ClassAchievementData, RotationData: ClassRaceHorseData[], RaceID: number, Rank: number}} = horseData.HorseData
+        for (const keynum of Object.keys(entitys)){
+            const num = Number(keynum)
+            const Passageentity = entitys[num].PassageData
+            const Achievemententity = entitys[num].AchievementData
+            const RaceHorseData = entitys[num].RotationData
+            const RaceID = entitys[num].RaceID
+            // Rotation
+            let data = ''
+            if (RaceHorseData.length > 0) {
+                for (const value of RaceHorseData){
+                    if (data == ''){
+                        data += `${HorseID},${RaceID}`
                     } else {
-                        strAchievement += `,${achievement.GoalTime},${achievement.Weight},${achievement.before}`
+                        data += `,${value.GoalTime}`.replace('null', '')
+                        data += `,${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${`${value.SpurtTime}`.replace('null', '')},${value.JockeyID},${value.interval}`
                     }
                 }
-                this.m_insertDic.strAchievement.push(strAchievement)
-                this.m_insertDic.data.push(data)
-                this.m_insertDic.strPassage.push(strPassage)
+                const empty = ',,,,,,,,,,,,,,,,,,,,,'
+
+                if (RaceHorseData.length == 1){
+                    data = data + empty + empty + empty + empty + empty
+                }
+                if (RaceHorseData.length == 2){
+                    data = data + empty + empty + empty + empty
+                }
+                if (RaceHorseData.length == 3){
+                    data = data + empty + empty + empty
+                }
+                if (RaceHorseData.length == 4){
+                    data = data + empty + empty
+                }
+                if (RaceHorseData.length == 5){
+                    data = data + empty
+                }
             }
-            resolve(true)
-        })
+
+            // aptitude
+            let strPassage = `${HorseID},${RaceID}`
+            for (const row of this.m_RaceData) {
+                // Passage
+                if (row.HorseID == HorseID) {
+                    // 予測したいレースより前の日付の情報を保持していく
+                    if (row.HoldDay.getTime() < Passageentity.represent.HoldDay.getTime()){
+                        Passageentity.addPassage1(row.Passage1)
+                        Passageentity.addPassage2(row.Passage2)
+                        Passageentity.addPassage3(row.Passage3)
+                        Passageentity.addPassage4(row.Passage4)
+                    }
+                }
+
+                if (row.HorseID == HorseID) {
+                    // 予測したいレースより前の日付の情報を保持していく
+                    if (row.HoldDay.getTime() < Achievemententity.represent.HoldDay.getTime()){
+                        const before = row.before == null ? 0 :(row.HoldDay.getTime() - Achievemententity.represent.HoldDay.getTime()) / 86400000
+                        const data = new ClassRaceHorseData(
+                            row,
+                            before
+                        )
+                        const AchievementData = Achievemententity.getIDAchievementData(data.ID)
+                        if (AchievementData == null) {
+                            Achievemententity.updateAchievement(data)
+                        } else if(AchievementData.GoalTime > data.GoalTime) {
+                            Achievemententity.updateAchievement(data)
+                        } else {
+                            // なにもなし
+                        }
+                    }
+                }
+            }
+            strPassage += `,${Passageentity.AveragePassage1},${Passageentity.AveragePassage2},${Passageentity.AveragePassage3},${Passageentity.AveragePassage4}`
+
+            // Acievement
+            const achievements = entitys[num].AchievementData.achievements
+            let strAchievement = `${HorseID},${RaceID}`
+            for (const key of Object.keys(achievements)){
+                const id = Number(key)
+                const achievement = achievements[id]
+                if (achievement == null || achievement.GoalTime == null) {
+                    const empty = `,,,`
+                    strAchievement += empty
+                } else {
+                    strAchievement += `,${achievement.GoalTime},${achievement.Weight},${achievement.before}`
+                }
+            }
+            this.m_insertDic.strAchievement.push(strAchievement)
+            this.m_insertDic.data.push(data)
+            this.m_insertDic.strPassage.push(strPassage)
+        }
     }
 }
 

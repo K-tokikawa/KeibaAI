@@ -16,7 +16,7 @@ export default abstract class CreateStudyDataBase
     }
     async CreateData(valuenum: number, shell: PythonShell | null){
 
-        // await CreateTotallingData(valuenum)
+        await CreateTotallingData(valuenum)
         const sql = new GetRaceInfomationMinMax()
         let MinMax: EntStudyDataMinMax[] =  await sql.Execsql()
         let [loop, min] = GetLoopMin(valuenum, MinMax)
@@ -29,8 +29,13 @@ export default abstract class CreateStudyDataBase
             const sql = new GetRaceInfomationData(param)
             const value = await sql.Execsql() as EntRaceInfomationData[]
             this.mgr = new MgrPredictData() // メモリ解放のためにインスタンス再生成
-            await this.mgr.init(value)
-            await this.main(Start, shell)
+            try {
+                await this.mgr.init(value)
+                await this.main(Start, shell)
+            } 
+            catch {
+                console.log(loop)
+            }
             loop--
             count++
         }
