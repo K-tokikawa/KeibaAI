@@ -22,7 +22,7 @@ from RaceHorseInfomation as RHI
 where
     GoalTime is not null
     and RHI.OutValue = 0
-    and RI.Year >= 1992
+    and RI.Year >= 2015
 `
         return await this.ExecGet(sql)
     }

@@ -7,13 +7,13 @@ import { ExecPythonPredict, ExecPythontrainExplanatoryValue } from "./CreateData
 const valuenum = 500
 main()
 async function main(){
-    await CreateBloodStudyData(valuenum)
-    await CreateJockeyStydyData(valuenum)
-    await CreateHorseStudyData(valuenum)
-    await ExecPythontrainExplanatoryValue()
+    // await CreateBloodStudyData(valuenum)
+    // await CreateJockeyStydyData(valuenum)
+    // await CreateHorseStudyData(valuenum)
+    // await ExecPythontrainExplanatoryValue()
 
     await CreateRaceStudyData(valuenum)
-    await ExecPythonPredict()
+    // await ExecPythonPredict()
 }
 
 

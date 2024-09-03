@@ -844,7 +844,7 @@ from (
             GoalTime is not null
             and RHI.OutValue = 0
             and RI.Direction is not null
-            and RI.Year >= 1992
+            and RI.Year >= 2015
     ) as BD
 where
     ${this.parameter?.IDs == null?`BD.num BETWEEN ${this.parameter?.Start} and ${this.parameter?.Finish}`: `BD.HorseID in {${this.parameter?.IDs}}`}

@@ -6,8 +6,12 @@ import CreateStudyDataBase from "../class/ClassCreateStudyDataBase"
 
 export async function CreateRaceStudyData(valuenum: number) {
     const shell = new PythonShell('./src/python/whilepredict.py')
+    const shell_1 = new PythonShell('./src/python/whilepredict.py')
+    const shell_2 = new PythonShell('./src/python/whilepredict.py')
+    const shell_3 = new PythonShell('./src/python/whilepredict.py')
+    const shell_4 = new PythonShell('./src/python/whilepredict.py')
     const classcreate = new ClassCreateRaceStudyData()
-    classcreate.CreateData(valuenum, shell)
+    classcreate.CreateData(valuenum, [shell, shell_1, shell_2, shell_3, shell_4])
 }
 
 class ClassCreateRaceStudyData extends CreateStudyDataBase{
@@ -15,14 +19,14 @@ class ClassCreateRaceStudyData extends CreateStudyDataBase{
     {
         super()
     }
-    async main(Start: number, shell: PythonShell){
+    async main(Start: number, shell: PythonShell[]){
         const rows = await CreateRacePredictData(this.mgr, shell)
         const filePath = `./data/predict/${Start}.csv`
-        await FileUtil.ContinueOutputFile(filePath, rows)
+        FileUtil.ContinueOutputFile(filePath, rows)
     }
 }
 
-async function CreateRacePredictData(mgr: MgrPredictData, shell: PythonShell) {
+async function CreateRacePredictData(mgr: MgrPredictData, shell: PythonShell[]) {
     const rows: string[] = []
 
     const multiProgressber = multiProgress()
@@ -60,7 +64,6 @@ async function CreateRacePredictData(mgr: MgrPredictData, shell: PythonShell) {
 
         const predictprogress = multiProgressber().addProgress(Object.keys(Horse).length, 20, 'predict')
         for (const strHorseID of Object.keys(Horse)) {
-            predictprogress.addCount(1)
             const HorseID = Number(strHorseID)
             const Horsevalue = Horse[HorseID]
 
@@ -76,19 +79,23 @@ async function CreateRacePredictData(mgr: MgrPredictData, shell: PythonShell) {
                 const rowAptitude = `aptitude,${row},${Aptitude.Aptitude},${blood}`
                 const rowRotation = `rotation,${row},${info.Direction},${Rotation.Rotation}`
                 const rowAchievement = `achievement,${row},${Achievement.Achievement}`
-                const Blood = await Predict(BloodData, shell)
-                const Jockey = await Predict(JockeyData, shell)
-                const preAchievement = await Predict(rowAchievement, shell)
-                const preRotation = await Predict(rowRotation, shell)
-                const preAptitude = await Predict(rowAptitude, shell)
-    
+                const value = await Promise.all(
+                    [
+                        Predict(BloodData, shell[0]),
+                        Predict(JockeyData, shell[1]),
+                        Predict(rowAchievement, shell[2]),
+                        Predict(rowRotation, shell[3]),
+                        Predict(rowAptitude, shell[4])
+                    ]
+                )
                 dicpredict[RaceID].Horses[Horsevalue.HorseNo] = {
-                    horseinfo: `,${Blood},${Jockey},${preAchievement},${preRotation},${preAptitude}`,
+                    horseinfo: `,${value[0]},${value[1]},${value[2]},${value[3]},${value[4]}`,
                     rank: Horsevalue.Rank
                 }
             }catch {
                 FileUtil.OutputFile([`${RaceID}_${Horsevalue.HorseNo}`], `${RaceID}.txt`, false)
             }
+            predictprogress.addCount(1)
         }
 
         for (const strHorseNo of Object.keys(dicpredict[RaceID].Horses)) {

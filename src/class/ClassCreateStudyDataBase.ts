@@ -14,7 +14,7 @@ export default abstract class CreateStudyDataBase
     {
         this.mgr = new MgrPredictData()
     }
-    async CreateData(valuenum: number, shell: PythonShell | null){
+    async CreateData(valuenum: number, shell: PythonShell[] | null){
 
         await CreateTotallingData(valuenum)
         const sql = new GetRaceInfomationMinMax()
@@ -24,7 +24,7 @@ export default abstract class CreateStudyDataBase
         while (loop != 0)
         {
             const [Start, Finish] = GetStartFinishMinMax(valuenum, count, min)
-    
+
             const param = new PrmStudyData(Start, Finish)
             const sql = new GetRaceInfomationData(param)
             const value = await sql.Execsql() as EntRaceInfomationData[]
@@ -40,5 +40,5 @@ export default abstract class CreateStudyDataBase
             count++
         }
     }
-    abstract main(Start: number, shell: PythonShell|null): Promise<void>
+    abstract main(Start: number, shell: PythonShell[]|null): Promise<void>
 }

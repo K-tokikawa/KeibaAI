@@ -4,17 +4,23 @@ import xgboost as xgb
 import optuna
 import subprocess
 
-rotation = 'rotation'
-aptitude = 'aptitude'
-achievement = 'achievement'
+# rotation = 'rotation'
+# aptitude = 'aptitude'
+# achievement = 'achievement'
 Jockey = 'Jockey'
 blood = 'blood'
 
-l = [rotation,aptitude,achievement,Jockey,blood]
+l = [
+    # rotation,
+    # aptitude,
+    # achievement,
+    Jockey,
+    blood
+     ]
 
 for mode in l:
 
-    trial = 10
+    trial = 100
 
     DEFAULT_ATTRIBUTES = (
         'index',

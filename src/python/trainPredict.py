@@ -4,7 +4,7 @@ import xgboost as xgb
 import optuna
 import subprocess
 
-trial = 10
+trial = 100
 DEFAULT_ATTRIBUTES = (
     'index',
     'uuid',

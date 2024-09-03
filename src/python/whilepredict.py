@@ -1,6 +1,5 @@
 import xgboost as xgb
 import pandas as pd
-from sklearn.metrics import mean_squared_error
 import numpy as np
 
 
@@ -9,34 +8,30 @@ aptitude = '.\\model\\aptitude\\model.json'
 rotation = '.\\model\\rotation\\model.json'
 blood = '.\\model\\blood\\model.json'
 Jockey = '.\\model\\Jockey\\model.json'
-pace = '.\\model\\pace\\model.json'
 
 achievementmodel = xgb.Booster()
 aptitudemodel = xgb.Booster()
 rotationmodel = xgb.Booster()
 bloodmodel = xgb.Booster()
 jockeymodel = xgb.Booster()
-pacemodel = xgb.Booster()
 
 achievementmodel.load_model(achievement)
 aptitudemodel.load_model(aptitude)
 rotationmodel.load_model(rotation)
 bloodmodel.load_model(blood)
 jockeymodel.load_model(Jockey)
-pacemodel.load_model(pace)
 
 achievementmodel.set_param({'tree_method':'gpu_hist'})
 aptitudemodel.set_param({'tree_method':'gpu_hist'})
 rotationmodel.set_param({'tree_method':'gpu_hist'})
 bloodmodel.set_param({'tree_method':'gpu_hist'})
 jockeymodel.set_param({'tree_method':'gpu_hist'})
-pacemodel.set_param({'tree_method':'gpu_hist'})
-
 while(True):
     data = input()
     data = data.split(',')
     mode = data[0]
     datas = []
+    datas.append(None) #field name 調整のため
     for d in data:
         if (d == 'None' or d == 'null'):
             datas.append(None)
@@ -46,7 +41,7 @@ while(True):
             except ValueError:
                 None
     data = pd.DataFrame([pd.Series(data=datas)])
-    # data = data.drop(data.columns[[0, 0]], axis=1)
+    data = data.drop(data.columns[[0, 0]], axis=1)
     xgb_test = xgb.DMatrix(data)
     if mode == 'achievement':
         y_pred = achievementmodel.predict(xgb_test)
@@ -58,6 +53,4 @@ while(True):
         y_pred = bloodmodel.predict(xgb_test)
     if mode == 'Jockey':
         y_pred = jockeymodel.predict(xgb_test)
-    if mode == 'pace':
-        y_pred = pacemodel.predict(xgb_test)
     print(y_pred)

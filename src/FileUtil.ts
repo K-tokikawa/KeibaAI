@@ -9,12 +9,11 @@ export default class FileUtil {
         filePath: string,
         bol: boolean = true
     ) {
-        console.log('output')
         const ProgressBar = simpleProgress()
-        const progress = ProgressBar(lines.length, 20, 'FileOutPut')
+        // const progress = ProgressBar(lines.length, 20, 'FileOutPut')
         let index = 0
         for (let line of lines){
-            if(bol) progress(1)
+            // if(bol) progress(1)
             line = line + '\n'
             const arybuf = Encoding.convert(line, {
                 from: 'UNICODE',
@@ -41,25 +40,22 @@ export default class FileUtil {
         return page
     }
 
-    public static async ContinueOutputFile(filepath: string, lines: string[]){
-        return new Promise((resoleve) => {
-            let exist = fs.existsSync(filepath)
-            lines.forEach((line: string, index: number) => {
-                line = line + '\n'
-                const arybuf = Encoding.convert(line, {
-                    from: 'UNICODE',
-                    to: 'UTF8',
-                    type: 'arraybuffer',
-                });
-    
-                if (exist) {
-                    fs.appendFileSync(filepath, Buffer.from(arybuf))
-                } else {
-                    fs.writeFileSync(filepath, Buffer.from(arybuf));
-                    exist = fs.existsSync(filepath)
-                }
-            })
-            resoleve(true)
-        })
+    public static ContinueOutputFile(filepath: string, lines: string[]){
+        let exist = fs.existsSync(filepath)
+        for (let line of lines){
+            line = line + '\n'
+            const arybuf = Encoding.convert(line, {
+                from: 'UNICODE',
+                to: 'UTF8',
+                type: 'arraybuffer',
+            });
+
+            if (exist) {
+                fs.appendFileSync(filepath, Buffer.from(arybuf))
+            } else {
+                fs.writeFileSync(filepath, Buffer.from(arybuf));
+                exist = fs.existsSync(filepath)
+            }
+        }
     }
 }
