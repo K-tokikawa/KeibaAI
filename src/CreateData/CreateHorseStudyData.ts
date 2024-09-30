@@ -2,8 +2,6 @@ import { PythonShell } from "python-shell"
 import FileUtil from "../FileUtil"
 import CreateStudyDataBase from "../class/ClassCreateStudyDataBase"
 
-
-
 export async function CreateHorseStudyData(valuenum: number){
     const classcreate = new ClassCreate()
     await classcreate.CreateData(valuenum, null) 

@@ -18,6 +18,8 @@ import EntRaceHorseInfomationData from "../entity/EntRaceHorseInfomationData"
 import ClassDicHorse from "../class/ClassDicHorse"
 import GetHorseIDBloodStudyData_Blood from "../querry/GetHorseIDBloodStudyData_Blood"
 import EntBloodStudyData from "../entity/EntBloodStudyData"
+import GetTrainingData from "../querry/GetTrainingData"
+import EntTrainingData from "../entity/EntTrainingData"
 
 export function GetLoop(Datanum: number, valuenum: number)
 {
@@ -92,8 +94,9 @@ export async function CreateTotallingData(valuenum: number){
         const RaceDataparam = new PrmStudyData(0, 0, HorseIDs)
         const RaceDatapsql = new GetRaceHorseStudyData(RaceDataparam)
         const RaceDatas = await RaceDatapsql.Execsql() as EntRaceHorseStudyData[]
-    
-        const mgr = new MgrRaceData(RaceDatas)
+        const TrainingDataSql = new GetTrainingData(RaceDataparam)
+        const TrainingData = await TrainingDataSql.Execsql() as EntTrainingData[]
+        const mgr = new MgrRaceData(RaceDatas, TrainingData)
         await mgr.dicCreate()
         const dic = mgr.insertDic
         const paramHorseIDs = new PrmStudyData(0, 0, HorseIDs)
@@ -104,7 +107,7 @@ export async function CreateTotallingData(valuenum: number){
             await Achievement.BulkInsert('AchievementTable')
             const Aptitude = new BulkInsert(dic.strPassage, 'AptitudeTable')
             await Aptitude.BulkInsert('AptitudeTable')
-            const Rotation = new BulkInsert(dic.data, 'RotationTable')
+            const Rotation = new BulkInsert(dic.data, 'RotationTable_test')
             await Rotation.BulkInsert('RotationTable')
         } catch {
             console.log(value)

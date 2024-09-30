@@ -7,12 +7,21 @@ import PrmStudyData from "../param/PrmStudyData";
 import ClassAchievementData from "../class/ClassAchievementData";
 import ClassHorseData from "../class/ClassHorseData";
 import simpleProgress from "../ProgressBar";
+import EntTrainingData from "../entity/EntTrainingData";
 
 export default class MgrRaceData{
     private m_RaceData: EntRaceHorseStudyData[]
+    private m_TariningData: EntTrainingData[]
     private m_dic: {
         [HorseID: number]: {
             data: ClassHorseData
+        }
+    }
+    private m_TrainigDic: {
+        [HorseID: number]: {
+            [RaceID: number]: {
+                data: EntTrainingData
+            }
         }
     }
     private m_insertDic: {
@@ -20,9 +29,14 @@ export default class MgrRaceData{
         data: string[],
         strPassage: string[],
     }
-    constructor(RaceData: EntRaceHorseStudyData[]) {
+    constructor(
+        RaceData: EntRaceHorseStudyData[],
+        TrainingData: EntTrainingData[]
+    ) {
         this.m_RaceData = RaceData
+        this.m_TariningData = TrainingData
         this.m_dic = {}
+        this.m_TrainigDic = {}
         this.m_insertDic = {strAchievement: [], data: [], strPassage: []}
     }
 
@@ -30,6 +44,7 @@ export default class MgrRaceData{
     public get insertDic() { return this.m_insertDic }
 
     async dicCreate(){
+        this.CreateTrainingDic()
         const dic = this.m_dic
         for(const row of this.m_RaceData) {
             const data = new ClassRaceHorseData(
@@ -92,7 +107,23 @@ export default class MgrRaceData{
             await this.CreateRacePredict(id)
         }
     }
-
+    CreateTrainingDic(){
+        for(var row of this.m_TariningData){
+            var HorseID = row.HorseID
+            var RaceID = row.RaceID
+            if (this.m_TrainigDic[HorseID] == undefined) {
+                this.m_TrainigDic[HorseID] = {
+                    [RaceID]:{
+                        data: row
+                    }
+                }
+            } else {
+                this.m_TrainigDic[HorseID][RaceID] = {
+                    data: row
+                }
+            }
+        }
+    }
     async CreateRacePredict(HorseID: number){
         const dic = this.m_dic
         const horseData = dic[HorseID].data
@@ -103,6 +134,7 @@ export default class MgrRaceData{
             const Achievemententity = entitys[num].AchievementData
             const RaceHorseData = entitys[num].RotationData
             const RaceID = entitys[num].RaceID
+            const TrainingData = this.m_TrainigDic[HorseID][RaceID].data
             // Rotation
             let data = ''
             if (RaceHorseData.length > 0) {
@@ -111,10 +143,10 @@ export default class MgrRaceData{
                         data += `${HorseID},${RaceID}`
                     } else {
                         data += `,${value.GoalTime}`.replace('null', '')
-                        data += `,${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${`${value.SpurtTime}`.replace('null', '')},${value.JockeyID},${value.interval}`
+                        data += `,${value.Venue},${value.HoldMonth},${value.Hold},${value.Day},${value.Range},${value.Ground},${value.GroundCondition},${value.Weather},${value.Weight},${value.TrainerID},${value.HorseGender},${value.HorseWeight},${value.HorseNo},${value.HorseAge},${value.Remarks},${value.RaceRemarks},${value.Fluctuation},${`${value.SpurtTime}`.replace('null', '')},${value.JockeyID},${value.interval},${TrainingData.Cource},${TrainingData.Condition},${TrainingData.RapTime1},${TrainingData.RapTime2},${TrainingData.RapTime3},${TrainingData.RapTime4},${TrainingData.RapTime5},${TrainingData.TrainingLoad}`
                     }
                 }
-                const empty = ',,,,,,,,,,,,,,,,,,,,,'
+                const empty = ',,,,,,,,,,,,,,,,,,,,,,,,,,,,,'
 
                 if (RaceHorseData.length == 1){
                     data = data + empty + empty + empty + empty + empty

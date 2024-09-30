@@ -18,7 +18,7 @@ from (
     where
         RHI.HorseID is not null
         and RHI.OutValue = 0
-        and RI.Year >= 1992
+        and RI.Year >= 2008
         and RI.Direction <> 3
         and RI.Direction is not null
     group by

@@ -115,7 +115,7 @@ from (
         and RI.Direction is not null
 ) as RHI
 where
-${this.parameter?.IDs == null ? `RHI.HorseID between ${this.parameter?.Start} and ${this.parameter?.Finish}`: `RHI.HorseID in (${this.parameter?.IDs})`}
+    ${this.parameter?.IDs == null ? `RHI.HorseID between ${this.parameter?.Start} and ${this.parameter?.Finish}`: `RHI.HorseID in (${this.parameter?.IDs})`}
 order by
     RHI.HorseID
 `
