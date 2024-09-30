@@ -29,7 +29,7 @@ async function main()
             const jockeyRows = []
             const raceInfomations = await GetRaceInfomation(year, half)
             const ProgressBar = simpleProgress()
-            const progress = ProgressBar(Object.keys(raceInfomations).length, 20, 'Aptitude')
+            const progress = ProgressBar(Object.keys(raceInfomations).length, 20, 'CreateData')
             for (const raceInfomation of raceInfomations) {
               progress(1)
               const raceID = raceInfomation.ID as number
