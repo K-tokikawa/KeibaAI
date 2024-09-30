@@ -116,7 +116,7 @@ for mode in l:
                     evals_result=evals_result,
                     )
 
-    bst.save_model(f'.\\model\\{mode}\\model.json')
+    bst.save_model(f'.\\model_alpha\\{mode}\\model.json')
 print('Finish Train')
 
 

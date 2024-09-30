@@ -245,7 +245,6 @@ order by
                 convertToEmptyString(raceHorseInfomation.GroundCondition)}`
 
             const rowRace = `${
-                    convertToEmptyString(raceHorseInfomation.GoalTime)},${
                     rowBase},${
                     convertToEmptyString(raceHorseInfomation.GateNo)},${
                     convertToEmptyString(raceHorseInfomation.HorseNo)},${
@@ -260,7 +259,7 @@ order by
             if (dic[raceHorseInfomation.HorseID] == undefined) {
                 dic[raceHorseInfomation.HorseID] = []
                 raceHorseInfomation.Achievement = new Array(713).fill(null)
-                raceHorseInfomation.JockeyRow = `${raceHorseInfomation.Rank},${rowBase}`
+                raceHorseInfomation.JockeyRow = `${rowBase}`
                 raceHorseInfomation.RaceRow = rowRace
                 raceHorseInfomation.RotationRow = `${
                     raceHorseInfomation.RaceRow},${
@@ -276,6 +275,7 @@ order by
                 const lastValue = dic[raceHorseInfomation.HorseID].at(-1)
                 raceHorseInfomation.before = getDateDifferenceInDays(lastValue?.HoldDate as Date, raceHorseInfomation.HoldDate)
                 raceHorseInfomation.RotationRow = `${
+                    convertToEmptyString(raceHorseInfomation.GoalTime)},${
                     rowRace},${
                     convertToEmptyString(raceHorseInfomation.Passage1)},${
                     convertToEmptyString(raceHorseInfomation.Passage2)},${

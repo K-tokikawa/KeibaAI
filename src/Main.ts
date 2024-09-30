@@ -3,14 +3,20 @@ import { RaceHorseInfomation } from "./sqlClass/RaceHorseInfoamtion"
 import { BloodData } from "./sqlClass/BloodData"
 import FileUtil from "./FileUtil"
 import simpleProgress from "./ProgressBar"
-import { ExecPythontrainExplanatoryValue } from "./sqlClass/Util"
+import { ExecPythontrainExplanatoryValue, Predict } from "./sqlClass/Util"
+import { PythonShell } from "python-shell"
 
-// main()
+const MODE: ('Study' | 'Predict') = 'Predict'
+main()
 predict()
+async function main() {
+  await CreateStudyData()
+  await predict()
+}
 async function predict(){
   await ExecPythontrainExplanatoryValue()
 }
-async function main()
+async function CreateStudyData()
 {
     // データの取得 2008年くらいから 2008年からしか調教データがない
     // → データ数が多いので分割して取得する。レース情報を期間を指定して取得
@@ -19,6 +25,10 @@ async function main()
     const endYear = 2023
 
     const range = Array.from({ length: endYear - startYear + 1 }, (_, i) => i + startYear).sort((a, b) => b - a);
+    const shell = new PythonShell('./src/python/whilepredict.py')
+    const shell_1 = new PythonShell('./src/python/whilepredict.py')
+    const shell_2 = new PythonShell('./src/python/whilepredict.py')
+    const shell_3 = new PythonShell('./src/python/whilepredict.py')
     for (const year of range) {
       // 期間内レースに出走した競走馬情報を取得
       const periods: ('first' | 'second' | 'third' | 'fourth')[] = ['first' , 'second' , 'third' , 'fourth'];
@@ -27,6 +37,7 @@ async function main()
             const horseAchivementRows = []
             const bloodRows = []
             const jockeyRows = []
+            const predictRows = []
             const raceInfomations = await GetRaceInfomation(year, half)
             const ProgressBar = simpleProgress()
             const progress = ProgressBar(Object.keys(raceInfomations).length, 20, 'CreateData')
@@ -39,21 +50,50 @@ async function main()
               const dicBloodData = await GetDicBloodData(horseIDs)
               for (const horseID of horseIDs) {
                 const horseInfomations  = dicHorseInfomations[horseID]
-                const raceRow = horseInfomations[0].RaceRow
-                const bloodData = dicBloodData[horseID]
-                const bloodRow = raceRow + bloodData
-                bloodRows.push(bloodRow)
+                const goalTime = horseInfomations[0].GoalTime
+                const raceRow = MODE == 'Study' ? goalTime + ',' + horseInfomations[0].RaceRow : horseInfomations[0].RaceRow
+
+                const bloodRow = raceRow + ',' + dicBloodData[horseID]
                 const achivementRow = raceRow + ',' + horseInfomations[0].Achievement.join(',')
-                horseAchivementRows.push(achivementRow)
                 const rotationRow = GetRotationRow(horseInfomations)
-                horseRotationRows.push(rotationRow)
-                jockeyRows.push(horseInfomations[0].JockeyRow)
+                const jockeyRow = MODE == 'Study' ? horseInfomations[0].Rank + ',' + horseInfomations[0].JockeyRow : horseInfomations[0].JockeyRow
+
+                if (MODE == 'Study') {
+                  bloodRows.push(bloodRow)
+                  horseAchivementRows.push(achivementRow)
+                  horseRotationRows.push(rotationRow)
+                  jockeyRows.push(jockeyRow)
+                } else {
+                  // Pythonになげる
+                  const predict = await Promise.all(
+                    [
+                      Predict(bloodRow, shell),
+                      Predict(achivementRow, shell_1),
+                      Predict(rotationRow, shell_2),
+                      Predict(jockeyRow, shell_3),
+                    ]
+                  )
+                  // 結果とGoalTimeを結合してファイルに出力する
+                  const predictRow = goalTime + ',' + `${predict[0]},${predict[1]},${predict[2]},${predict[3]}}`
+                  predictRows.push(predictRow)
+                }
               }
             }
-            FileUtil.OutputFile(horseRotationRows, `./data/rotation_alpha/${year}_${half}.csv`)
-            FileUtil.OutputFile(horseAchivementRows, `./data/achievement_alpha/${year}_${half}.csv`)
-            FileUtil.OutputFile(bloodRows, `./data/blood_alpha/${year}_${half}.csv`)
-            FileUtil.OutputFile(jockeyRows, `./data/jockey_alpha/${year}_${half}.csv`)
+            if (horseRotationRows.length > 0) {
+              FileUtil.OutputFile(horseRotationRows, `./data/rotation_alpha/${year}_${half}.csv`)
+            }
+            if (horseAchivementRows.length > 0) {
+              FileUtil.OutputFile(horseAchivementRows, `./data/achievement_alpha/${year}_${half}.csv`)
+            }
+            if (bloodRows.length > 0) {
+              FileUtil.OutputFile(bloodRows, `./data/blood_alpha/${year}_${half}.csv`)
+            }
+            if (jockeyRows.length > 0) {
+              FileUtil.OutputFile(jockeyRows, `./data/jockey_alpha/${year}_${half}.csv`)
+            }
+            if (predictRows.length > 0) {
+              FileUtil.OutputFile(predictRows, `./data/predict_alpha/${year}_${half}.csv`)
+            }
           }
     }
     // 作成しないといけないデータ
@@ -122,3 +162,6 @@ function generateHalfYearPeriod(half: 'first' | 'second' | 'third' | 'fourth'): 
     };
   }
 
+  async function ExecPredictDatail(){
+    await ExecPythontrainExplanatoryValue()
+  }
