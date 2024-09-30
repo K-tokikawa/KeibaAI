@@ -5,6 +5,9 @@ import FileUtil from "./FileUtil";
 export default abstract class SQLBase<T>{
 
     protected abstract Execsql(prm: any): Promise<T>
+    protected abstract Execsql(): Promise<T>
+
+    protected sql: string = ''
 
     protected connection: Connection;
 

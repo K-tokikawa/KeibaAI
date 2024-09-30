@@ -4,16 +4,14 @@ import xgboost as xgb
 import optuna
 import subprocess
 
-# rotation = 'rotation'
-# aptitude = 'aptitude'
-# achievement = 'achievement'
-Jockey = 'Jockey'
-blood = 'blood'
+rotation = 'rotation_alpha'
+achievement = 'achievement_alpha'
+Jockey = 'Jockey_alpha'
+blood = 'blood_alpha'
 
 l = [
-    # rotation,
-    # aptitude,
-    # achievement,
+    rotation,
+    achievement,
     Jockey,
     blood
      ]
@@ -51,7 +49,7 @@ for mode in l:
         evals_result = {}
         xgb.train(params,
                 xgb_train,
-                num_boost_round=3000,
+                num_boost_round=5000,
                 early_stopping_rounds=100,
                 verbose_eval=100,
                 evals=evals,
@@ -111,7 +109,7 @@ for mode in l:
     evals_result = {}
     bst = xgb.train(param,
                     xgb_train,
-                    num_boost_round=3000,
+                    num_boost_round=5000,
                     early_stopping_rounds=100,
                     verbose_eval=100,
                     evals=evals,
