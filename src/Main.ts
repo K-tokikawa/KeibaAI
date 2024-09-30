@@ -15,8 +15,8 @@ async function main()
     // データの取得 2008年くらいから 2008年からしか調教データがない
     // → データ数が多いので分割して取得する。レース情報を期間を指定して取得
     // レース情報を取得 RaceIDでDictinary 
-    const startYear = 2008
-    const endYear = 2016
+    const startYear = 2014
+    const endYear = 2023
 
     const range = Array.from({ length: endYear - startYear + 1 }, (_, i) => i + startYear).sort((a, b) => b - a);
     for (const year of range) {
