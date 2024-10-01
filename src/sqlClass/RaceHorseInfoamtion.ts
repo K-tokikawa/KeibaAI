@@ -259,7 +259,7 @@ order by
             if (dic[raceHorseInfomation.HorseID] == undefined) {
                 dic[raceHorseInfomation.HorseID] = []
                 raceHorseInfomation.Achievement = new Array(713).fill(null)
-                raceHorseInfomation.JockeyRow = `${rowBase}`
+                raceHorseInfomation.JockeyRow = `${raceHorseInfomation.JockeyID},${rowBase}`
                 raceHorseInfomation.RaceRow = rowRace
                 raceHorseInfomation.RotationRow = `${
                     raceHorseInfomation.RaceRow},${

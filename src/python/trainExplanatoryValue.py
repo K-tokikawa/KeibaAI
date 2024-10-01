@@ -10,10 +10,10 @@ Jockey = 'Jockey_alpha'
 blood = 'blood_alpha'
 
 l = [
-    rotation,
-    achievement,
+    # rotation,
+    # achievement,
     Jockey,
-    blood
+    # blood
      ]
 
 for mode in l:
