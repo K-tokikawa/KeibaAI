@@ -39,6 +39,7 @@ export class RaceHorseInfoamtion_row extends SQLBase<RaceHorseInfoamtion_row[]> 
     public RaceMasterID: number = 0
     public before: number = 0
     public RaceRow: string = ''
+    public RaceHorseRow: string = ''
     public JockeyRow: string = ''
     constructor(raceID: number, horseIDs: number[]) {
         super()
@@ -115,7 +116,7 @@ where
                 convertToEmptyString(raceHorseInfomation.Ground)},${
                 convertToEmptyString(raceHorseInfomation.Weather)},${
                 convertToEmptyString(raceHorseInfomation.GroundCondition)}`
-
+            this.RaceRow = rowBase
             const rowRace = `${
                     rowBase},${
                     convertToEmptyString(raceHorseInfomation.GateNo)},${
@@ -131,7 +132,7 @@ where
             if (dic[raceHorseInfomation.HorseID] == undefined) {
                 dic[raceHorseInfomation.HorseID] = []
                 raceHorseInfomation.JockeyRow = `${raceHorseInfomation.JockeyID},${rowBase}`
-                raceHorseInfomation.RaceRow = rowRace
+                raceHorseInfomation.RaceHorseRow = rowRace
             }
             dic[raceHorseInfomation.HorseID].push(raceHorseInfomation)
         }

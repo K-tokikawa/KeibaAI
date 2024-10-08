@@ -17,17 +17,17 @@ export class RaceInfomation extends SQLBase<RaceInfomation[]> {
     public GroundCondition: number | null= null
     public RaceMasterID: number | null= null
     public HorseIDs: number[] | null= null
-    constructor(Year: number, Start: number, End: number)
+    constructor(year: number, start: number, end: number, outValue: boolean)
     {
         super()
-        if (Year <= 0
-            || !(Start == 1 || Start == 4 || Start == 7 || Start == 10)
-            || !(End == 3 || End == 6 || End == 9 || End == 12)) {
+        if (year <= 0
+            || !(start == 1 || start == 4 || start == 7 || start == 10)
+            || !(end == 3 || end == 6 || end == 9 || end == 12)) {
             throw new Error(
                 `パラメータが正しく設定されていません。
-                Year : ${Year}
-                Start : ${Start}
-                End : ${End}
+                Year : ${year}
+                Start : ${start}
+                End : ${end}
                 `
             )
         }
@@ -53,8 +53,9 @@ FROM RaceInfomation AS RI
 LEFT OUTER JOIN RaceHorseInfomation AS RHI
     ON RHI.RaceID = RI.ID
 WHERE
-	Year = ${Year}
-    and HoldMonth between ${Start} and ${End}
+	Year = ${year}
+    and HoldMonth between ${start} and ${end}
+    ${outValue ? "and OutValue = 0" : ""}
 GROUP BY 
     RI.ID, 
     RI.RaceID, 

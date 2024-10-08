@@ -34,7 +34,7 @@ export class RaceHorseInfomation extends SQLBase<RaceHorseInfomation[]> {
     public RaceRemarks: number = 0
     public Barn: number = 0
     public TrainerID: number = 0
-    public OutValue: number = 0
+    public OutValue: boolean = false
     public Cource: number = 0
     public Condition: number = 0
     public RapTime1: number = 0
@@ -50,8 +50,12 @@ export class RaceHorseInfomation extends SQLBase<RaceHorseInfomation[]> {
     public RotationRow: string = ''
     public JockeyRow: string = ''
     public Achievement: number[] = []
-    constructor(raceID: number, horseIDs: number[]) {
+    private timeAverage: {
+        [key: string] : number
+    } = {}
+    constructor(raceID: number, horseIDs: number[], timeAverage: {[key: string] : number}) {
         super()
+        this.timeAverage = timeAverage
         if (horseIDs.length == 0) {
             throw new Error(`HorseIDが指定されていません。RaceID : ${raceID}`)
         }
@@ -61,105 +65,104 @@ export class RaceHorseInfomation extends SQLBase<RaceHorseInfomation[]> {
 
         this.sql = `
 with training as (
-		select
-			  RHI.RaceID
-			, RHI.HorseID
-			, C.num as Cource
-			,	case TR.GroundCondition
-				when  '''良''' then 1
-				when  '''稍重''' then 2
-				when  '''重''' then 3
-				when  '''不良''' then 4
-				else 5
-			  end as Condition
-			, RapTime1
-			, RapTime2
-			, RapTime3
-			, RapTime4
-			, RapTime5
-			, TrainingLoad.num as TrainingLoad
-		from Training as TR
-			left outer join RaceHorseInfomation as RHI
-				on RHI.netkeibaID = TR.HorseID
-				and RHI.netkeibaRaceID = TR.RaceID
-			left outer join (
-				select
-					Course
-					, ROW_NUMBER()over(order by count(Course) desc) as num
-
-				from Training as TR
-				Group by
-					Course
-				) as C
-				on C.Course = TR.Course
-			left outer join (
-				select
-					  TR.RaceID as RaceID
-					, TR.HorseID as HorseID
-					, num
-				from Training as TR
-					left outer join (
-						select
-							TR.TrainingLoad
-							, ROW_NUMBER()over(order by TrainingLoad) as num
-						from Training as TR
-						group by
-							TrainingLoad
-						) as TrainingLoad
-						on TrainingLoad.TrainingLoad = TR.TrainingLoad
-					) as TrainingLoad
-						on TrainingLoad.HorseID = TR.HorseID
-						and TrainingLoad.RaceID = TR.RaceID
+    select
+          RHI.RaceID
+        , RHI.HorseID
+        , C.num as Cource
+        ,       case TR.GroundCondition
+                when  '''良''' then 1
+                when  '''稍重''' then 2
+                when  '''重''' then 3
+                when  '''不良''' then 4
+                else 5
+          end as Condition
+        , RapTime1
+        , RapTime2
+        , RapTime3
+        , RapTime4
+        , RapTime5
+        , TrainingLoad.num as TrainingLoad
+    from Training as TR
+    left outer join RaceHorseInfomation as RHI
+            on RHI.netkeibaID = TR.HorseID
+            and RHI.netkeibaRaceID = TR.RaceID
+    left outer join (
+            select
+                    Course
+                    , ROW_NUMBER()over(order by count(Course) desc) as num
+            from Training as TR
+            Group by
+                    Course
+            ) as C
+            on C.Course = TR.Course
+    left outer join (
+        select
+              TR.RaceID as RaceID
+            , TR.HorseID as HorseID
+            , num
+        from Training as TR
+            left outer join (
+                select
+                    TR.TrainingLoad
+                    , ROW_NUMBER()over(order by TrainingLoad) as num
+                from Training as TR
+                group by
+                    TrainingLoad
+            ) as TrainingLoad
+                on TrainingLoad.TrainingLoad = TR.TrainingLoad
+    ) as TrainingLoad
+        on TrainingLoad.HorseID = TR.HorseID
+        and TrainingLoad.RaceID = TR.RaceID
 ),
 HoldDate as (
 	select
 		DATEFROMPARTS(Year, HoldMonth, HoldDay) AS HoldDate
-	from RaceInfomation
-	where
+    from RaceInfomation
+    where
 		ID = ${raceID}
 )
 select
-	  RHI.HorseID
-	, RHI.RaceID
+      RHI.HorseID
+    , RHI.RaceID
     , Rank
-	, Venue
+    , Venue
     , Hold
     , Day
     , HoldMonth
     , HoldDay
-    , Range
-    , Direction
+    , RI.Range
+    , RI.Direction
     , Ground
     , Weather
     , GroundCondition
-	, GateNo
-	, HorseNo
-	, HorseAge
-	, HorseGender
-	, Weight
-	, JockeyID
-	, GoalTime
-	, Passage1
-	, Passage2
-	, Passage3
-	, Passage4
-	, SpurtTime
-	, Popularity
-	, HorseWeight
-	, CAST(Fluctuation AS INT) as Fluctuation
-	, Remarks
-	, RaceRemarks
-	, Barn
-	, TrainerID
-	, OutValue
-	, Cource
-	, Condition
-	, RapTime1
-	, RapTime2
-	, RapTime3
-	, RapTime4
-	, RapTime5
-	, TrainingLoad
+    , GateNo
+    , HorseNo
+    , HorseAge
+    , HorseGender
+    , Weight
+    , JockeyID
+    , GoalTime
+    , Passage1
+    , Passage2
+    , Passage3
+    , Passage4
+    , SpurtTime
+    , Popularity
+    , HorseWeight
+    , CAST(Fluctuation AS INT) as Fluctuation
+    , Remarks
+    , RaceRemarks
+    , Barn
+    , TrainerID
+    , OutValue
+    , Cource
+    , Condition
+    , RapTime1
+    , RapTime2
+    , RapTime3
+    , RapTime4
+    , RapTime5
+    , TrainingLoad
     , DATEFROMPARTS(Year, HoldMonth, HoldDay) AS HoldDate
     , RaceMasterID
 from RaceHorseInfomation as RHI
@@ -171,91 +174,37 @@ from RaceHorseInfomation as RHI
 where
 	    DATEFROMPARTS(Year, HoldMonth, HoldDay) <= (select * from HoldDate)
     and RHI.HorseID in (${horseIDs})
-	and OutValue = 0
 order by
-	HorseID
-	, DATEFROMPARTS(Year, HoldMonth, HoldDay) desc
+        HorseID
+        , DATEFROMPARTS(Year, HoldMonth, HoldDay) desc
 `
     }
 
-    public Execsql(): Promise<RaceHorseInfomation[]>{
-        return this.ExecGet(this.sql)
+    public async Execsql(): Promise<RaceHorseInfomation[]>{
+        return await this.ExecGet(this.sql)
     }
     private Dammy() {
-        const rowBase = `${
-            convertToEmptyString(this.Venue)},${
-            convertToEmptyString(this.Hold)},${
-            convertToEmptyString(this.Day)},${
-            convertToEmptyString(this.HoldMonth)},${
-            convertToEmptyString(this.Range)},${
-            convertToEmptyString(this.Direction)},${
-            convertToEmptyString(this.Ground)},${
-            convertToEmptyString(this.Weather)},${
-            convertToEmptyString(this.GroundCondition)}`
-
-        const rowRace = `${
-                convertToEmptyString(this.GoalTime)},${
-                rowBase},${
-                convertToEmptyString(this.GateNo)},${
-                convertToEmptyString(this.HorseNo)},${
-                convertToEmptyString(this.HorseAge)},${
-                convertToEmptyString(this.HorseGender)},${
-                convertToEmptyString(this.Weight)},${
-                convertToEmptyString(this.JockeyID)},${
-                convertToEmptyString(this.HorseWeight)},${
-                convertToEmptyString(this.Fluctuation)},${
-                convertToEmptyString(this.TrainerID)}`
-        this.RotationRow = `${
-                    rowRace},${
-                    convertToEmptyString(this.Passage1)},${
-                    convertToEmptyString(this.Passage2)},${
-                    convertToEmptyString(this.Passage3)},${
-                    convertToEmptyString(this.Passage4)},${
-                    convertToEmptyString(this.SpurtTime)},${
-                    convertToEmptyString(this.Remarks)},${
-                    convertToEmptyString(this.RaceRemarks)},${
-                    convertToEmptyString(this.Barn)},${
-                    convertToEmptyString(this.Cource)},${
-                    convertToEmptyString(this.Condition)},${
-                    convertToEmptyString(this.RapTime1)},${
-                    convertToEmptyString(this.RapTime2)},${
-                    convertToEmptyString(this.RapTime3)},${
-                    convertToEmptyString(this.RapTime4)},${
-                    convertToEmptyString(this.RapTime5)},${
-                    convertToEmptyString(this.TrainingLoad)},${
-                    convertToEmptyString(this.before)}`
-                    .replace(/0/g, '')
+        const rowBase = this.GetRowBase(null)
+        const rowRace = `${convertToEmptyString(this.GoalTime)},${rowBase},${this.GetRowRace(null)}`
+        this.RotationRow = `${rowRace},${this.GetRowRotation(null)}`
         return this
     }
     public async GetDicRaceHorseInfomation() {
-        const raceHorseInfomations = await this.Execsql()
+        const raceHorseInfomations = (await this.Execsql()).filter(x => x.Direction != 3)
         var dic: {
             [HorseID: number]: RaceHorseInfomation[]
         } = {}
         for (var raceHorseInfomation of raceHorseInfomations) {
-            const rowBase = `${
-                convertToEmptyString(raceHorseInfomation.Venue)},${
-                convertToEmptyString(raceHorseInfomation.Hold)},${
-                convertToEmptyString(raceHorseInfomation.Day)},${
-                convertToEmptyString(raceHorseInfomation.HoldMonth)},${
-                convertToEmptyString(raceHorseInfomation.Range)},${
-                convertToEmptyString(raceHorseInfomation.Direction)},${
-                convertToEmptyString(raceHorseInfomation.Ground)},${
-                convertToEmptyString(raceHorseInfomation.Weather)},${
-                convertToEmptyString(raceHorseInfomation.GroundCondition)}`
-
-            const rowRace = `${
-                    rowBase},${
-                    convertToEmptyString(raceHorseInfomation.GateNo)},${
-                    convertToEmptyString(raceHorseInfomation.HorseNo)},${
-                    convertToEmptyString(raceHorseInfomation.HorseAge)},${
-                    convertToEmptyString(raceHorseInfomation.HorseGender)},${
-                    convertToEmptyString(raceHorseInfomation.Weight)},${
-                    convertToEmptyString(raceHorseInfomation.JockeyID)},${
-                    convertToEmptyString(raceHorseInfomation.HorseWeight)},${
-                    convertToEmptyString(raceHorseInfomation.Fluctuation)},${
-                    convertToEmptyString(raceHorseInfomation.TrainerID)}`
-
+            const rowBase = this.GetRowBase(raceHorseInfomation)
+            const rowRace = `${rowBase},${this.GetRowRace(raceHorseInfomation)}`
+            let age = 0
+            if (raceHorseInfomation.HorseAge == 3) {
+                age = 1
+            } else if (raceHorseInfomation.HorseAge > 3){
+                age = 2
+            }
+            const averageTime = this.timeAverage[`${raceHorseInfomation.Direction}_${raceHorseInfomation.Range}_${age}`]
+            raceHorseInfomation.GoalTime = raceHorseInfomation.GoalTime - averageTime /* あんまりよくないけど書き換える*/
             if (dic[raceHorseInfomation.HorseID] == undefined) {
                 dic[raceHorseInfomation.HorseID] = []
                 raceHorseInfomation.Achievement = new Array(713).fill(null)
@@ -274,26 +223,8 @@ order by
             } else {
                 const lastValue = dic[raceHorseInfomation.HorseID].at(-1)
                 raceHorseInfomation.before = getDateDifferenceInDays(lastValue?.HoldDate as Date, raceHorseInfomation.HoldDate)
-                raceHorseInfomation.RotationRow = `${
-                    convertToEmptyString(raceHorseInfomation.GoalTime)},${
-                    rowRace},${
-                    convertToEmptyString(raceHorseInfomation.Passage1)},${
-                    convertToEmptyString(raceHorseInfomation.Passage2)},${
-                    convertToEmptyString(raceHorseInfomation.Passage3)},${
-                    convertToEmptyString(raceHorseInfomation.Passage4)},${
-                    convertToEmptyString(raceHorseInfomation.SpurtTime)},${
-                    convertToEmptyString(raceHorseInfomation.Remarks)},${
-                    convertToEmptyString(raceHorseInfomation.RaceRemarks)},${
-                    convertToEmptyString(raceHorseInfomation.Barn)},${
-                    convertToEmptyString(raceHorseInfomation.Cource)},${
-                    convertToEmptyString(raceHorseInfomation.Condition)},${
-                    convertToEmptyString(raceHorseInfomation.RapTime1)},${
-                    convertToEmptyString(raceHorseInfomation.RapTime2)},${
-                    convertToEmptyString(raceHorseInfomation.RapTime3)},${
-                    convertToEmptyString(raceHorseInfomation.RapTime4)},${
-                    convertToEmptyString(raceHorseInfomation.RapTime5)},${
-                    convertToEmptyString(raceHorseInfomation.TrainingLoad)},${
-                    convertToEmptyString(raceHorseInfomation.before)}`
+
+                raceHorseInfomation.RotationRow = `${convertToEmptyString(raceHorseInfomation.GoalTime)},${rowRace},${this.GetRowRotation(raceHorseInfomation)}`
                 if (dic[raceHorseInfomation.HorseID][0].Achievement[raceHorseInfomation.RaceMasterID - 1] == undefined) {
                     dic[raceHorseInfomation.HorseID][0].Achievement[raceHorseInfomation.RaceMasterID - 1] = raceHorseInfomation.GoalTime
                 } else if (dic[raceHorseInfomation.HorseID][0].Achievement[raceHorseInfomation.RaceMasterID - 1] > raceHorseInfomation.GoalTime){
@@ -309,5 +240,56 @@ order by
             }
         }
         return dic
+    }
+
+    GetRowBase(params: RaceHorseInfomation | null) {
+        const rowBase = `${
+            convertToEmptyString(params != null ? params.Venue : this.Venue)},${
+            convertToEmptyString(params != null ? params.Hold : this.Hold)},${
+            convertToEmptyString(params != null ? params.Day : this.Day)},${
+            convertToEmptyString(params != null ? params.HoldMonth : this.HoldMonth)},${
+            convertToEmptyString(params != null ? params.Range : this.Range)},${
+            convertToEmptyString(params != null ? params.Direction : this.Direction)},${
+            convertToEmptyString(params != null ? params.Ground : this.Ground)},${
+            convertToEmptyString(params != null ? params.Weather : this.Weather)},${
+            convertToEmptyString(params != null ? params.GroundCondition : this.GroundCondition)}`
+        return rowBase
+    }
+
+    GetRowRace(params: RaceHorseInfomation | null) {
+        const rowRace = `${
+            convertToEmptyString(params != null ? params.GateNo : this.GateNo)},${
+            convertToEmptyString(params != null ? params.HorseNo : this.HorseNo)},${
+            convertToEmptyString(params != null ? params.HorseAge : this.HorseAge)},${
+            convertToEmptyString(params != null ? params.HorseGender : this.HorseGender)},${
+            convertToEmptyString(params != null ? params.Weight : this.Weight)},${
+            convertToEmptyString(params != null ? params.JockeyID : this.JockeyID)},${
+            convertToEmptyString(params != null ? params.HorseWeight : this.HorseWeight)},${
+            convertToEmptyString(params != null ? params.Fluctuation : this.Fluctuation)},${
+            convertToEmptyString(params != null ? params.TrainerID : this.TrainerID)}`
+        return rowRace
+    }
+
+    GetRowRotation(params: RaceHorseInfomation | null) {
+        const rotationRow = `${
+            convertToEmptyString(params != null ? params.Passage1 : this.Passage1)},${
+            convertToEmptyString(params != null ? params.Passage2 : this.Passage2)},${
+            convertToEmptyString(params != null ? params.Passage3 : this.Passage3)},${
+            convertToEmptyString(params != null ? params.Passage4 : this.Passage4)},${
+            convertToEmptyString(params != null ? params.SpurtTime : this.SpurtTime)},${
+            convertToEmptyString(params != null ? params.Remarks : this.Remarks)},${
+            convertToEmptyString(params != null ? params.RaceRemarks : this.RaceRemarks)},${
+            convertToEmptyString(params != null ? params.Barn : this.Barn)},${
+            convertToEmptyString(params != null ? params.Cource : this.Cource)},${
+            convertToEmptyString(params != null ? params.Condition : this.Condition)},${
+            convertToEmptyString(params != null ? params.RapTime1 : this.RapTime1)},${
+            convertToEmptyString(params != null ? params.RapTime2 : this.RapTime2)},${
+            convertToEmptyString(params != null ? params.RapTime3 : this.RapTime3)},${
+            convertToEmptyString(params != null ? params.RapTime4 : this.RapTime4)},${
+            convertToEmptyString(params != null ? params.RapTime5 : this.RapTime5)},${
+            convertToEmptyString(params != null ? params.TrainingLoad : this.TrainingLoad)},${
+            convertToEmptyString(params != null ? params.before : this.before)}`
+            .replace(/0/g, '')
+        return rotationRow
     }
 }

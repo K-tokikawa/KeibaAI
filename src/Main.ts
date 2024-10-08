@@ -6,12 +6,25 @@ import simpleProgress from "./ProgressBar"
 import { ExecPythontrainExplanatoryValue, Predict } from "./sqlClass/Util"
 import { PythonShell } from "python-shell"
 import { RaceHorseInfoamtion_row } from "./sqlClass/RaceHorseInfoamtion_row"
+import { TimeAverage } from "./sqlClass/TimeAverage"
 
-const MODE: ('Study' | 'Predict') = 'Predict'
+const startYear = 2014
+const endYear = 2023
+const MODE: ('Study' | 'Predict') = 'Study'
 const CREATEDATAMODE: ('All' | 'Row') = 'All'
+const shell = new PythonShell('./src/python/whilepredict.py')
+const shell_1 = new PythonShell('./src/python/whilepredict.py')
+const shell_2 = new PythonShell('./src/python/whilepredict.py')
+const shell_3 = new PythonShell('./src/python/whilepredict.py')
+const pythonShell = [shell, shell_1, shell_2, shell_3]
+
+let timeAverages : {[key: string]: number} = {}
 main()
 
 async function main() {
+  
+  const timeAverage = new TimeAverage()
+  timeAverages = await timeAverage.GetDicTimeAverage()
   await CreateStudyData()
   // await predict()
 }
@@ -25,60 +38,6 @@ async function CreateStudyData()
     // データの取得 2008年くらいから 2008年からしか調教データがない
     // → データ数が多いので分割して取得する。レース情報を期間を指定して取得
     // レース情報を取得 RaceIDでDictinary 
-    const startYear = 2014
-    const endYear = 2024
-
-    const range = Array.from({ length: endYear - startYear + 1 }, (_, i) => i + startYear).sort((a, b) => b - a);
-    const shell = new PythonShell('./src/python/whilepredict.py')
-    const shell_1 = new PythonShell('./src/python/whilepredict.py')
-    const shell_2 = new PythonShell('./src/python/whilepredict.py')
-    const shell_3 = new PythonShell('./src/python/whilepredict.py')
-    for (const year of range) {
-      // 期間内レースに出走した競走馬情報を取得
-      const periods: ('first' | 'second' | 'third' | 'fourth')[] = ['first' , 'second' , 'third' , 'fourth'];
-      for (const half of periods) {
-            let horseRotationRows: string[] = []
-            let horseachievementRows: string[] = []
-            let bloodRows: string[] = []
-            let jockeyRows: string[] = []
-            let predictRows: string[] = []
-            const raceInfomations = await GetRaceInfomation(year, half)
-            const ProgressBar = simpleProgress()
-            const progress = ProgressBar(Object.keys(raceInfomations).length, 20, 'CreateData')
-            for (const raceInfomation of raceInfomations) {
-              progress(1)
-              const raceID = raceInfomation.ID as number
-              const horses = raceInfomation.HorseIDs as number[]
-              if (CREATEDATAMODE == 'All') {
-                const record = await CreateAllRecord(raceID, horses, [shell, shell_1, shell_2, shell_3])
-
-                horseRotationRows = horseRotationRows.concat(record.horseRotationRows)
-                horseachievementRows = horseachievementRows.concat(record.horseachievementRows)
-                bloodRows = bloodRows.concat(record.bloodRows)
-                jockeyRows = jockeyRows.concat(record.jockeyRows)
-                predictRows = predictRows.concat(record.predictRows)
-              } else {
-                const record = await CreateJockeyRecord(raceID, horses)
-                jockeyRows = jockeyRows.concat(record)
-              }
-            }
-            if (horseRotationRows.length > 0) {
-              FileUtil.OutputFile(horseRotationRows, `./data/rotation_alpha/${year}_${half}.csv`)
-            }
-            if (horseachievementRows.length > 0) {
-              FileUtil.OutputFile(horseachievementRows, `./data/achievement_alpha/${year}_${half}.csv`)
-            }
-            if (bloodRows.length > 0) {
-              FileUtil.OutputFile(bloodRows, `./data/blood_alpha/${year}_${half}.csv`)
-            }
-            if (jockeyRows.length > 0) {
-              FileUtil.OutputFile(jockeyRows, `./data/jockey_alpha/${year}_${half}.csv`)
-            }
-            if (predictRows.length > 0) {
-              FileUtil.OutputFile(predictRows, `./data/predict_alpha/${year}_${half}.csv`)
-            }
-          }
-    }
     // 作成しないといけないデータ
     // 血統
     // 騎手 コース 馬場 距離 芝orダート 斤量 開催月
@@ -86,55 +45,165 @@ async function CreateStudyData()
     // → ローテーション 適性
     // ローテーション 直近5レース タイム コース 馬場 距離 芝orダート 調教 騎手 厩舎 上がりタイム 備考 増減 間隔 斤量
     // 適性 騎手 天気 開催月 馬体重 馬番 性別 年齢 斤量 開催 開催日 + 実績(コース 馬場 距離 芝orダート のタイム タイム 斤量 何日前か)
+
+    const functinons: Promise<void>[] = []
+
+    let functinon = CreateDetailData;
+    if (MODE == 'Predict') {
+      functinon = CreatePredictData
+    }
+    
+    const range = Array.from({ length: endYear - startYear + 1 }, (_, i) => i + startYear).sort((a, b) => b - a);
+    for (const year of range) {
+      // 期間内レースに出走した競走馬情報を取得
+      const periods: ('first' | 'second' | 'third' | 'fourth')[] = ['first' , 'second' , 'third' , 'fourth'];
+      for (const period of periods) {
+        functinons.push(functinon(year, period))
+        if (functinons.length == 4) {
+          console.log(new Date())
+          await Promise.all(functinons)
+          functinons.length = 0
+          console.log(new Date())
+        }
+      }
+    }
 }
-async function CreateAllRecord(raceID: number, horses: number[], pythonShell: PythonShell[]) {
+
+async function CreateDetailData(year: number, period: ('first' | 'second' | 'third' | 'fourth')) {
+  let horseRotationRows: string[] = []
+  let horseachievementRows: string[] = []
+  let bloodRows: string[] = []
+  let jockeyRows: string[] = []
+  const raceInfomations = await GetRaceInfomation(year, period, true)
+  const ProgressBar = simpleProgress()
+  const progress = ProgressBar(Object.keys(raceInfomations).length, 20, `CreateData_${period}`)
+  for (const raceInfomation of raceInfomations) {
+    progress(1)
+    const raceID = raceInfomation.ID as number
+    const horses = raceInfomation.HorseIDs as number[]
+    const record = await CreateAllRecord(raceID, horses)
+    horseRotationRows = horseRotationRows.concat(record.horseRotationRows)
+    horseachievementRows = horseachievementRows.concat(record.horseachievementRows)
+    bloodRows = bloodRows.concat(record.bloodRows)
+    jockeyRows = jockeyRows.concat(record.jockeyRows)
+}
+  if (horseRotationRows.length > 0) {
+    FileUtil.OutputFile(horseRotationRows, `./data/rotation_alpha/${year}_${period}.csv`)
+  }
+  if (horseachievementRows.length > 0) {
+    FileUtil.OutputFile(horseachievementRows, `./data/achievement_alpha/${year}_${period}.csv`)
+  }
+  if (bloodRows.length > 0) {
+    FileUtil.OutputFile(bloodRows, `./data/blood_alpha/${year}_${period}.csv`)
+  }
+  if (jockeyRows.length > 0) {
+    FileUtil.OutputFile(jockeyRows, `./data/jockey_alpha/${year}_${period}.csv`)
+  }
+}
+
+async function CreatePredictData(year: number, period: ('first' | 'second' | 'third' | 'fourth')) {
+  let predictRows: string[] = []
+  const raceInfomations = await GetRaceInfomation(year, period, false)
+  const ProgressBar = simpleProgress()
+  const progress = ProgressBar(Object.keys(raceInfomations).length, 20, 'CreateData')
+  for (const raceInfomation of raceInfomations) {
+    progress(1)
+    const record = await CreatePredictRows(raceInfomation)
+    predictRows.concat(record)
+  }
+  FileUtil.OutputFile(predictRows, `./data/predict_alpha/${year}_${period}.csv`)
+}
+
+async function CreateAllRecord(raceID: number, horses: number[]) {
   const horseRotationRows: string[] = []
   const horseachievementRows: string[] = []
   const bloodRows: string[] = []
   const jockeyRows: string[] = []
-  const predictRows: string[] = []
   const dicHorseInfomations = await GetDicRaceHorseInfomation(raceID, horses)
   const horseIDs = Object.keys(dicHorseInfomations).map(x => Number(x))
   const dicBloodData = await GetDicBloodData(horseIDs)
   for (const horseID of horseIDs) {
     const horseInfomations  = dicHorseInfomations[horseID]
-    const goalTime = horseInfomations[0].GoalTime
-    const raceRow = MODE == 'Study' ? goalTime + ',' + horseInfomations[0].RaceRow : horseInfomations[0].RaceRow
-
-    const bloodRow = raceRow + ',' + dicBloodData[horseID]
-    const achievementRow = raceRow + ',' + horseInfomations[0].Achievement.join(',')
-    const rotationRow = GetRotationRow(horseInfomations)
-    const jockeyRow = MODE == 'Study' ? horseInfomations[0].Rank + ',' + horseInfomations[0].JockeyRow : horseInfomations[0].JockeyRow
-
-    if (MODE == 'Study') {
-      bloodRows.push(bloodRow)
-      horseachievementRows.push(achievementRow)
-      horseRotationRows.push(rotationRow)
-      jockeyRows.push(jockeyRow)
-    } else {
-      // Pythonになげる
-      const predict = await Promise.all(
-        [
-          Predict('blood,' + bloodRow, pythonShell[0]),
-          Predict('achievement,' + achievementRow, pythonShell[1]),
-          Predict('rotation,' + rotationRow, pythonShell[2]),
-          Predict('jockey,' + jockeyRow, pythonShell[3]),
-        ]
-      )
-      console.log(predict)
-      // 結果とGoalTimeを結合してファイルに出力する
-      const predictRow = goalTime + ',' + `${predict[0]},${predict[1]},${predict[2]},${predict[3]}}`
-      predictRows.push(predictRow)
-    }
-  }
+    const studyRows = GetStudyRows(horseInfomations, dicBloodData[horseID])
+    bloodRows.push(studyRows.bloodRow)
+    horseachievementRows.push(studyRows.achievementRow)
+    horseRotationRows.push(studyRows.rotationRow)
+    jockeyRows.push(studyRows.jockeyRow)
+}
   return {
     horseRotationRows,
     horseachievementRows,
     bloodRows,
-    jockeyRows,
-    predictRows
+    jockeyRows
   }
 }
+
+async function CreatePredictRows(raceInfomation: RaceInfomation) {
+  const dicPredictRows: {[horseNo:number]: {predict: string, goalTime: number, outValue: boolean}} = {}
+  const horses = raceInfomation.HorseIDs as number[]
+  const dicHorseInfomations = await GetDicRaceHorseInfomation(raceInfomation.ID, horses)
+  const horseIDs = Object.keys(dicHorseInfomations).map(x => Number(x))
+  const dicBloodData = await GetDicBloodData(horseIDs)
+  for (const horseID of horseIDs) {
+    const horseInfomations  = dicHorseInfomations[horseID]
+    const studyRows = GetStudyRows(horseInfomations, dicBloodData[horseID])
+      // Pythonになげる
+      const predict = await Promise.all(
+        [
+          Predict('blood,' + studyRows.bloodRow, pythonShell[0]),
+          Predict('achievement,' + studyRows.achievementRow, pythonShell[1]),
+          Predict('rotation,' + studyRows.rotationRow, pythonShell[2]),
+          Predict('jockey,' + studyRows.jockeyRow, pythonShell[3]),
+        ]
+      )
+      // 結果とGoalTimeを結合してファイルに出力する
+      const goalTime = horseInfomations[0].GoalTime
+      const predictRow = `${predict[0]},${predict[1]},${predict[2]},${predict[3]}`
+      dicPredictRows[horseInfomations[0].HorseNo] = {predict: predictRow, goalTime: goalTime, outValue: horseInfomations[0].OutValue}
+  }
+  const predictRows = []
+  const horseNos = Object.keys(dicPredictRows).map(x => Number(x)).sort((a, b) => a - b)
+
+  for (const predictHorseNo of horseNos) {
+    const predictHorse = dicPredictRows[predictHorseNo]
+    if (predictHorse.outValue) {
+      continue
+    }
+    const predictHorseRow = predictHorse.predict
+    const predictHorseGoalTime = predictHorse.goalTime
+    let predictRow = predictHorseGoalTime + ','+ predictHorseRow
+    for (const horseNo of horseNos) {
+      if (horseNo != predictHorseNo) {
+        const horseRow = predictHorse.predict
+        predictRow += ',' + horseRow
+      } else {
+        predictRow += ',' + ',,,'
+      }
+    }
+    for (let dammy = 18 - horseNos.length; dammy > 0; dammy--) {
+      predictRow += ',' + ',,,'
+    }
+    predictRows.push(predictRow)
+  }
+  return predictRows
+}
+
+function GetStudyRows(horseInfomations: RaceHorseInfomation[], dicBloodData: string) {
+  const goalTime = horseInfomations[0].GoalTime
+  const raceRow = MODE == 'Study' ? goalTime + ',' + horseInfomations[0].RaceRow : horseInfomations[0].RaceRow
+
+  const bloodRow = raceRow + ',' + dicBloodData
+  const achievementRow = raceRow + ',' + horseInfomations[0].Achievement.join(',')
+  const rotationRow = GetRotationRow(horseInfomations)
+  const jockeyRow = MODE == 'Study' ? horseInfomations[0].Rank + ',' + horseInfomations[0].JockeyRow : horseInfomations[0].JockeyRow
+  return {
+    bloodRow,
+    achievementRow,
+    rotationRow,
+    jockeyRow,
+  }
+}
+
 async function CreateJockeyRecord(raceID: number, horses: number[]) {
   const dicHorseInfomations = await GetDicRaceHorseInfomation_row(raceID, horses)
   const horseIDs = Object.keys(dicHorseInfomations).map(x => Number(x))
@@ -156,7 +225,7 @@ async function CreateBloodRecord(raceID: number, horses: number[]) {
   for (const horseID of horseIDs) {
     const horseInfomations  = dicHorseInfomations[horseID]
     const goalTime = horseInfomations[0].GoalTime
-    const raceRow = goalTime + ',' + horseInfomations[0].RaceRow
+    const raceRow = goalTime + ',' + horseInfomations[0].RaceHorseRow
 
     const bloodRow = raceRow + ',' + dicBloodData[horseID]
     const jockeyRow = horseInfomations[0].Rank + ',' + horseInfomations[0].JockeyRow
@@ -167,14 +236,14 @@ async function CreateBloodRecord(raceID: number, horses: number[]) {
   return jockeyRows
 }
 
-async function GetRaceInfomation(year: number, half: 'first' | 'second' | 'third' | 'fourth') {
+async function GetRaceInfomation(year: number, half: 'first' | 'second' | 'third' | 'fourth', outValue: boolean) {
   const period = generateHalfYearPeriod(half)
-  const races = new RaceInfomation(year, period.start, period.end)
+  const races = new RaceInfomation(year, period.start, period.end, outValue)
   return await races.Execsql()
 }
 
 async function GetDicRaceHorseInfomation(raceID: number, horseIDs: number[]) {
-  const horses = new RaceHorseInfomation(raceID, horseIDs)
+  const horses = new RaceHorseInfomation(raceID, horseIDs, timeAverages)
   return await horses.GetDicRaceHorseInfomation()
 }
 
