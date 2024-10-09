@@ -189,14 +189,13 @@ order by
         this.RotationRow = `${rowRace},${this.GetRowRotation(null)}`
         return this
     }
+
     public async GetDicRaceHorseInfomation() {
         const raceHorseInfomations = (await this.Execsql()).filter(x => x.Direction != 3)
         var dic: {
             [HorseID: number]: RaceHorseInfomation[]
         } = {}
         for (var raceHorseInfomation of raceHorseInfomations) {
-            const rowBase = this.GetRowBase(raceHorseInfomation)
-            const rowRace = `${rowBase},${this.GetRowRace(raceHorseInfomation)}`
             let age = 0
             if (raceHorseInfomation.HorseAge == 3) {
                 age = 1
@@ -205,6 +204,8 @@ order by
             }
             const averageTime = this.timeAverage[`${raceHorseInfomation.Direction}_${raceHorseInfomation.Range}_${age}`]
             raceHorseInfomation.GoalTime = raceHorseInfomation.GoalTime - averageTime /* あんまりよくないけど書き換える*/
+            const rowBase = this.GetRowBase(raceHorseInfomation)
+            const rowRace = `${rowBase},${this.GetRowRace(raceHorseInfomation)}`
             if (dic[raceHorseInfomation.HorseID] == undefined) {
                 dic[raceHorseInfomation.HorseID] = []
                 raceHorseInfomation.Achievement = new Array(713).fill(null)

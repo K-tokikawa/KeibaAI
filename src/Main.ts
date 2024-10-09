@@ -10,7 +10,7 @@ import { TimeAverage } from "./sqlClass/TimeAverage"
 
 const startYear = 2014
 const endYear = 2023
-const MODE: ('Study' | 'Predict') = 'Study'
+const MODE: ('Study' | 'Predict') = 'Predict'
 const CREATEDATAMODE: ('All' | 'Row') = 'All'
 const shell = new PythonShell('./src/python/whilepredict.py')
 const shell_1 = new PythonShell('./src/python/whilepredict.py')
@@ -105,7 +105,7 @@ async function CreatePredictData(year: number, period: ('first' | 'second' | 'th
   let predictRows: string[] = []
   const raceInfomations = await GetRaceInfomation(year, period, false)
   const ProgressBar = simpleProgress()
-  const progress = ProgressBar(Object.keys(raceInfomations).length, 20, 'CreateData')
+  const progress = ProgressBar(Object.keys(raceInfomations).length, 20, `CreateData_${year}_${period}`)
   for (const raceInfomation of raceInfomations) {
     progress(1)
     const record = await CreatePredictRows(raceInfomation)
@@ -147,19 +147,20 @@ async function CreatePredictRows(raceInfomation: RaceInfomation) {
   for (const horseID of horseIDs) {
     const horseInfomations  = dicHorseInfomations[horseID]
     const studyRows = GetStudyRows(horseInfomations, dicBloodData[horseID])
-      // Pythonになげる
-      const predict = await Promise.all(
-        [
-          Predict('blood,' + studyRows.bloodRow, pythonShell[0]),
-          Predict('achievement,' + studyRows.achievementRow, pythonShell[1]),
-          Predict('rotation,' + studyRows.rotationRow, pythonShell[2]),
-          Predict('jockey,' + studyRows.jockeyRow, pythonShell[3]),
-        ]
-      )
-      // 結果とGoalTimeを結合してファイルに出力する
-      const goalTime = horseInfomations[0].GoalTime
-      const predictRow = `${predict[0]},${predict[1]},${predict[2]},${predict[3]}`
-      dicPredictRows[horseInfomations[0].HorseNo] = {predict: predictRow, goalTime: goalTime, outValue: horseInfomations[0].OutValue}
+    // Pythonになげる
+    const predict = await Promise.all(
+      [
+      Predict('blood,' + studyRows.bloodRow, pythonShell[0]),
+        Predict('achievement,' + studyRows.achievementRow, pythonShell[1]),
+        Predict('rotation,' + studyRows.rotationRow, pythonShell[2]),
+        Predict('jockey,' + studyRows.jockeyRow, pythonShell[3]),
+      ]
+    )
+    // 結果とGoalTimeを結合してファイルに出力する
+    const goalTime = horseInfomations[0].GoalTime
+    const predictRow = `${predict[0]},${predict[1]},${predict[2]},${predict[3]}`
+    
+    dicPredictRows[horseInfomations[0].HorseNo] = {predict: predictRow, goalTime: goalTime, outValue: horseInfomations[0].OutValue}
   }
   const predictRows = []
   const horseNos = Object.keys(dicPredictRows).map(x => Number(x)).sort((a, b) => a - b)
@@ -258,7 +259,7 @@ async function GetDicBloodData(horseIDs: number[]) {
 }
 
 function GetRotationRow(horseInfomations: RaceHorseInfomation[]){
-  let rotatinRow = ''
+  let rotatinRow = MODE == 'Study' ? `${horseInfomations[0].GoalTime}` : ''
   let rotationCount = 0
   for(const horseInfomation of horseInfomations) {
     rotatinRow += horseInfomation.RotationRow
