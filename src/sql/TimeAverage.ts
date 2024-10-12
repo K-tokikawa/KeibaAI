@@ -1,4 +1,3 @@
-import { time } from "console"
 import SQLBase from "../SQLBase"
 
 export class TimeAverage extends SQLBase<TimeAverage[]> {

@@ -1,4 +1,5 @@
 import SQLBase from "../SQLBase"
+import { convertToEmptyString } from "../Util"
 
 export class RaceInfomation extends SQLBase<RaceInfomation[]> {
     public ID: number = 0
@@ -17,6 +18,7 @@ export class RaceInfomation extends SQLBase<RaceInfomation[]> {
     public GroundCondition: number | null= null
     public RaceMasterID: number | null= null
     public HorseIDs: number[] | null= null
+    public RaceRow: string = ''
     constructor(year: number, start: number, end: number, outValue: boolean)
     {
         super()
@@ -48,7 +50,16 @@ SELECT
     RI.Weather, 
     RI.GroundCondition, 
     RI.RaceMasterID,
-    STRING_AGG(RHI.HorseID, ',') WITHIN GROUP (ORDER BY RHI.HorseID) AS HorseIDs
+    STRING_AGG(RHI.HorseID, ',') WITHIN GROUP (ORDER BY RHI.HorseID) AS HorseIDs,
+    convert(Varchar, RI.Venue) + ',' +
+    convert(Varchar, RI.Hold) + ',' +
+    convert(Varchar, RI.Day) + ',' +
+    convert(Varchar, RI.HoldMonth) + ',' +
+    convert(Varchar, RI.Range) + ',' +
+    convert(Varchar, RI.Direction) + ',' +
+    convert(Varchar, RI.Ground) + ',' +
+    convert(Varchar, RI.Weather) + ',' +
+    convert(Varchar, RI.GroundCondition) as RaceRow
 FROM RaceInfomation AS RI
 LEFT OUTER JOIN RaceHorseInfomation AS RHI
     ON RHI.RaceID = RI.ID

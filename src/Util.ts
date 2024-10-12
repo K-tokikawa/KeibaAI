@@ -44,3 +44,15 @@ export async function ExecPythonPredict()
         console.log(message)
     })
 }
+
+export function formatNumber(num: number): string {
+    // 数字が10以下の場合は二桁にする
+    return num.toString().padStart(2, '0');
+}
+
+export function convertToDate(time: string): Date {
+    const [hours, minutes] = time.split(':').map(Number);
+    const now = new Date();
+    now.setHours(hours, minutes, 0, 0); // 時、分、秒、ミリ秒を設定
+    return now;
+}

@@ -1,5 +1,5 @@
 import SQLBase from "../SQLBase";
-import { convertToEmptyString } from "./Util";
+import { convertToEmptyString } from "../Util";
 
 export class BloodData extends SQLBase<BloodData[]> {
     public ID : number = 0

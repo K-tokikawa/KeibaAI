@@ -1,5 +1,5 @@
 import SQLBase from "../SQLBase";
-import { convertToEmptyString } from "./Util";
+import { convertToEmptyString } from "../Util";
 
 export class RaceHorseInfoamtion_row extends SQLBase<RaceHorseInfoamtion_row[]> {
     public HorseID: number = 0

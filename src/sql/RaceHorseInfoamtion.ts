@@ -1,5 +1,5 @@
 import SQLBase from "../SQLBase";
-import { convertToEmptyString, getDateDifferenceInDays } from "./Util";
+import { convertToEmptyString, getDateDifferenceInDays } from "../Util";
 
 export class RaceHorseInfomation extends SQLBase<RaceHorseInfomation[]> {
     public HorseID: number = 0
@@ -69,7 +69,7 @@ with training as (
           RHI.RaceID
         , RHI.HorseID
         , C.num as Cource
-        ,       case TR.GroundCondition
+        , case TR.GroundCondition
                 when  '''良''' then 1
                 when  '''稍重''' then 2
                 when  '''重''' then 3
@@ -183,6 +183,7 @@ order by
     public async Execsql(): Promise<RaceHorseInfomation[]>{
         return await this.ExecGet(this.sql)
     }
+
     private Dammy() {
         const rowBase = this.GetRowBase(null)
         const rowRace = `${convertToEmptyString(this.GoalTime)},${rowBase},${this.GetRowRace(null)}`
@@ -195,6 +196,10 @@ order by
         var dic: {
             [HorseID: number]: RaceHorseInfomation[]
         } = {}
+        if (this.HorseID != 0) {
+            dic[this.HorseID] = []
+            dic[this.HorseID].push(this)
+        }
         for (var raceHorseInfomation of raceHorseInfomations) {
             let age = 0
             if (raceHorseInfomation.HorseAge == 3) {
@@ -222,6 +227,9 @@ order by
                     convertToEmptyString(raceHorseInfomation.RapTime5)},${
                     convertToEmptyString(raceHorseInfomation.TrainingLoad)}`
             } else {
+                if (raceHorseInfomation.Achievement == undefined) {
+                    raceHorseInfomation.Achievement = new Array(713).fill(null)
+                }
                 const lastValue = dic[raceHorseInfomation.HorseID].at(-1)
                 raceHorseInfomation.before = getDateDifferenceInDays(lastValue?.HoldDate as Date, raceHorseInfomation.HoldDate)
 

@@ -44,7 +44,7 @@ def objective(trial):
     result = result[len(result)-1]
     return result
 
-files = glob.glob(f'.\\data\\predict\\*.csv')
+files = glob.glob(f'.\\data\\predict_alpha\\*.csv')
 datas = pd.DataFrame()
 count = 0
 for file in files:
