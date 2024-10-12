@@ -50,8 +50,6 @@ async function BatProcess(){
       const Round: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
       const raceData = await RacePredict(Year, Month, HoldDay, Round)
-      // 出走馬の最新のRaceIDを取得
-      // RaceInfomationに投げて予測レースより以前のデータを取得する。
       const results = await predictprocess(Year, Month, HoldDay, Round, true)
       let resulttext = ''
       for (const result of Object.keys(results.root)) {

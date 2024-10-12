@@ -5,11 +5,14 @@ import AnalysisData from "./AnalysisData";
 
 export default async function RacePredict(Year: number, Month: number, HoldDay: number, Round: number[]) {
     const analysisData = new AnalysisData()
+    // TrainingDataの取得を追加
     const races = await analysisData.GetAnalysisData(Year, Month, HoldDay, Round)
+
     // 出走馬の最新のRaceIDを取得
     for (const race of races) {
-
-        // netkeibaIDからDBのhorseIDを取得
+        // ページからのデータとDBのデータを合わせてAIに投げるデータを作成する。
+        // AIの結果を表示するデータを既存から持ってきて調整する。
+        await GetHorseRecentRace(race)
     }
     // RaceInfomationに投げて予測レースより以前のデータを取得する。
 
